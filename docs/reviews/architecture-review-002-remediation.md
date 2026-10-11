@@ -82,7 +82,10 @@ printed digit.
 - `BEYOND` region: `ρ̂ ≥ 1.02866` or `ρ̂ ≤ 0.97153`.
 - P(`BEYOND`): 0.108 / 0.114 at ±2.5%; 0.675 / 0.703 at ±3%; 0.984 / 0.989 at ±3.5%.
 
-### 2.5 A2 hull rule (Monte Carlo, 30 clusters × 10^6, 40,000 replicates)
+### 2.5 A2 hull rule (Monte Carlo, 30 clusters × 10^6, 40,000 replicates). Superseded by section 8
+
+> The 30-cluster A2 design was replaced by Option B in Architecture Review 003. These figures are kept as a
+> record only.
 
 P(`WITHIN`) at true `ρ̄`, for between-prefix heterogeneity `τ` = 0 / 0.005 / 0.01:
 
@@ -218,5 +221,41 @@ are in proposal 3.12.
 - Updated: `docs/proposals/experiment-002-research-design.md` (revision 2)
 - Created: `docs/reviews/architecture-review-002-remediation.md` (this document)
 
-All three are untracked on `docs/experiment-002-design`. Nothing has been committed. **Stop for Architect
-review. No implementation authorization has been granted.**
+At the time of revision 2, all three were untracked. They were later committed as `cde1fe3` on
+`docs/experiment-002-design`, as authorized by the revision 2 disposition.
+
+## 8. Architecture Review 003 (Option B for A2), proposal revision 3
+
+**Disposition received:**
+
+- Option B approved for A2: 3,000 independently sampled 76-byte prefixes; nonces `0..9,999` per prefix;
+  1,500 prefixes per stage; 30M A2 inputs; `sha256`.
+- The ±2% margin and the 0.005 / 0.005 alpha split are unchanged.
+- The revision 2 disposition had already accepted the Experiment 001 closeout and approved the research
+  direction in principle. Freeze, implementation and execution remain unauthorized.
+
+| # | Required work | Resolution | Where |
+|---|---|---|---|
+| 1 | Proposal revision 3 with Option B throughout | Population, prefix derivation (3,000 prefixes), stage allocation (clusters 0–1,499 / 1,500–2,999), 2,999 df, N2 pseudo-clusters matched to the A2 analysis path, overlap guarantees (3,000-prefix distinctness check; N2 membership check against the 3,000 prefixes and nonces `0..9,999`), evidence content (per-cluster counts), workload, the A2 reading of the 9-cell matrix, configuration outline, decisions D3 and D6 marked decided, new decisions D12 and D13 | proposal 3.1–3.14, 4, 5 |
+| 2 | Recalculate A2 power and operating characteristics; do not assume unchanged power | Direct simulation with exact per-cluster binomial counts and the full D / V / margin procedure, plus an independent sufficient-statistic engine; difference and replication power, `WITHIN` and `BEYOND` power, and size at the boundaries | addendum 1.4; proposal 3.6 |
+| 3 | False `WITHIN` and false `BEYOND` under homogeneous and heterogeneous populations, including mixtures at 20%, 5%, 1%, 0.1% and rarer | Simulated: homogeneous; normal, t₃ and lognormal variation; mixtures at 20%, 5%, 1%, 0.1%, 0.01% and the feasibility limit 0.0078%. Exact two-point lower bounds for the rare mixtures | addendum 1.3, 1.4 |
+| 4 | Distinguish the strict input-level null from the population-average estimand | Three objects defined: `H0_A2`, `ρ_A2^cond` and `ρ̄_A2`. A2 difference flags are reported as strict-null rejections only | proposal 3.1, 3.2, 3.4; addendum 1.2 |
+| 5 | Justify any population-level guarantee, or restrict the claim; never present simulation as proof | **Restricted.** A uniform guarantee for `ρ̄_A2` is shown impossible (two-point argument; ≥ 0.79 false `WITHIN` at the feasibility limit). The confirmatory claim moves to `ρ_A2^cond`, whose error bound is proven given the input-level Bernoulli model (hull ⊆ Clopper–Pearson; Hoeffding 1956). Population statements are model-conditional under H-A2, supported by simulation only, and labelled as such | proposal 3.2; addendum 1.3, 1.6; decision D12 |
+| 6 | Reassess the combined 0.01 claim with conditional assumptions | ≤ 0.01 (exact-size value 0.00995) for confirmatory claims, conditional on the stated models, a correct implementation and a single attempt. A2 population statements are excluded | proposal 3.5; addendum 2 |
+| 7 | Preserve the A3 procedure, Experiment 001 evidence, `v0.2.0` and the retry safeguards | Unchanged. Evidence re-verified; tag unchanged; proposal 3.8 untouched | addendum 3; section 4 checks |
+| 8 | Update the addendum and this record with resolved, conditional and blocking status | Addendum section 4 status table; this section | addendum 4 |
+
+**Key A2 numbers** (addendum 1.3, 1.4):
+
+| Quantity | Value |
+|---|---|
+| Errors about `ρ_A2^cond` | ≤ 0.0016632 (proven given the model); simulations agree |
+| Population-level false `WITHIN` | 0.0012–0.0020 under regular heterogeneity or prevalence ≥ 5%; 0.0041 at 1%; 0.050 at 0.1%; 0.74–0.79 at ≤ 0.01% |
+| Population-level false `BEYOND` | ≤ 0.0019 |
+| Homogeneous power | equal to A1 and A3 for difference tests; `WITHIN` power 0.99993 at `ρ = 1` |
+| Power under heterogeneity | reduced; for example `WITHIN` 0.22 at lognormal τ = 0.3 (decision D14) |
+
+**What changed in the decision rules:** nothing. The thresholds, intervals, budgets and the 9-cell matrix
+are unchanged. The only substantive change is the **scope of A2's confirmatory margin claim**
+(evaluated-inputs estimand). It is submitted for acceptance as D12. N2's pseudo-cluster analysis adds no
+hashes and no primary claims.

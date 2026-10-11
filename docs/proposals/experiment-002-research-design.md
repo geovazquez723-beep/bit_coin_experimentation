@@ -1,11 +1,17 @@
 # Experiment 002: research design proposal
 
-- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Review 002
-- **Revision:** 2. It supersedes revision 1. The changes are mapped finding by finding in
-  [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md).
-- **Status:** **PROPOSAL, conditional.** The Architect requires revisions before implementation is
-  authorized. Not approved, not implemented, not executed. No executable configuration exists. Nothing in
-  this document changes the frozen `v0.2.0` release or the Experiment 001 evidence.
+- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002 and 003
+- **Revision:** 3. It supersedes revision 2.
+  - Revision 3 adopts **Option B for A2** (Architecture Review 003): 3,000 prefixes × nonces `0..9,999`,
+    1,500 prefixes per stage, `sha256`.
+  - It restricts A2's confirmatory margin claim to the sampled-prefix estimand (3.1, 3.2).
+  - Changes are mapped in
+    [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md) (section 8).
+    The statistical basis is in
+    [experiment-002-protocol-readiness-addendum.md](../reviews/experiment-002-protocol-readiness-addendum.md).
+- **Status:** **PROPOSAL.** Research direction approved in principle. **Protocol freeze, implementation and
+  execution are not authorized.** No executable configuration exists, and no execution seed has been
+  selected. Nothing in this document changes the frozen `v0.2.0` release or the Experiment 001 evidence.
 - **Builds on:** [Experiment 001 scientific review](../reviews/experiment-001-scientific-review.md)
   (run `20261011T205056Z-exp001-fc1d75fc`).
 - **Governance:** the Architect approves the design. The Director approves and runs every execution. The
@@ -125,9 +131,17 @@ Engine `sha256`, target `T = 2^248`, `p0 = 1/256`. For each primary arm `a ∈ {
 the **population-average success-rate ratio** `ρ_a = p̄_a / p0` over the population `U_a` defined in
 section 3.2:
 
-- For A1 and A3, `p̄_a` is the success fraction over the finite population `U_a`.
-- For A2, `p̄_a` is the expected success fraction over a uniformly random prefix, with the nonce block fixed
-  as defined in 3.2.
+- For A1 and A3, `p̄_a` is the success fraction over the finite population `U_a`. The SRS design makes the
+  inference design-based (3.2.4).
+- For A2 there are **two estimands**, and they must not be confused:
+  - **`ρ_A2^cond`, the confirmatory estimand.** The average success probability over the 30,000,000 inputs
+    actually evaluated (the 3,000 sampled prefixes × nonces `0..9,999`), divided by `p0`. It is defined
+    under the input-level Bernoulli model: each input `i` succeeds independently with some probability
+    `p_i`.
+  - **`ρ̄_A2`, the population estimand.** The expected success fraction over a uniformly random 76-byte
+    prefix with nonces `0..9,999`, divided by `p0`. It is reported **only as a model-conditional,
+    non-confirmatory statement** (3.2, A2), because no procedure at this design size can give it a uniform
+    confidence guarantee.
 
 **Research hypothesis under test (falsifiable).** *H_S: for at least one of A1–A3, `|ρ_a − 1| ≥ 0.02`.*
 
@@ -137,7 +151,15 @@ Each arm has two predeclared analyses:
 |---|---|---|---|
 | **Difference** (discovery) | `H0_a`: every input in `U_a` has success probability `p0` (the strict input-level null); `H1_a`: not so | Stage D | exact two-sided binomial; Holm across A1–A3 at **alpha_diff = 0.005** |
 | **Difference** (validation) | same null; one-sided in the discovery direction | Stage V, only for arms flagged in D | exact one-sided binomial; Holm across the flagged arms at **0.005** |
-| **Margin** | interval for `ρ_a`, compared with `(1 − δ, 1 + δ)`, `δ = 0.02` | Stages D + V pooled | two-sided interval at level `1 − 2·(0.005/3)` = **99.667%**: Clopper–Pearson for A1 and A3; for A2 the hull of Clopper–Pearson and a cluster-level t interval (3.2). Bonferroni across A1–A3 at **alpha_margin = 0.005** |
+| **Margin** | interval for `ρ_a` (`ρ_A2^cond` for A2), compared with `(1 − δ, 1 + δ)`, `δ = 0.02` | Stages D + V pooled | two-sided interval at level `1 − 2·(0.005/3)` = **99.667%**: Clopper–Pearson for A1 and A3; for A2 the hull of Clopper–Pearson and a cluster-level t interval (2,999 df; 3.2). Bonferroni across A1–A3 at **alpha_margin = 0.005** |
+
+For A2, the **difference** analysis tests the strict input-level null: every input has probability exactly
+`p0`. The **margin** analysis estimates an **average**. These are different questions:
+
+- If success probability varies between prefixes while the average equals 1, the strict null is false. The
+  difference test may then correctly flag A2 even though `ρ_A2^cond ≈ ρ̄_A2 ≈ 1`.
+- An A2 difference flag therefore means "not every input behaves like the null". It does **not** mean "the
+  average differs from `p0`". Its direction describes the evaluated inputs only.
 
 How H_S is decided for each arm (section 3.4 has the full matrix):
 
@@ -146,6 +168,9 @@ How H_S is decided for each arm (section 3.4 has the full matrix):
   is `BEYOND`: the interval lies entirely outside `[0.98, 1.02]`, on one side. This only triggers artifact
   investigation and independent replication (3.9). It never supports a claim of SHA-256 weakness.
 - **Not decided** otherwise.
+
+For A2, H_S is decided confirmatorily for `ρ_A2^cond`, the evaluated inputs. A statement about the prefix
+population `ρ̄_A2` is never confirmatory (3.2).
 
 A class-average bound does **not** bound sub-populations. For example, A3's weight-≤3 inputs are 0.045% of
 A3 (3.2), so an effect confined to them would barely move `ρ_A3`.
@@ -172,47 +197,86 @@ test. Seed derivation reuses the existing domain-separated `derive_seed`, a one-
   - Knuth's Algorithm S would need 4.29 × 10⁹ iterations, about 24 minutes at the prototype rate.
   - The split is a sequential hypergeometric assignment (3.2.4).
 
-#### A2: clustered prefix-and-nonce design
+#### A2: clustered prefix-and-nonce design (Option B, Architecture Review 003)
 
-A2 is **not** a uniform sample of 80-byte inputs. It is a **two-stage cluster design**.
+A2 is **not** a uniform sample of 80-byte inputs. It is a **two-stage cluster design**: many independently
+sampled prefixes, each with a short, completely enumerated nonce block. It supersedes the 30-prefix design
+of revision 2.
 
-- **Population:** `U2 = { prefix ‖ LE32(nonce) : prefix ∈ {0..255}^76, 0 ≤ nonce < 1,000,000 }`.
-  - Inputs are 80 bytes, which is two SHA-256 compression blocks. The nonce is in the second block.
-  - Estimand: the success fraction over the fixed nonce block, averaged over a **uniformly random 76-byte
-    prefix**.
-- **Prefix sampling (stage 1):** 30 prefixes drawn independently and uniformly from `{0..255}^76`.
-  - Prefix `j` (`j = 0..29`) is the first 76 bytes of
+- **Population:** `U2 = { prefix ‖ LE32(nonce) : prefix ∈ {0..255}^76, 0 ≤ nonce < 10,000 }`.
+  - Inputs are 80 bytes, which is two SHA-256 compression blocks. Bytes 64–75 of the prefix and the 4-byte
+    nonce lie in the second block.
+  - Engine `sha256`, as decided in Architecture Review 003.
+- **Prefix sampling (stage 1):** **3,000 prefixes**, drawn independently and uniformly from `{0..255}^76`.
+  - Prefix `j` (`j = 0..2,999`) is the first 76 bytes of
     `BLAKE2b-512(key = K_A2, "hashlab-exp002-prefix" ‖ j ‖ 0) ‖ BLAKE2b-512(key = K_A2, … ‖ j ‖ 1)`.
-  - All 30 prefixes are stored in the evidence.
-  - Distinctness is **verified deterministically** at plan time. A collision blocks execution; its
-    probability is about 2^-600.
-- **Nonce block assignment (stage 2):** every prefix gets the **same** block `[0, 1,000,000)`, enumerated in
-  ascending order. Within a cluster, nonces are **enumerated completely, not sampled**. This mirrors
-  counter-based proof-of-work practice.
-- **Clusters to stages:** clusters `j = 0..14` form Stage D and `j = 15..29` form Stage V, 15,000,000 inputs
-  each. Prefixes are i.i.d., so this fixed assignment is exchangeable with a random one.
-- **Conclusions apply to** the average over uniformly random 76-byte prefixes, nonces `0..999,999`, engine
-  `sha256`, 80-byte inputs.
-- **Conclusions do not apply to:**
-  - other nonce ranges or encodings;
-  - structured prefixes such as real block headers (version, previous hash, Merkle root, time and bits are
-    not uniform);
-  - `sha256d`;
-  - 80-byte inputs in general.
-- **Analysis consequences:**
-  - The **difference test** uses exact binomial stage totals. It is valid under the strict input-level null,
-    whatever the clustering. If success probability varies between prefixes (heterogeneity), the strict null
-    is false and the test may reject even when `ρ̄ = 1`. For A2, a difference flag means "the input-level null
-    is rejected", not "the average differs".
-  - The **margin interval** for `ρ̄_A2` is the **hull** (union) of two intervals, each at 99.667%:
-    - the pooled exact Clopper–Pearson interval;
-    - a cluster-level Student t interval on the 30 per-cluster ratios `r_j = k_j / (10^6 · p0)`
-      (29 df, `t = 3.1982`). Cluster sizes are equal, so the mean of the `r_j` equals the pooled ratio.
+  - `K_A2` derives from the master seed. No seed has been selected.
+  - All 3,000 prefixes are stored in the evidence.
+  - Pairwise distinctness is **verified deterministically** at plan time. A collision blocks execution; its
+    probability is about `C(3000, 2) / 2^608 ≈ 2^-586`.
+- **Nonce block assignment (stage 2):** every prefix gets the **same** block `[0, 10,000)`, enumerated
+  completely in ascending order. Nonces are not sampled.
+- **Clusters to stages:** clusters `j = 0..1,499` form Stage D and `j = 1,500..2,999` form Stage V. Each
+  stage has 1,500 × 10,000 = 15,000,000 inputs; the arm has 30,000,000. Prefixes are i.i.d., so this fixed
+  assignment is exchangeable with a random one.
+- **Applicability of conclusions:**
 
-    The hull covers whenever either interval covers, so it is valid both conditionally on the sampled
-    prefixes and for the prefix population.
-  - **Secondary:** a between-cluster χ² heterogeneity test per stage (14 df). Exploratory. **No prefix-level
-    claims.**
+  | Level | Statement | Status |
+  |---|---|---|
+  | Evaluated inputs (`ρ_A2^cond`) | A2 margin and difference labels | **Confirmatory.** Exact error control under the input-level Bernoulli model (below) |
+  | Prefix population (`ρ̄_A2`), uniformly random 76-byte prefixes, nonces `0..9,999`, `sha256`, 80 bytes | Generalization of a `WITHIN` or `BEYOND` result | **Model-conditional, not confirmatory.** Holds approximately only under assumption H-A2 (below), supported by simulation, not proof |
+  | Other nonce ranges or encodings; structured prefixes such as real block headers; `sha256d`; 80-byte inputs in general | none | **Out of scope** |
+
+- **Difference analysis (strict input-level null).**
+  - Exact binomial test on each stage total (15M inputs), with the same thresholds as A1 and A3.
+  - **Valid under the strict null** whatever the clustering: every input is then Bernoulli(`p0`), so the
+    stage total is exactly Binomial(15M, `p0`).
+  - Under prefix heterogeneity with average 1, the strict null is false and flags are **correct rejections of
+    the strict null**. They are not evidence that the average differs (3.1).
+- **Margin analysis.**
+  - The decision interval is the **hull** (union) of two intervals:
+    - the pooled exact Clopper–Pearson interval at 99.667%;
+    - a cluster-level Student t interval on the 3,000 per-cluster ratios `r_j = k_j / (10^4 · p0)`, with
+      **2,999 df** and `t_{0.998333, 2999} = 2.9376`. Cluster sizes are equal, so `mean(r_j)` equals the
+      pooled ratio.
+  - `WITHIN` requires **both** intervals inside `(0.98, 1.02)`. `BEYOND` requires **both** to lie entirely
+    outside `[0.98, 1.02]`, on the same side.
+  - Stages are pooled for the margin analysis. A per-stage analysis (1,499 df) is not used.
+- **Guarantee for the confirmatory estimand.** The hull's `WITHIN` and `BEYOND` events are subsets of the
+  corresponding Clopper–Pearson events. Under the input-level Bernoulli model, the pooled count is a sum of
+  independent, not necessarily identical, Bernoulli trials (Poisson-binomial).
+  - By Hoeffding (1956, Ann. Math. Statist. 27:713–721, Theorem 4), for any `c ≤ n·p̄ − 1`, the lower tail
+    `P(S ≤ c)` of such a sum is at most the binomial tail with the same mean; the upper tail is symmetric.
+  - The decision boundaries lie more than 1 count from the mean at the margin (for example `W_HI = 118,519`
+    against a mean of 119,531 at `ρ = 1.02`).
+  - Therefore P(false `WITHIN`) and P(false `BEYOND`) for `ρ_A2^cond` are **at most the exact binomial
+    values**, 0.0016629 and 0.0016632. This holds for **any** pattern of heterogeneity between prefixes. It is
+    a mathematical bound, given the model.
+- **No uniform guarantee for the population estimand** (proof by two-point argument; addendum 1.3).
+  - A prefix population in which a fraction `π = 0.02/255 ≈ 7.8 × 10⁻⁵` of prefixes succeed on every nonce,
+    and all others are exactly null, has `ρ̄_A2 = 1.02`.
+  - With probability `(1 − π)^3000 = 0.790`, none of these prefixes is sampled. The data are then distributed
+    exactly as under the null.
+  - Hence **any** decision rule with P(`WITHIN` | null population) = `w` has P(`WITHIN`) ≥ `w − 0.210` under
+    this population. For the proposed rule, `w = 0.9999`, so false `WITHIN` is at least 0.790.
+  - Simulation confirms this and shows the failure begins at moderate rarity (addendum 1.4):
+    - false `WITHIN` 0.0041 at `π = 0.01` (independent cross-check 0.0038);
+    - 0.050 at `π = 0.001`.
+- **Assumption H-A2 for population-level statements.** The deviation of per-prefix success rates from the
+  population average is **not concentrated in prefixes of prevalence below about 5%**. Under the families
+  simulated, the hull's population-level false-`WITHIN` rate is 0.0012–0.0020 (at most about 1.2× the
+  nominal 0.00167) and its false-`BEYOND` rate is ≤ 0.0019:
+  - homogeneous;
+  - normal, heavy-tailed (Student t₃) and lognormal variation up to a relative SD of 0.3;
+  - mixtures with prevalence ≥ 5%.
+
+  These are simulation results, not a proof. The population statement is therefore **approximately**, not
+  exactly, at the nominal level even when H-A2 holds.
+
+  H-A2 is an assumption about SHA-256's behaviour across prefixes. It **cannot be verified** from 3,000
+  clusters. The between-cluster heterogeneity test (secondary) can only reveal gross violations.
+- **Secondary (exploratory):** a between-cluster χ² heterogeneity test per stage (1,499 df). **No
+  prefix-level claims.**
 
 #### A3: low Hamming weight
 
@@ -297,10 +361,13 @@ subsets that lie entirely in the low 32 bits. Unranking is a bijection:
     skipped.
   - First 15M accepted values go to D, next 15M to V. Uniqueness follows from the bijection.
   - Because N1 is a control, not an inferential arm, its uniformity rests on the PRP heuristic (class C).
-- **N2, 80-byte null control:**
+- **N2, 80-byte null control, matched to A2's analysis path:**
   - i.i.d. uniform 80-byte strings from a keyed BLAKE2b stream, 15M per stage.
-  - Any string equal to an A2 input is rejected. The check is deterministic: does the first 76 bytes match
-    one of the 30 prefixes, with a nonce below 10^6.
+  - The strings are grouped, in stream order, into **pseudo-clusters of 10,000** (1,500 per stage).
+  - N2 is analysed with **exactly A2's procedures**: the stage-total difference tests and the hull margin rule
+    with the cluster t interval on 2,999 df. N2 therefore exercises the A2 analysis code on null data.
+  - Any string equal to an A2 input is rejected. The check is deterministic: do the first 76 bytes match one
+    of the 3,000 prefixes, with a little-endian nonce below 10,000.
 - **P1, P2+ and P2− positive controls:**
   - Inputs come from the same permutation `π_N`, on indices starting at 2^63. N1 uses fewer than 31 × 10^6
     indices, so these index ranges are disjoint from N1's and the values are distinct.
@@ -337,8 +404,8 @@ bytes):
 | Stage D vs Stage V in A1 and A3 | **M** | partition of one SRS drawn without replacement |
 | Stage D vs Stage V in N1 | **M** | bijection, disjoint index ranges |
 | Within A1, A3, N1, P (uniqueness) | **M** | SRS without replacement; bijection |
-| A2 clusters and stages | **D**, then **M** | 30 prefixes verified distinct (D); distinct prefixes, or the same prefix with distinct nonces, give distinct inputs (M) |
-| N2 vs A2 | **D** | membership check of every N2 input; hits rejected and counted |
+| A2 clusters and stages | **D**, then **M** | 3,000 prefixes verified pairwise distinct (D); distinct prefixes, or the same prefix with distinct nonces, give distinct inputs (M) |
+| N2 vs A2 | **D** | membership check of every N2 input against the 3,000 prefixes and nonces `0..9,999`; hits rejected and counted |
 | Uniqueness within N2 | **P** | not checked. P(any duplicate) ≤ `C(3×10^7, 2) / 2^640` ≈ 2^-591 |
 | Sampling uniformity (A1, A3) | **C** | MT19937 treated as an ideal RNG |
 | Sampling uniformity (N1, P, prefixes, N2) | **C** | Feistel / BLAKE2b treated as pseudorandom; controls only |
@@ -396,6 +463,16 @@ How to read the table:
 - **Every `REP` label** goes to artifact investigation and then Experiment 002-R before any statement
   stronger than "candidate deviation, unconfirmed".
 - **No label** implies a cryptographic weakness or an economic advantage.
+- **A2 reading.** The same 9 cells apply, with two differences:
+  - The difference outcome refers to the **strict input-level null**. `REP` means "not every evaluated input
+    behaves like Bernoulli(`p0`)".
+  - The margin outcome refers to **`ρ_A2^cond`**, the evaluated inputs.
+
+  Every A2 label is reported with the qualifier `estimand: evaluated-inputs`. A population-level sentence may
+  be added only in the form "under assumption H-A2, the prefix population average `ρ̄_A2` is also within ±2%"
+  (or beyond it), and it is never part of the confirmatory result. A2 `REP` with `WITHIN` is consistent with
+  between-prefix heterogeneity around an average near 1. It is reported as such and still goes to artifact
+  investigation.
 
 ### 3.5 Error budget and multiple testing
 
@@ -403,11 +480,27 @@ How to read the table:
 |---|---:|---|---|
 | Difference (discovery, then validation) | 3 | Holm two-sided in D; Holm one-sided in V among flagged | **0.005**. A false `REP` claim needs a false discovery, so P(any false `REP`) ≤ 0.005 under strong FWER control |
 | Margin (`WITHIN` / `BEYOND`) | 3 | Bonferroni: one two-sided 99.667% interval per arm | **0.005**. For any true `ρ_a`, at most one of a false `WITHIN` (`|ρ_a − 1| ≥ δ`) or a false `BEYOND` (`|ρ_a − 1| < δ`) is possible, each requiring a one-sided miss of probability ≤ 0.005/3. Total ≤ 0.005 |
-| **Combined primary claims** | | Bonferroni over the two families | **≤ 0.01** |
+| **Combined primary claims** | | Bonferroni over the two families | **≤ 0.01**, under the conditions below |
 | Secondary (leading-zero bits, first byte, last byte per arm and stage; A2 heterogeneity; A3 weight strata) | | Holm within the family | exploratory; never changes a label |
 | Controls | | individual thresholds (3.7) | gates or diagnostics, outside the primary budget |
 
 The 0.005 / 0.005 split is the Architect's provisional allocation (decision D4).
+
+**Conditions of the 0.01 guarantee** (formal argument: addendum section 2):
+
+- **Difference claims, all arms.** The exact binomial test is exact under the strict input-level null.
+  For A1 and A3 it is also conservative under the finite-population SRS model (exact hypergeometric check).
+- **A1 and A3 margin claims.** Exact Clopper–Pearson under the Bernoulli model. Conservative under the
+  finite-population SRS model: verified by exact hypergeometric computation at the boundary, plus
+  monotonicity in the population count. The SRS model treats the sampler's RNG as ideal.
+- **A2 margin claims about `ρ_A2^cond`.** Bounded by the exact binomial values for any between-prefix
+  heterogeneity, under the input-level independent-Bernoulli model (Hoeffding 1956). This is a mathematical
+  argument, given that model.
+- **Excluded from the guarantee:**
+  - A2 statements about the prefix population `ρ̄_A2`. No uniform bound exists at J = 3,000 (two-point
+    argument). They hold approximately only under H-A2, on simulation evidence.
+  - Secondary tests, controls, Experiment 002-R, and any attempt beyond a single confirmatory attempt
+    (3.8).
 
 ### 3.6 Sample size and power
 
@@ -466,18 +559,33 @@ Margin, A1 and A3, exact Clopper–Pearson at 99.667%, pooled n = 30M:
 At the boundary `ρ = 1 ± 0.02`, P(`WITHIN`) = 0.00166 ≤ 0.005/3 = 0.001667. The exact size of the
 equivalence decision is therefore controlled, as required.
 
-Margin, A2: Monte Carlo of the hull rule, 30 clusters of 10^6, 40,000 replicates (Monte Carlo SE ≤ 0.0025).
-`τ` is the between-prefix standard deviation of the relative effect.
+**A2 (Option B), recalculated.** Simulation evidence, not proof. Direct simulation with exact per-cluster
+Binomial(10⁴, `p_j`) counts and the full procedure. Full tables are in addendum 1.4.
 
-| True `ρ̄` | `τ = 0` | `τ = 0.005` | `τ = 0.010` |
-|---|---:|---:|---:|
-| 1.000 | 0.9994 | 0.9983 | 0.9846 |
-| 1.005 | 0.963 | 0.945 | 0.860 |
-| 1.010 | 0.568 | 0.517 | 0.395 |
-| 1.015 | 0.070 | 0.067 | 0.054 |
-| 1.020 (boundary) | 0.0010 | 0.0011 | 0.0014 |
+- **Homogeneous prefixes** (no between-prefix variation).
+  - The stage totals are exactly Binomial(15M), so difference power equals A1 and A3 exactly: discovery
+    0.954 / 0.958 at ±2%.
+  - Simulated discovery and replication with a single arm flagged: 0.941 / 0.947.
+  - `WITHIN` power at `ρ` = 1 / 1.005 / 1.01 / 1.015: 0.99993 / 0.986 / 0.673 / 0.108. That is slightly
+    below A1 and A3, because the t interval must also lie inside.
+  - `BEYOND` power at 1.025 / 1.03 / 1.035: 0.102 / 0.665 / 0.984.
+- **Heterogeneous prefixes:** **power is not unchanged.**
 
-The hull rule stays within the nominal 0.00167 at the boundary under heterogeneity.
+  | Model (relative between-prefix SD) | P(`WITHIN`) at `ρ̄` = 1.000 / 1.005 / 1.010 | P(`REP`), single arm, at `ρ̄` = 1.02 |
+  |---|---|---:|
+  | normal, τ = 0.05 | 0.9998 / 0.974 / 0.624 | 0.930 |
+  | normal, τ = 0.10 | 0.995 / 0.918 / 0.483 | 0.895 |
+  | lognormal, τ = 0.30 | **0.223** / 0.170 / 0.066 | 0.670 |
+  | mixture, 1% of prefixes carry the effect | 0.9999 / 0.972 / 0.486 | 0.791 |
+
+  Strong heterogeneity widens the cluster t interval, so `WITHIN` becomes hard to reach. Such an outcome is
+  reported as `inconclusive-at-margin`, not as a failure.
+- **Operating characteristics at the margin** (population level; 120,000 replicates; SE ≈ 0.00012):
+  - false `WITHIN` at `ρ̄ = 1.02 / 0.98` is **0.0012–0.0020** for homogeneous, normal, t₃ and lognormal
+    variation, and for mixtures with prevalence ≥ 5%;
+  - it is **0.0041** at 1% prevalence, **0.050** at 0.1%, and **0.74–0.79** at 0.01% and below;
+  - false `BEYOND` at `ρ̄ = 1.0199 / 0.9801` is ≤ 0.0019 in every model.
+- **Errors about the confirmatory estimand `ρ_A2^cond`** stay at or below the proven bound in every model.
 
 Positive controls (exact, one-sided alpha 0.001):
 
@@ -497,7 +605,7 @@ Expected successes: 58,594 per arm-stage, 117,188 per arm pooled, about 703,900 
 | **P1** (+25%, 200k) | The pipeline sees a gross effect | **Gate:** detected at one-sided p < 0.001 |
 | **P2+ / P2−** (±2%, 15M each) | Calibrate sensitivity at the margin, both directions | **Gate:** at least one detected at one-sided p < 0.001 (expected failure about 0.15%). Both detections, and whether the interval covers the planted value, are reported |
 | **P2± not `WITHIN`** | The margin rule does not accept an effect at the margin | **Gate:** the margin rule (99.667% Clopper–Pearson, n = 15M) must not return `WITHIN` for P2+ or P2− (probability ≤ 0.00167 each under correct code) |
-| **N1, N2** | Detect artifacts specific to input length or sampler | Tested exactly like arms (D: two-sided 0.001667; V: one-sided 0.005). Flagged in D: non-blocking diagnostic. **Flagged in D and replicated in V: gate failure F4** (3.8). Margin not `WITHIN`: diagnostic (expected about 10⁻⁴) |
+| **N1, N2** | Detect artifacts specific to input length, sampler or (N2) the A2 cluster analysis path | Tested exactly like arms; N2 with A2's procedures on 3,000 pseudo-clusters (D: two-sided 0.001667; V: one-sided 0.005). Flagged in D: non-blocking diagnostic. **Flagged in D and replicated in V: gate failure F4** (3.8). Margin not `WITHIN`: diagnostic (expected about 10⁻⁴) |
 | **Overlap and exclusion audit** | Unit independence | **Gate** per section 3.3 |
 
 P2− requires a new negative-lift mode in the control engine. The current control supports positive lifts
@@ -589,7 +697,9 @@ The `hashlab-manifest-v1` sealing scheme is kept. The following are added, each 
 - **Success recording.** Candidate bytes and the stage for every success; about 704,000 records, roughly
   75 MB.
 - **Audit sample.** Defined by a seed. The audit seed is recorded; the indices are not stored.
-- **Overlap audit results** (3.3) and the 30 A2 prefixes, stored in the evidence.
+- **Overlap audit results** (3.3), the 3,000 A2 prefixes, and the 3,000 A2 and 3,000 N2 per-cluster success
+  counts, stored in the evidence. The per-cluster counts are needed to recompute the cluster t interval
+  independently.
 - **Read-only verification command**, with no writes into the evidence directory (review R5).
 - **Deterministic ordering** of every list in `analysis.json` (review R4).
 - **Off-machine archive** of the sealed evidence, with its manifest hash list committed to the repository in
@@ -625,7 +735,8 @@ production code, and must be re-measured in the G2 smoke run.
 | A1 Vitter's Algorithm D, 30M | not prototyped | 1–5 min. Algorithm S fallback: about 24 min |
 | N1 + P, about 60.2M Feistel evaluations | prototype: about 57,000 per s **including** cycle-walking of about 3.3 evaluations each, so about 190,000 per s per evaluation; no cycle-walking on 2^64 | about 5–6 min |
 | E001 inverse index check (7M) and re-enumeration | prototype enumeration rates | 1–3 min |
-| N2 generation (30M × 80 B) and A2 membership check | BLAKE2b stream | about 1–2 min |
+| N2 generation (30M × 80 B) and A2 membership check (3,000 prefixes) | BLAKE2b stream | about 1–2 min |
+| A2 input construction (3,000 prefixes × 10,000 nonces) | concatenation; 3,000 BLAKE2b prefix derivations | under 1 min |
 | **Total, single process** | | **about 15–45 min**. Uncertainty about 2×, until measured at G2 |
 
 - **Memory:** under 1 GB. There are no deduplication sets; the exclusion set has 60,721 entries; E001 is
@@ -649,7 +760,8 @@ G1 requires all of the following:
 - the samplers pass the exactness checks of 3.2.4 on small analogs;
 - unranking is a bijection;
 - every **M** property is tested;
-- the margin rule and the A2 hull rule match reference values;
+- the margin rule and the A2 hull rule (2,999 df) match reference values. The A2 per-cluster aggregation is
+  tested on synthetic counts against an independent recomputation;
 - the negative-lift control is tested;
 - blinding of progress and failure output is verified;
 - all existing tests pass;
@@ -676,7 +788,8 @@ G4 outcomes:
 | Sub-population mining (A2 prefixes, A3 weights, bytes) | Secondary family only; Holm; no sub-population claims. Class averages do not bound sub-populations (3.1) |
 | Over-claiming equivalence | The wording is fixed: "`ρ` for population U lies within ±2% at `T = 2^248`, `sha256`, this implementation". Never "SHA-256 has no structural bias" |
 | Over-claiming deviation | At 30M per arm, tiny artifacts become significant. Every `REP` is a candidate until 002-R |
-| Over-generalizing A2 | Clustered design with a stated population (3.2); no claim about real block headers, `sha256d` or other nonce ranges |
+| Over-generalizing A2 | Clustered design with a stated population (3.2). Confirmatory claims refer to the evaluated inputs only; population statements are labelled model-conditional (H-A2). No claim about real block headers, `sha256d` or other nonce ranges |
+| Reading an A2 difference flag as an average effect | Stated distinction (3.1, 3.2): the A2 difference test rejects the strict input-level null; average-level statements come only from the margin analysis |
 | Treating a probabilistic guarantee as exact | Guarantee classes M / E / D / P / C (3.3) |
 | Economic misreading | No economic labels |
 
@@ -689,7 +802,7 @@ G4 outcomes:
 # OUTLINE ONLY -- NOT A VALID HASHLAB CONFIG -- DO NOT EXECUTE
 schema_version: <TBD: 2>
 experiment: {id: "002", name: structure-class-margin, specification: docs/experiment-002.md}
-engine: sha256                                       # decision D3
+engine: sha256                                       # decided, Architecture Review 003
 target: {equivalent_leading_zero_bits: 8}            # T = 2^248, p0 = 1/256
 seeds: {master: <TBD: committed before attempt 1, decision D5>, rng: mt19937, prf: blake2b-keyed}
 
@@ -698,11 +811,13 @@ arms:                                               # primary family, m = 3
     population: {encoding: be-bytes, width: 8, range: [2^20, 2^32)}       # |U1| = 4,293,918,720
     sampling: {method: srs-without-replacement, algorithm: vitter-D, split: hypergeometric}
   - id: A2-prefix-nonce-w80
-    population: {prefix_bytes: 76, prefix_distribution: uniform, nonce: {bytes: 4, order: little, block: [0, 1000000)}}
-    sampling: {method: two-stage-cluster, clusters: 30, prefix_source: blake2b-keyed,
+    population: {prefix_bytes: 76, prefix_distribution: uniform, nonce: {bytes: 4, order: little, block: [0, 10000)}}
+    sampling: {method: two-stage-cluster, clusters: 3000, nonces_per_cluster: 10000, prefix_source: blake2b-keyed,
                nonce_assignment: same-block-all-clusters, enumeration: complete-ascending,
-               stage_assignment: {discovery: clusters 0-14, validation: clusters 15-29}}
-    analysis: {margin_interval: hull(clopper-pearson, cluster-t-29df)}
+               stage_assignment: {discovery: clusters 0-1499, validation: clusters 1500-2999}}
+    analysis: {difference: strict-input-level-null, margin_estimand: evaluated-inputs (rho_cond),
+               margin_interval: hull(clopper-pearson, cluster-t-2999df),
+               population_statement: model-conditional-H-A2, non-confirmatory}
   - id: A3-lowhw-w8
     population: {width: 8, max_hamming_weight: 6, require_top32_nonzero: true,
                  exclude: experiment-001-candidates}                         # |U3| = 82,068,263
@@ -720,7 +835,8 @@ exclusions:
 controls:
   null:
     - {id: N1-w8, source: feistel64-blake2b, indices: from 0, reject: [A1, A3, E001], per_stage: 15000000}
-    - {id: N2-w80, source: blake2b-stream, reject: [A2], per_stage: 15000000}
+    - {id: N2-w80, source: blake2b-stream, reject: [A2], per_stage: 15000000,
+       pseudo_clusters: {size: 10000, per_stage: 1500}, analysis: same-as-A2}
   positive:                                         # inputs from the N1 permutation, indices >= 2^63
     - {id: P1,       relative_lift: +0.25, inputs: 200000,   detect_alpha_one_sided: 0.001, gate: must-detect}
     - {id: P2-plus,  relative_lift: +0.02, inputs: 15000000, detect_alpha_one_sided: 0.001}
@@ -750,10 +866,13 @@ economics: {screen: disabled, throughput: descriptive-only}
 |---|---|---|
 | D1 | Primary direction: Option 2, with Option 3 deferred | Approve |
 | D2 | Margin `δ` | ±2%. At 30M pooled: P(`WITHIN`) 0.99991 at `ρ = 1`, 0.68 at `ρ = 1.01` |
-| D3 | Engine for A2 (`sha256` or `sha256d`) | `sha256` for continuity; `sha256d` as a later experiment |
+| D3 | Engine for A2 | **Decided (Architecture Review 003): `sha256`** |
 | D4 | Confirm the provisional alpha split, 0.005 difference + 0.005 margin (total 0.01) | Confirm |
 | D5 | How the master seed is chosen and committed (Director-chosen and committed, or a public randomness-beacon value published after the pre-registration commit) | Director-chosen and committed, plus the registry rules of 3.8 |
-| D6 | Population definitions: A1 range; A2 prefix length, nonce block `[0, 10^6)` shared by all clusters, 30 clusters; A3 weight cap 6 and exclusion of Experiment 001 candidates | As proposed |
+| D6 | Population definitions | **A2 decided (Architecture Review 003):** 3,000 prefixes × nonces `0..9,999`, 1,500 per stage. A1 range and A3 definition (weight cap 6, Experiment 001 exclusion): as proposed |
+| D12 | Accept restricting A2's confirmatory margin claim to the evaluated inputs (`ρ_A2^cond`), with population statements model-conditional under H-A2 (3.2) | Accept. A uniform population guarantee is impossible at this design size |
+| D14 | A2 margin decision rule: keep the hull of Clopper–Pearson and cluster t (protects population statements; power falls under strong heterogeneity), or use Clopper–Pearson alone for the confirmatory `ρ_A2^cond` label (more power; population statements would then need a separate, non-confirmatory t interval) | Keep the hull, as currently specified. No rule change proposed |
+| D13 | Whether to add an A2-path positive control (a planted ±2% lift on clustered 80-byte inputs, about 15M extra hashes). N2 already exercises the A2 analysis path on null data | Optional. Recommended only if the A2 hull implementation is judged high-risk at G1 |
 | D7 | Execution environment (keep CPython 3.11.0 / OpenSSL 1.1.1q, or upgrade); the independent SHA-256 implementation for the verifier; whether to do a second-machine full rerun | Keep for the main run; use an independent implementation for the verifier; the second-machine rerun is optional |
 | D8 | Implementation scope: exact samplers (Algorithm S; Vitter's Algorithm D); ranking; N1 permutation and inverse index check; A2 cluster design and hull interval; margin rule and the 9-cell classification; negative-lift control; success recording and audit; blinding; read-only verifier; deterministic ordering; run-registry template; schema version 2; release `v0.3.0` | Approve as one reviewed change set |
 | D9 | Experiment 001 follow-ups: off-machine archive; update `docs/experiment-001.md` status; optional deterministic re-execution audit | Archive and update the docs |
@@ -769,8 +888,13 @@ session scratch space, outside the repository:
 
 - **Power and margin tables:** implementation A, `hashlab.statistics.inference` at `v0.2.0`; implementation
   B, independent log-space binomial sums and bisection Clopper–Pearson; plus a normal-approximation
-  cross-check. A2 uses a Monte Carlo of the hull rule (normal approximation to the per-cluster binomial
-  counts; seed 20261011; 40,000 replicates per cell).
+  cross-check.
+- **A2 (revision 3):** two independent simulation engines (addendum section 1.4):
+  - a numpy direct simulation with exact per-cluster Binomial(10⁴, `p_j`) counts and the full decision
+    procedure;
+  - a pure-Python sufficient-statistic engine.
+
+  Plus the exact two-point lower bound. The revision 2 Monte Carlo for 30 clusters is superseded.
 - **A3:**
   - cardinality by three methods plus brute-force analogs;
   - exact re-enumeration of the Experiment 001 8-byte candidates from the sealed configuration and seeds
