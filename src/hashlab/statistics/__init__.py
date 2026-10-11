@@ -15,8 +15,11 @@ from hashlab.statistics.inference import (
     bonferroni,
     chi2_sf,
     clopper_pearson,
+    exact_binomial_power,
     holm,
     minimum_detectable_effect,
+    minimum_detectable_effect_unpooled,
+    normal_power,
 )
 
 __all__ = [
@@ -29,9 +32,12 @@ __all__ = [
     "bonferroni",
     "chi2_sf",
     "clopper_pearson",
+    "exact_binomial_power",
     "holm",
     "leading_zero_gof",
     "leading_zero_probability",
     "minimum_detectable_effect",
+    "minimum_detectable_effect_unpooled",
+    "normal_power",
     "uniform_byte_gof",
 ]

@@ -33,10 +33,10 @@ phases:
 
 statistics:
   alpha: 0.01                          # family-wise error rate per family
-  confidence_level: 0.99               # Clopper-Pearson intervals
+  confidence_level: 0.99               # Clopper-Pearson intervals (marginal; simultaneous = Bonferroni over generators)
   correction: holm                     # holm | bonferroni
-  power: 0.80                          # planning only (minimum detectable effect)
-  min_actionable_relative_effect: 0.01 # need >= +1% throughput-adjusted success lift to be actionable
+  power: 0.80                          # planning only (minimum detectable effect; not an exclusion bound)
+  min_actionable_relative_effect: 0.01 # exploratory economic screen: >= +1% throughput-adjusted lift (never confirmatory)
 
 execution:
   batch_size: 10000                    # candidates held in memory at once (per batch)
@@ -53,6 +53,12 @@ controls:
     width: 8
     candidates: 200000
     relative_lift: 0.25                # planted +25% success rate; must be detected
+
+# Amendment 1 (Architecture Review 001, before any execution): predeclared economic reference.
+# Throughput comparisons use this generator, never the fastest observed one, and only for generators
+# whose domain is identical to it (same kind, width, alphabet and cardinality). Exploratory only.
+economics:
+  reference_generator: seq-be-w8       # sequential 8-byte big-endian integers (simplest candidate source)
 
 generators:
   # 1. Sequential fixed-width integer encodings

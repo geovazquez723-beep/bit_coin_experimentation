@@ -272,7 +272,13 @@ def minimum_detectable_effect(n: int, p0: float, alpha: float, power: float, tes
 
     Uses a two-sided test at Bonferroni level alpha/tests (conservative for Holm).
     MDE_rel = (z_{1 - alpha'/2} + z_{power}) * sqrt(p0 * (1 - p0) / n) / p0.
-    For planning only. The analysis itself uses exact tests.
+    The null variance is used in both terms (so the result is the same for an
+    increase and a decrease) and the far rejection tail is ignored.
+
+    For planning only. The analysis itself uses exact tests. An MDE is the
+    effect a test would detect with probability ``power`` under these
+    approximations. It is NOT an exclusion bound: a non-significant result does
+    not show that effects of this size, or smaller, are absent.
     """
     if n <= 0:
         raise ValueError("n must be positive")
@@ -284,3 +290,129 @@ def minimum_detectable_effect(n: int, p0: float, alpha: float, power: float, tes
         min_detectable_relative_effect=z * se / p0,
         alpha_per_test=alpha_per_test,
     )
+
+
+def _check_planning(n: int, p0: float, level: float, name: str) -> None:
+    if n <= 0:
+        raise ValueError("n must be positive")
+    if not 0.0 < p0 < 1.0:
+        raise ValueError("p0 must be strictly between 0 and 1")
+    if not 0.0 < level < 1.0:
+        raise ValueError(f"{name} must be strictly between 0 and 1")
+
+
+def normal_power(n: int, p0: float, relative_effect: float, alpha_level: float, alternative: str = "two-sided") -> float:
+    """Normal-approximation power of the test of H0: p = p0 when the true rate is p0 * (1 + relative_effect).
+
+    Critical values use the null standard error sqrt(p0 (1 - p0) / n); the spread
+    under the alternative uses sqrt(p1 (1 - p1) / n) ("unpooled"). Two-sided
+    power counts both rejection tails. ``alpha_level`` is the level of this one
+    test (already divided by any multiplicity correction). Planning only.
+    """
+    _check_planning(n, p0, alpha_level, "alpha_level")
+    p1 = p0 * (1.0 + relative_effect)
+    if not 0.0 <= p1 <= 1.0:
+        raise ValueError("p0 * (1 + relative_effect) must be in [0, 1]")
+    normal = NormalDist()
+    se0 = math.sqrt(p0 * (1.0 - p0) / n)
+    se1 = math.sqrt(p1 * (1.0 - p1) / n)
+    shift = p1 - p0
+
+    def tail(signed_shift: float, z: float) -> float:
+        # P(estimate - p0 crosses z * se0 in the direction of signed_shift)
+        if se1 == 0.0:
+            return 1.0 if signed_shift >= z * se0 else 0.0
+        return normal.cdf((signed_shift - z * se0) / se1)
+
+    if alternative == "greater":
+        return tail(shift, normal.inv_cdf(1.0 - alpha_level))
+    if alternative == "less":
+        return tail(-shift, normal.inv_cdf(1.0 - alpha_level))
+    if alternative == "two-sided":
+        z = normal.inv_cdf(1.0 - alpha_level / 2.0)
+        return tail(shift, z) + tail(-shift, z)
+    raise ValueError("alternative must be 'two-sided', 'greater' or 'less'")
+
+
+def minimum_detectable_effect_unpooled(
+    n: int, p0: float, alpha: float, power: float, tests: int = 1, direction: str = "increase"
+) -> float:
+    """Directional normal-approximation MDE that uses the alternative variance.
+
+    Solves  delta * p0 = z_{1 - alpha'/2} * se0 + z_{power} * se1(delta)  for delta,
+    with alpha' = alpha / tests (two-sided, like the discovery test),
+    se0 = sqrt(p0 (1 - p0) / n), se1 = sqrt(p1 (1 - p1) / n), and
+    p1 = p0 (1 + delta) for an increase or p0 (1 - delta) for a decrease.
+    Returns delta > 0 (a relative effect size in either direction).
+
+    Solved by bisection; the left side minus the right side increases with
+    delta whenever n * p1 * (1 - p1) is not tiny. Planning only, NOT an
+    exclusion bound (see ``minimum_detectable_effect``).
+    """
+    _check_planning(n, p0, alpha, "alpha")
+    if not 0.0 < power < 1.0:
+        raise ValueError("power must be strictly between 0 and 1")
+    if direction not in ("increase", "decrease"):
+        raise ValueError("direction must be 'increase' or 'decrease'")
+    sign = 1.0 if direction == "increase" else -1.0
+    alpha_per_test = alpha / max(1, tests)
+    normal = NormalDist()
+    z_alpha = normal.inv_cdf(1.0 - alpha_per_test / 2.0)
+    z_power = normal.inv_cdf(power)
+    se0 = math.sqrt(p0 * (1.0 - p0) / n)
+
+    def gap(delta: float) -> float:
+        p1 = min(1.0, max(0.0, p0 * (1.0 + sign * delta)))
+        return delta * p0 - z_alpha * se0 - z_power * math.sqrt(p1 * (1.0 - p1) / n)
+
+    lo, hi = 0.0, ((1.0 - p0) / p0 if sign > 0 else 1.0)  # keeps p1 inside [0, 1]
+    if gap(hi) < 0.0:
+        raise ValueError("no relative effect in range reaches the requested power")
+    for _ in range(_BISECT_STEPS):
+        mid = 0.5 * (lo + hi)
+        if mid in (lo, hi):
+            break
+        if gap(mid) < 0.0:
+            lo = mid
+        else:
+            hi = mid
+    return hi
+
+
+def exact_binomial_power(n: int, p0: float, p1: float, alpha_level: float, alternative: str = "two-sided") -> float:
+    """Exact power of ``binom_test`` at level ``alpha_level`` when the true rate is p1.
+
+    Rejection uses the analysis rule (p-value strictly below the level): for
+    the doubled-tail two-sided test, reject when P0(X >= k) < alpha_level / 2
+    or P0(X <= k) < alpha_level / 2. Power is P1(X in the rejection region).
+    Critical counts are found by bisection over k. For reproducing planning
+    figures; not called by the plan, whose numbers stay normal approximations.
+    """
+    _check_count(0, n)
+    _check_planning(max(n, 1), p0, alpha_level, "alpha_level")
+    _check_binomial(n, p1)
+    if alternative not in ("two-sided", "greater", "less"):
+        raise ValueError("alternative must be 'two-sided', 'greater' or 'less'")
+    level = alpha_level / 2.0 if alternative == "two-sided" else alpha_level
+    power = 0.0
+    if alternative in ("two-sided", "greater"):
+        # smallest k in [0, n + 1] with P0(X >= k) < level (k = n + 1 means "never reject")
+        lo, hi = 0, n + 1
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if binom_sf(mid, n, p0) < level:
+                hi = mid
+            else:
+                lo = mid + 1
+        power += binom_sf(lo, n, p1)
+    if alternative in ("two-sided", "less"):
+        # largest k in [-1, n] with P0(X <= k) < level (k = -1 means "never reject")
+        lo, hi = -1, n
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            if binom_cdf(mid, n, p0) < level:
+                lo = mid
+            else:
+                hi = mid - 1
+        power += binom_cdf(lo, n, p1)
+    return power

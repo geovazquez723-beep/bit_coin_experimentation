@@ -15,24 +15,29 @@ is claimed without strong, replicated, independent evidence. See
 | [docs/research-charter.md](docs/research-charter.md) | purpose, governance, principles, scope |
 | [docs/methodology.md](docs/methodology.md) | definitions, null hypotheses, decision rules, controls |
 | [docs/experiment-001.md](docs/experiment-001.md) | Experiment 001 specification |
+| [docs/reviews/architecture-review-001-remediation.md](docs/reviews/architecture-review-001-remediation.md) | Architecture Review 001 findings, changes and provenance |
+| [docs/CHANGELOG.md](docs/CHANGELOG.md) | versions and the analysis contract (current: 0.2.0) |
+| [docs/smoke-test.md](docs/smoke-test.md) | evidence-pipeline smoke test (not Experiment 001) |
 | [configs/baseline.yaml](configs/baseline.yaml) | Experiment 001 configuration |
 
 ## Layout
 
 ```text
 configs/baseline.yaml           Experiment 001 configuration (pre-registered)
+configs/smoke-evidence.yaml     evidence-pipeline smoke test only (writes to results-smoke/, never results/)
 src/hashlab/
   cli.py                        validate | plan | run | analyze
   candidates/                   base (domains, seeds), sequential, random (uniform + random_bytes),
                                 patterned, structured
   hashing/                      sha256, sha256d, target (exact integer target arithmetic)
   experiments/                  config (strict validation), baseline (plan + run), analysis (decision rules
-                                + report), controls (positive-control engine), selfcheck (validate)
-  statistics/                   inference (exact binomial, Clopper-Pearson, chi-square, Holm),
+                                + integrity checks + report), economics (predeclared reference, domain
+                                comparability), controls (positive-control engine), selfcheck (validate)
+  statistics/                   inference (exact binomial, Clopper-Pearson, chi-square, Holm, planning power),
                                 distribution (streaming histograms, goodness of fit)
   evidence/                     manifest (environment, file hashes, verification), storage (write-once runs)
-tests/                          pytest suite (tiny fixtures only)
-docs/                           charter, methodology, Experiment 001 spec
+tests/                          pytest suite (tiny fixtures only; independent statistical references)
+docs/                           charter, methodology, Experiment 001 spec, reviews/ (architecture reviews)
 results/                        evidence directories, one per run
 ```
 
@@ -73,6 +78,17 @@ python -m pytest
 python -m hashlab.cli plan --config configs/baseline.yaml
 python -m hashlab.cli plan --config configs/baseline.yaml --json > plan-preview.json
 ```
+
+## Evidence-pipeline smoke test (optional, not Experiment 001)
+
+A tiny separate run (about 5,400 hashes) that checks evidence creation, the manifest, reports,
+re-analysis and tamper refusal. Full steps and expected output: [docs/smoke-test.md](docs/smoke-test.md).
+
+```powershell
+python -m hashlab.cli run --config configs/smoke-evidence.yaml --results-dir results-smoke
+```
+
+Its run ids contain `expsmoke-evidence`; its numbers have no scientific meaning.
 
 ## Execute Experiment 001 (Director only)
 
@@ -133,14 +149,28 @@ itself.
 - Generators use different domains (width, bytes vs ASCII), so each is
   compared only with the theoretical `p0`. Comparisons between generators
   would compare different sample spaces.
-- There is no deduplication across generators. Generators may share some
-  inputs.
+- There is no deduplication across generators, and an identical domain does
+  not mean independent samples: `seq-be-w8` and `struct-gray-w8` share 951,424
+  of their 1,000,000 candidates, so agreement between them is not
+  corroboration. See [methodology section 5b](docs/methodology.md).
+- No label is a confirmatory mining advantage.
+  `candidate-anomaly-requires-independent-replication` means "replicated and
+  passed an exploratory economic screen" (see the label legend in every
+  report).
 - The secondary distribution tests reuse the primary digests, so they are not
   independent evidence.
-- The baseline is sensitive to effects of about 9% relative or larger. It is
-  silent about smaller effects.
-- Throughput is measured in pure Python on one machine. It is relevant only to
-  the actionability rule within a run, not to real mining economics.
+- The baseline's planning minimum detectable effect is about 9.3% relative
+  (80% power for the discovery test, normal approximation). That is a planning
+  quantity, not an exclusion bound: detection of such an effect is not
+  guaranteed, and a non-significant result does not rule out effects of that
+  size or smaller, nor establish equivalence. See
+  [methodology section 8](docs/methodology.md#8-sensitivity-statement).
+- Throughput is measured in pure Python on one machine. It feeds only the
+  exploratory economic screen within a run (against the predeclared reference
+  `seq-be-w8`, identical domains only), never a confirmatory economic claim
+  and not real mining economics.
+- Rate intervals are labelled: `marginal` intervals cover one generator and
+  phase; `simultaneous` intervals (Bonferroni) cover all generators jointly.
 - Manifest verification catches accidental changes, not deliberate tampering
   by someone who rewrites the manifest too.
 - The patterned generators enumerate in lexicographic order, so a run samples
@@ -150,7 +180,9 @@ itself.
   extreme tails (p < about 1e-300) underflow to 0.
 - The Engineer ran no experiment, benchmark or pytest session. The Engineer
   only compiled the sources and ran `validate`/`plan` and the reference
-  arithmetic.
+  arithmetic. For Architecture Review 001 the Engineer compiled the changed
+  sources, ran the dry-run plan to compute fingerprints, and computed
+  reference values with standalone arithmetic; the test suite was not run.
 
 ## Open architectural questions for the Architect and Director
 
@@ -167,8 +199,11 @@ itself.
    correlation between consecutive digests? Both cost CPU per hash and need a
    correction design.
 5. **Sample size:** what minimum detectable effect is the scientific target?
-   Reaching 1% needs about 85× the baseline sample (about 870M hashes), which
-   probably requires a compiled hashing path outside the current scope.
+   An 80%-power planning MDE of 1% needs about 87× the baseline sample
+   (`(9.33 / 1)^2`; about 0.9 billion hashes), which probably requires a
+   compiled hashing path outside the current scope. If effects must be
+   *excluded*, the design also needs a predeclared equivalence or
+   confidence-bound analysis.
 6. **Patterned sampling:** lexicographic prefix, or a seeded permutation of
    the motif space?
 7. **`sha256d` run:** a separate Experiment 001b, or a second engine inside

@@ -10,3 +10,6 @@ plan-preview.json
 # Evidence directories are large and read-only; how to retain them is an open question (see README).
 results/*
 !results/.gitkeep
+
+# Evidence-pipeline smoke tests (configs/smoke-evidence.yaml). Never Experiment 001 evidence.
+results-smoke/

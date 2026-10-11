@@ -29,11 +29,19 @@ from hashlab.candidates import CandidateGenerator, build_generator, derive_seed,
 from hashlab.candidates.random import RandomBytesGenerator
 from hashlab.evidence.manifest import collect_environment, utc_now_iso
 from hashlab.evidence.storage import RunDirectory, new_run_id
+from hashlab.experiments.analysis import CLASSIFICATION_LEGEND
 from hashlab.experiments.config import PHASES, target_from_resolved
 from hashlab.experiments.controls import BiasedControlEngine
+from hashlab.experiments.economics import (
+    EVIDENCE_LEVEL,
+    STATUS_COMPARABLE,
+    STATUS_NOT_COMPARABLE,
+    comparability_table,
+    reference_generator,
+)
 from hashlab.hashing import get_engine
 from hashlab.statistics.distribution import DigestAccumulator
-from hashlab.statistics.inference import minimum_detectable_effect
+from hashlab.statistics.inference import minimum_detectable_effect, minimum_detectable_effect_unpooled, normal_power
 
 POSITIVE_CONTROL_ID = "positive-control"
 #: Rough per-entry memory of a Python set holding bytes objects (object header + slot), for planning only.
@@ -85,10 +93,7 @@ def build_plan(resolved: dict) -> dict:
             warnings.append(
                 f"{gen.generator_id}: about {exp_dups:.1f} duplicate draws expected; they are removed and counted"
             )
-        power = {
-            phase: _power_dict(minimum_detectable_effect(n, p0, stats["alpha"], stats["power"], tests))
-            for phase, n in requested.items()
-        }
+        power = {phase: _power_dict(n, p0, stats, tests) for phase, n in requested.items()}
         total_hashes += total_requested
         entries.append(
             {
@@ -118,6 +123,27 @@ def build_plan(resolved: dict) -> dict:
     null_control = resolved["controls"]["null_control_generator"]
     if null_control is None:
         warnings.append("no null-control generator is designated")
+
+    reference = reference_generator(resolved)
+    comparability = comparability_table(resolved)
+    if reference is None:
+        warnings.append(
+            "no economic reference is predeclared (economics.reference_generator): the exploratory economic screen "
+            "is disabled, so a replicated positive effect is classified at most replicated-anomaly-non-actionable"
+        )
+    not_comparable = sorted(gid for gid, row in comparability.items() if row["status"] == STATUS_NOT_COMPARABLE)
+    if not_comparable:
+        warnings.append(
+            f"domains differ from the economic reference {reference} for: {', '.join(not_comparable)}; "
+            "their throughput is reported descriptively, without a relative-efficiency comparison"
+        )
+    if any(row["status"] == STATUS_COMPARABLE for row in comparability.values()):
+        warnings.append(
+            "an identical domain does not mean independent samples: generators are not deduplicated against "
+            "each other, and deterministic generators can share most of their candidates (seq-be-w8 and "
+            "struct-gray-w8 at baseline settings share 951,424 of 1,000,000). Agreement between such generators "
+            "is not independent corroboration (methodology section 5b)"
+        )
 
     hypotheses = [
         {
@@ -156,13 +182,42 @@ def build_plan(resolved: dict) -> dict:
             "replication": "same-direction one-sided exact test p < alpha in the validation phase, "
             "corrected across flagged generators",
             "actionable": (
-                "replicated AND more successes than p0 AND validation lower bound of the success-rate ratio, "
-                "times the generator's end-to-end throughput relative to the fastest generator, is at least "
-                f"1 + {stats['min_actionable_relative_effect']}"
+                "never declared by this analysis: economic evidence is exploratory and no confirmatory economic "
+                "procedure is predeclared"
+            ),
+            "exploratory_economic_screen": (
+                "replicated AND more successes than p0 AND the generator's domain is identical to the predeclared "
+                "economic reference AND the Bonferroni-simultaneous (across the primary family) validation lower "
+                "bound of the success-rate ratio, times the generator's end-to-end throughput relative to the "
+                f"predeclared reference, is at least 1 + {stats['min_actionable_relative_effect']}. A marginal bound "
+                "alone never passes. Passing gives the label candidate-anomaly-requires-independent-replication, "
+                "which is exploratory and never a confirmatory mining advantage"
+            ),
+            "classification_legend": CLASSIFICATION_LEGEND,
+            "economic_reference": reference,
+            "intervals": (
+                f"marginal: {stats['confidence_level']} Clopper-Pearson per generator and phase (descriptive); "
+                f"simultaneous: Bonferroni across the {tests} primary generators"
+            ),
+            "integrity": (
+                "missing generator or control evidence and invalid or inconsistent counts are blocking "
+                "integrity failures"
             ),
             "null_control": null_control,
+            "null_control_rule": (
+                "a statistically flagged null control is a non-blocking diagnostic that is reported in the verdict; "
+                "missing null-control evidence is a blocking integrity failure"
+            ),
             "positive_control": positive,
         },
+        "economics": {
+            "reference_generator": reference,
+            "selection": "predeclared in the configuration before execution; never chosen from observed throughput",
+            "evidence_level": EVIDENCE_LEVEL,
+            "comparability_rule": "identical domain: kind, width_bytes, alphabet, alphabet_size and cardinality",
+            "comparability": comparability,
+        },
+        "sensitivity": _sensitivity(resolved, p0, tests),
         "generators": entries,
         "total_hashes_planned": total_hashes,
         "batch_size": execution["batch_size"],
@@ -175,12 +230,80 @@ def build_plan(resolved: dict) -> dict:
     return plan
 
 
-def _power_dict(power) -> dict:
+MDE_INTERPRETATION = (
+    "planning quantity, not an exclusion bound: an effect of this size would be flagged in discovery with "
+    "probability about equal to the power target (not guaranteed); a non-significant result does not show "
+    "that effects of this size or smaller are absent"
+)
+
+
+def _unpooled_mde(n: int, p0: float, stats: dict, tests: int, direction: str) -> float | None:
+    try:
+        return minimum_detectable_effect_unpooled(n, p0, stats["alpha"], stats["power"], tests, direction)
+    except ValueError:  # no detectable effect inside the valid probability range (extreme targets)
+        return None
+
+
+def _power_dict(n: int, p0: float, stats: dict, tests: int) -> dict:
+    pooled = minimum_detectable_effect(n, p0, stats["alpha"], stats["power"], tests)
     return {
-        "expected_successes": power.expected_successes,
-        "min_detectable_relative_effect": power.min_detectable_relative_effect,
-        "alpha_per_test": power.alpha_per_test,
-        "method": "normal approximation, Bonferroni-conservative (planning only)",
+        "expected_successes": pooled.expected_successes,
+        "min_detectable_relative_effect": pooled.min_detectable_relative_effect,
+        "min_detectable_relative_increase_unpooled": _unpooled_mde(n, p0, stats, tests, "increase"),
+        "min_detectable_relative_decrease_unpooled": _unpooled_mde(n, p0, stats, tests, "decrease"),
+        "alpha_per_test": pooled.alpha_per_test,
+        "power_target": stats["power"],
+        "method": (
+            "normal approximation, two-sided, Bonferroni alpha/tests (conservative for Holm), discovery test only; "
+            "'min_detectable_relative_effect' uses the null variance in both terms, the 'unpooled' values use the "
+            "alternative variance (planning only)"
+        ),
+        "interpretation": MDE_INTERPRETATION,
+    }
+
+
+def _sensitivity(resolved: dict, p0: float, tests: int) -> dict:
+    """Planning sensitivity of the whole decision chain (normal approximations; no data involved)."""
+    stats = resolved["statistics"]
+    n_discovery = resolved["phases"]["discovery"]["candidates_per_generator"]
+    n_validation = resolved["phases"]["validation"]["candidates_per_generator"]
+    increase = _unpooled_mde(n_discovery, p0, stats, tests, "increase")
+    replication: dict = {"one_generator_flagged": None, "all_generators_flagged": None}
+    if increase is not None and p0 * (1.0 + increase) <= 1.0:
+        # Replication is one-sided, Holm-corrected across the flagged generators: alpha (1 flagged) .. alpha/tests.
+        replication = {
+            "one_generator_flagged": normal_power(n_validation, p0, increase, stats["alpha"], "greater"),
+            "all_generators_flagged": normal_power(n_validation, p0, increase, stats["alpha"] / tests, "greater"),
+        }
+    return {
+        "purpose": "planning only; the analysis uses exact tests and never reads these numbers",
+        "assumptions": {
+            "n_discovery": n_discovery,
+            "n_validation": n_validation,
+            "n_basis": "planned attempted candidates per phase, assuming all are unique (removed duplicates lower n)",
+            "p0": p0,
+            "alpha_family": stats["alpha"],
+            "tests": tests,
+            "alpha_per_test": stats["alpha"] / tests,
+            "discovery_test": "two-sided; Bonferroni alpha/tests, which equals Holm's first step (conservative)",
+            "power_target": stats["power"],
+            "approximation": "normal approximation to Binomial(n, p0); one rejection tail",
+        },
+        "discovery_mde_pooled": minimum_detectable_effect(
+            n_discovery, p0, stats["alpha"], stats["power"], tests
+        ).min_detectable_relative_effect,
+        "discovery_mde_increase_unpooled": increase,
+        "discovery_mde_decrease_unpooled": _unpooled_mde(n_discovery, p0, stats, tests, "decrease"),
+        "replication_power_at_discovery_increase_mde": replication,
+        "interpretation": [
+            MDE_INTERPRETATION,
+            "the power target applies to the discovery test alone; flagging AND replicating an effect at the MDE "
+            "has probability of about power_target x replication power",
+            "excluding effects of a given size needs a predeclared confidence-bound or equivalence analysis, "
+            "which this experiment does not include",
+            "the exact doubled-tail binomial test is discrete and slightly conservative; "
+            "statistics.inference.exact_binomial_power gives its exact power",
+        ],
     }
 
 
@@ -506,17 +629,32 @@ def describe_plan(plan: dict) -> str:
         f"Theoretical success probability p0 = {plan['target']['success_probability_exact']}"
         f" ({plan['theoretical_success_probability']:.6g})",
         f"Primary family size: {plan['primary_family_size']}   Total hashes planned: {plan['total_hashes_planned']:,}",
+        f"Economic reference (predeclared, exploratory screen only): {plan['economics']['reference_generator']}",
         "",
         "Generators:",
     ]
+    comparability = plan["economics"]["comparability"]
     for g in plan["generators"]:
         disc = g["power"]["discovery"]
         lines.append(
             f"  - {g['id']} [{g['type']}] {g['domain']['kind']} width={g['domain']['width_bytes']} "
             f"domain={_short_int(g['domain']['cardinality'])}; requested {g['requested']}; {g['dedup_method']}; "
             f"E[successes/discovery]={disc['expected_successes']:.1f}; "
-            f"MDE~{disc['min_detectable_relative_effect']:.1%}"
+            f"planning MDE ({disc['power_target']:.0%}-power target, discovery only)"
+            f"~{disc['min_detectable_relative_effect']:.1%}; "
+            f"economics: {comparability[g['id']]['status']}"
         )
+    sens = plan["sensitivity"]
+    increase, decrease = sens["discovery_mde_increase_unpooled"], sens["discovery_mde_decrease_unpooled"]
+    lines += [
+        "",
+        f"Sensitivity (planning only, normal approximation, alpha/test = {sens['assumptions']['alpha_per_test']:.3g}, "
+        f"power target {sens['assumptions']['power_target']}): MDE ~{sens['discovery_mde_pooled']:.2%} pooled"
+        + (f", ~{increase:.2%} for an increase" if increase is not None else "")
+        + (f", ~{decrease:.2%} for a decrease" if decrease is not None else "")
+        + ".",
+        "  The MDE is not an exclusion bound: a non-significant result does not rule out effects of this size.",
+    ]
     for warning in plan["warnings"]:
         lines.append(f"WARNING: {warning}")
     for error in plan["errors"]:

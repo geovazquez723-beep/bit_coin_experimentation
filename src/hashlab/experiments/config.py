@@ -35,11 +35,15 @@ DEFAULTS: dict = {
         "null_control_generator": None,
         "positive_control": {"enabled": False, "width": 8, "candidates": 200_000, "relative_lift": 0.25},
     },
+    # Predeclared economic reference (experiments/economics.py). None disables the economic screen.
+    "economics": {
+        "reference_generator": None,
+    },
 }
 
 ALLOWED_TOP = {
     "schema_version", "experiment", "engine", "target", "seeds", "phases",
-    "statistics", "execution", "controls", "generators",
+    "statistics", "execution", "controls", "generators", "economics",
 }
 
 
@@ -200,6 +204,11 @@ def resolve_config(raw: dict) -> dict:
         if p0 >= 1.0 or lift * p0 / (1.0 - p0) > 1.0:
             errors.append("controls.positive_control.relative_lift: too large for this target")
 
+    economics = _merge(DEFAULTS["economics"], raw.get("economics", {}), "economics", errors)
+    reference = economics["reference_generator"]
+    if reference is not None and reference not in {g["id"] for g in generators}:
+        errors.append("economics.reference_generator: must name one of the generators")
+
     if errors:
         raise ConfigError("\n".join(errors))
 
@@ -215,6 +224,7 @@ def resolve_config(raw: dict) -> dict:
         "execution": execution,
         "controls": controls,
         "generators": generators,
+        "economics": economics,
     }
 
 

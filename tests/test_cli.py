@@ -99,6 +99,7 @@ def test_tiny_run_seals_evidence_and_analyze_verifies(tmp_path: Path, tiny_confi
     analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
     assert analysis["positive_control"]["detected"] is True
     assert analysis["null_control"]["generator"] == "rand"
+    assert analysis["integrity"] == {"passed": True, "blocking": False, "problems": []}  # real evidence is consistent
 
     capsys.readouterr()
     assert main(["analyze", "--run-id", run_dir.name, "--results-dir", str(results)]) == 0

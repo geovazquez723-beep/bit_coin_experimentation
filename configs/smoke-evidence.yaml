@@ -1,0 +1,72 @@
+# HASHLAB evidence-pipeline SMOKE TEST. THIS IS NOT EXPERIMENT 001.
+#
+# Purpose: check that a run creates and seals an evidence directory, that the manifest
+# verifies, that results/analysis/report are written, that stored evidence can be
+# re-analyzed, and that tampering is refused. Instructions: docs/smoke-test.md.
+#
+# Its numbers have NO scientific meaning: tiny samples, an easy target (2 leading zero
+# bits) and a different seed. Always write it to its own directory:
+#   python -m hashlab.cli run --config configs/smoke-evidence.yaml --results-dir results-smoke
+# Run ids look like <UTC stamp>-expsmoke-evidence-<hex>; Experiment 001 ids contain "exp001".
+
+schema_version: 1
+
+experiment:
+  id: smoke-evidence
+  name: SMOKE-TEST-evidence-pipeline-NOT-experiment-001
+  specification: docs/smoke-test.md
+  description: >
+    Evidence-pipeline smoke test only. Not part of Experiment 001; its results must never be
+    reported, pooled or compared with Experiment 001 results.
+
+engine: sha256
+
+target:
+  leading_zero_bits: 2    # p0 = 1/4 so a few hundred candidates give non-trivial counts
+
+seeds:
+  master: 424242          # deliberately different from Experiment 001 (20261011)
+
+phases:
+  discovery:
+    candidates_per_generator: 300
+  validation:
+    candidates_per_generator: 300
+
+statistics:
+  alpha: 0.01
+  confidence_level: 0.99
+  correction: holm
+  power: 0.80
+  min_actionable_relative_effect: 0.01
+
+execution:
+  batch_size: 64
+  progress_every_batches: 1000
+
+controls:
+  null_control_generator: smoke-rand
+  positive_control:
+    enabled: true
+    width: 8
+    candidates: 3000
+    relative_lift: 1.0    # planted 2x success rate: should be detected even at this size
+
+economics:
+  reference_generator: smoke-seq
+
+generators:
+  - id: smoke-seq
+    type: sequential
+    width: 4
+    encoding: be-bytes
+  - id: smoke-gray
+    type: structured
+    width: 4
+    mode: gray
+  - id: smoke-uniform
+    type: uniform
+    width: 2               # 65,536-value domain: a few duplicate draws exercise dedup accounting
+  - id: smoke-rand
+    type: random_bytes
+    width: 8
