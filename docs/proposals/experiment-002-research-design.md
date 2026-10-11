@@ -1,10 +1,17 @@
 # Experiment 002: research design proposal
 
-- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002 and 003
-- **Revision:** 3. It supersedes revision 2.
-  - Revision 3 adopts **Option B for A2** (Architecture Review 003): 3,000 prefixes × nonces `0..9,999`,
-    1,500 prefixes per stage, `sha256`.
-  - It restricts A2's confirmatory margin claim to the sampled-prefix estimand (3.1, 3.2).
+- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002, 003 and 004
+- **Revision:** 4. It supersedes revision 3.
+  - Revision 3 adopted **Option B for A2** (3,000 prefixes × nonces `0..9,999`, 1,500 per stage, `sha256`).
+  - Revision 4 (Architecture Review 004):
+    - distinguishes the observed fraction, the model mean probability and the structural population
+      fraction throughout (3.1.1–3.1.2);
+    - makes A1 and A3's margin claims **design-based** (3.2.5);
+    - corrects and verifies the Hoeffding (1956) citation (3.2, A2);
+    - makes the difference claim non-directional;
+    - tightens the combined bound to ≤ 0.0083867 (3.5);
+    - specifies the A2 qualification test QA2 (3.7.1);
+    - defines the exact seed-commitment and registry procedure (3.8).
   - Changes are mapped in
     [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md) (section 8).
     The statistical basis is in
@@ -127,39 +134,62 @@ It is preferable to simply increasing the hash count because it changes **what c
 
 ### 3.1 Hypotheses and estimands
 
-Engine `sha256`, target `T = 2^248`, `p0 = 1/256`. For each primary arm `a ∈ {A1, A2, A3}`, the estimand is
-the **population-average success-rate ratio** `ρ_a = p̄_a / p0` over the population `U_a` defined in
-section 3.2:
+Engine `sha256`, target `T = 2^248`, `p0 = 1/256`.
 
-- For A1 and A3, `p̄_a` is the success fraction over the finite population `U_a`. The SRS design makes the
-  inference design-based (3.2.4).
-- For A2 there are **two estimands**, and they must not be confused:
-  - **`ρ_A2^cond`, the confirmatory estimand.** The average success probability over the 30,000,000 inputs
-    actually evaluated (the 3,000 sampled prefixes × nonces `0..9,999`), divided by `p0`. It is defined
-    under the input-level Bernoulli model: each input `i` succeeds independently with some probability
-    `p_i`.
-  - **`ρ̄_A2`, the population estimand.** The expected success fraction over a uniformly random 76-byte
-    prefix with nonces `0..9,999`, divided by `p0`. It is reported **only as a model-conditional,
-    non-confirmatory statement** (3.2, A2), because no procedure at this design size can give it a uniform
-    confidence guarantee.
+#### 3.1.1 Three distinct quantities (Architecture Review 004)
 
-**Research hypothesis under test (falsifiable).** *H_S: for at least one of A1–A3, `|ρ_a − 1| ≥ 0.02`.*
+The protocol distinguishes three quantities and never substitutes one for another. Write `E_a` for the set
+of evaluated inputs of arm `a` (30,000,000 per arm) and `Y_x ∈ {0, 1}` for the SHA-256 success indicator of
+input `x`.
+
+| Symbol | Quantity | Nature | Role |
+|---|---|---|---|
+| **`f_a`** | **Observed success fraction** of the evaluated inputs: `f_a = Σ_{x∈E_a} Y_x / |E_a|`; ratio `f_a / p0` | Known exactly once hashing is done. Deterministic given `E_a` and SHA-256 | The **test statistic**. Always reported. **Never the object of an inferential claim**: there is nothing to infer about a number that has been observed |
+| **`μ_a`** | **Model mean probability:** `μ_a = Σ_{x∈E_a} p_x / |E_a|`, where the statistical model treats `Y_x` as independent Bernoulli(`p_x`) with unknown, arbitrary `p_x ∈ [0, 1]`; ratio `ρ_a^mod = μ_a / p0` | A parameter of a **hypothetical** model. SHA-256 is deterministic; the model is HASHLAB's null model with heterogeneity allowed | Object of all **difference** claims (through the strict null `p_x = p0`) and of **A2's confirmatory margin** claim |
+| **`θ_a`** | **Structural population fraction:** `θ_a = Σ_{x∈U_a} Y_x / |U_a|` over the whole population `U_a`, most of which is never evaluated; ratio `θ_a / p0` | Deterministic, fixed, unknown | Object of **A1 and A3's confirmatory margin** claims (design-based, 3.2.4). For A2 (`θ_A2 = ρ̄_A2 · p0`) **non-confirmatory** only (3.2, A2) |
+
+#### 3.1.2 Which quantity each element addresses
+
+| Element | A1 | A2 | A3 |
+|---|---|---|---|
+| Difference null `H0_a` (D and V tests) | model, strict: `p_x = p0` for all `x ∈ U_a` | same | same |
+| `REP` / `UNREP` claim | "the strict model null is false for `U_a`"; **direction is a description of `f_a`**, not a claim | same | same |
+| Margin interval (99.667%) | for `θ_A1 / p0`, **design-based** (randomness = SRS sampler only; valid for the fixed, deterministic SHA-256) | for `ρ_A2^mod = μ_A2 / p0`, **model-based** (requires independence; any heterogeneity) | for `θ_A3 / p0`, **design-based** |
+| `WITHIN` / `BEYOND` claim | `|θ_A1/p0 − 1| < δ` / `≥ δ` | `|ρ_A2^mod − 1| < δ` / `≥ δ` | `|θ_A3/p0 − 1| < δ` / `≥ δ` |
+| H_S decision | about `θ_A1` | about `μ_A2` (evaluated inputs, under the model) | about `θ_A3` |
+| Population sentence | the claim **is** about the population `U_A1` | "under H-A2, `θ_A2` is also …": non-confirmatory | the claim **is** about `U_A3` |
+| `f_a` | reported | reported | reported |
+
+Two consequences:
+
+- A1 and A3 margin claims need **no model of SHA-256**. Their only assumption is that the sampler draws a
+  uniform SRS (ideal RNG).
+- A2's margin claim, and every difference claim, are statements **within the independent-Bernoulli model**.
+  They are only as good as that model's independence assumption, which is HASHLAB's null model and is never
+  claimed to be a theorem.
+
+**Research hypothesis under test (falsifiable).** *H_S: for at least one arm, the arm's confirmatory margin
+quantity differs from `p0` by at least 2% relative: `|θ_A1/p0 − 1| ≥ 0.02`, `|ρ_A2^mod − 1| ≥ 0.02` or
+`|θ_A3/p0 − 1| ≥ 0.02`.*
 
 Each arm has two predeclared analyses:
 
 | Analysis | Hypotheses | Data | Procedure |
 |---|---|---|---|
-| **Difference** (discovery) | `H0_a`: every input in `U_a` has success probability `p0` (the strict input-level null); `H1_a`: not so | Stage D | exact two-sided binomial; Holm across A1–A3 at **alpha_diff = 0.005** |
-| **Difference** (validation) | same null; one-sided in the discovery direction | Stage V, only for arms flagged in D | exact one-sided binomial; Holm across the flagged arms at **0.005** |
-| **Margin** | interval for `ρ_a` (`ρ_A2^cond` for A2), compared with `(1 − δ, 1 + δ)`, `δ = 0.02` | Stages D + V pooled | two-sided interval at level `1 − 2·(0.005/3)` = **99.667%**: Clopper–Pearson for A1 and A3; for A2 the hull of Clopper–Pearson and a cluster-level t interval (2,999 df; 3.2). Bonferroni across A1–A3 at **alpha_margin = 0.005** |
+| **Difference** (discovery) | `H0_a`: in the model, `p_x = p0` for every `x ∈ U_a` (strict); `H1_a`: not so | Stage D | exact two-sided binomial; Holm across A1–A3 at **alpha_diff = 0.005** |
+| **Difference** (validation) | same null; one-sided, in the direction observed in D | Stage V, only for arms flagged in D | exact one-sided binomial; Holm across the flagged arms at **0.005** |
+| **Margin** | interval for the arm's quantity (`θ_a / p0` for A1 and A3; `ρ_A2^mod` for A2), compared with `(1 − δ, 1 + δ)`, `δ = 0.02` | Stages D + V pooled | the decision regions of the two-sided 99.667% (`1 − 2·0.005/3`) Clopper–Pearson interval for A1 and A3; for A2, the hull of Clopper–Pearson and a cluster-level t interval (2,999 df; 3.2). Bonferroni across arms at **alpha_margin = 0.005** |
 
-For A2, the **difference** analysis tests the strict input-level null: every input has probability exactly
-`p0`. The **margin** analysis estimates an **average**. These are different questions:
+**Difference vs margin.**
 
-- If success probability varies between prefixes while the average equals 1, the strict null is false. The
-  difference test may then correctly flag A2 even though `ρ_A2^cond ≈ ρ̄_A2 ≈ 1`.
-- An A2 difference flag therefore means "not every input behaves like the null". It does **not** mean "the
-  average differs from `p0`". Its direction describes the evaluated inputs only.
+- The difference analysis tests the **strict** model null: every input has probability exactly `p0`.
+- The margin analysis bounds an **average** (`θ_a` or `μ_a`).
+- If success probability varies between inputs while the average equals `p0`, the strict null is false.
+  The difference test may then correctly flag the arm even though the average is null.
+- A difference flag therefore means "not every input behaves like Bernoulli(`p0`)". It does **not** mean
+  "the average differs from `p0`".
+- **Revision 4 change.** The difference claim is non-directional. Its direction only describes `f_a`. A
+  directional claim about `μ_a` is not covered by the error budget under heterogeneity (addendum 2.3).
 
 How H_S is decided for each arm (section 3.4 has the full matrix):
 
@@ -169,8 +199,8 @@ How H_S is decided for each arm (section 3.4 has the full matrix):
   investigation and independent replication (3.9). It never supports a claim of SHA-256 weakness.
 - **Not decided** otherwise.
 
-For A2, H_S is decided confirmatorily for `ρ_A2^cond`, the evaluated inputs. A statement about the prefix
-population `ρ̄_A2` is never confirmatory (3.2).
+For A2, H_S is decided confirmatorily for `ρ_A2^mod`, the model mean over the evaluated inputs, not for the
+observed `f_A2`. A statement about the prefix population `ρ̄_A2 = θ_A2 / p0` is never confirmatory (3.2).
 
 A class-average bound does **not** bound sub-populations. For example, A3's weight-≤3 inputs are 0.045% of
 A3 (3.2), so an effect confined to them would barely move `ρ_A3`.
@@ -223,7 +253,8 @@ of revision 2.
 
   | Level | Statement | Status |
   |---|---|---|
-  | Evaluated inputs (`ρ_A2^cond`) | A2 margin and difference labels | **Confirmatory.** Exact error control under the input-level Bernoulli model (below) |
+  | Observed fraction of the evaluated inputs (`f_A2`) | reported descriptively | **No inferential claim** |
+  | Model mean probability of the evaluated inputs (`ρ_A2^mod = μ_A2 / p0`) | A2 margin labels; A2 difference labels (strict model null) | **Confirmatory.** Error bound proven within the independent-Bernoulli model, for any heterogeneity (below) |
   | Prefix population (`ρ̄_A2`), uniformly random 76-byte prefixes, nonces `0..9,999`, `sha256`, 80 bytes | Generalization of a `WITHIN` or `BEYOND` result | **Model-conditional, not confirmatory.** Holds approximately only under assumption H-A2 (below), supported by simulation, not proof |
   | Other nonce ranges or encodings; structured prefixes such as real block headers; `sha256d`; 80-byte inputs in general | none | **Out of scope** |
 
@@ -242,24 +273,43 @@ of revision 2.
   - `WITHIN` requires **both** intervals inside `(0.98, 1.02)`. `BEYOND` requires **both** to lie entirely
     outside `[0.98, 1.02]`, on the same side.
   - Stages are pooled for the margin analysis. A per-stage analysis (1,499 df) is not used.
-- **Guarantee for the confirmatory estimand.** The hull's `WITHIN` and `BEYOND` events are subsets of the
-  corresponding Clopper–Pearson events. Under the input-level Bernoulli model, the pooled count is a sum of
-  independent, not necessarily identical, Bernoulli trials (Poisson-binomial).
-  - By Hoeffding (1956, Ann. Math. Statist. 27:713–721, Theorem 4), for any `c ≤ n·p̄ − 1`, the lower tail
-    `P(S ≤ c)` of such a sum is at most the binomial tail with the same mean; the upper tail is symmetric.
-  - The decision boundaries lie more than 1 count from the mean at the margin (for example `W_HI = 118,519`
-    against a mean of 119,531 at `ρ = 1.02`).
-  - Therefore P(false `WITHIN`) and P(false `BEYOND`) for `ρ_A2^cond` are **at most the exact binomial
-    values**, 0.0016629 and 0.0016632. This holds for **any** pattern of heterogeneity between prefixes. It is
-    a mathematical bound, given the model.
-- **No uniform guarantee for the population estimand** (proof by two-point argument; addendum 1.3).
+- **Guarantee for the confirmatory quantity `ρ_A2^mod`** (addendum 1.2(2) has the verification).
+  - The hull's `WITHIN` and `BEYOND` events are subsets of the corresponding Clopper–Pearson events.
+  - In the model, the pooled count `S` is a sum of `n = 3 × 10^7` independent Bernoulli(`p_x`) variables with
+    mean `n·μ_A2` (Poisson-binomial).
+  - **Theorem used:** Hoeffding, W. (1956), "On the distribution of the number of successes in independent
+    trials", *Ann. Math. Statist.* 27(3):713–721, doi:10.1214/aoms/1177728178. The result, as stated in the
+    paper's abstract: for integers `0 ≤ b ≤ n·p̄ ≤ c ≤ n`, `P(b ≤ S ≤ c)` attains its minimum over all
+    `(p_1, …, p_n)` with mean `p̄` when `p_1 = … = p_n = p̄` (that is, at Binomial(`n`, `p̄`)). Secondary
+    sources number it Theorem 5, a corollary of Theorem 4; revision 3 cited "Theorem 4", which is corrected
+    here. The full text is subscriber-only and was not accessed.
+  - **Derived one-sided tails:**
+    - with `c = n`: `P(S ≥ b) ≥ P(B ≥ b)` for `b ≤ n·p̄`, hence **`P(S ≤ d) ≤ P(B ≤ d)` for every integer
+      `d ≤ n·p̄ − 1`** (lower tail);
+    - with `b = 0`: `P(S ≤ c) ≥ P(B ≤ c)` for `c ≥ n·p̄`, hence **`P(S ≥ d) ≤ P(B ≥ d)` for every integer
+      `d ≥ n·p̄ + 1`** (upper tail).
+
+    The conditions matter: inside `n·p̄ − 1 < d < n·p̄ + 1` the inequalities can fail, by up to 0.43 in
+    small-n checks.
+  - **Conditions at the protocol's boundaries, checked:**
+    - `W_HI = 118,519 ≤ n·1.02·p0 − 1 = 119,530.25`, and `W_LO = 115,839 ≥ n·0.98·p0 + 1`;
+    - `B_HI = 120,546 ≥ n·1.02·p0 + 1`, and `B_LO = 113,851 ≤ n·0.98·p0 − 1`.
+
+    Binomial tails are monotone in `p̄`.
+  - Hence, for **any** heterogeneity:
+    - P(false `WITHIN`) ≤ P(B ≤ 118,519 | 1.02·p0) = **0.0016629** (0.0016556 on the low side);
+    - P(false `BEYOND`) ≤ **0.0016632** (0.0016553 on the low side), plus a negligible opposite-side term.
+  - This is a mathematical bound **within the independent-Bernoulli model**. It is verified numerically on
+    29,230 exact small-n cases and on heterogeneous mixtures at the protocol's actual boundaries
+    (addendum 1.2(2)).
+- **No uniform guarantee for the population estimand** (proof by two-point argument; addendum 1.2(4)).
   - A prefix population in which a fraction `π = 0.02/255 ≈ 7.8 × 10⁻⁵` of prefixes succeed on every nonce,
     and all others are exactly null, has `ρ̄_A2 = 1.02`.
   - With probability `(1 − π)^3000 = 0.790`, none of these prefixes is sampled. The data are then distributed
     exactly as under the null.
   - Hence **any** decision rule with P(`WITHIN` | null population) = `w` has P(`WITHIN`) ≥ `w − 0.210` under
     this population. For the proposed rule, `w = 0.9999`, so false `WITHIN` is at least 0.790.
-  - Simulation confirms this and shows the failure begins at moderate rarity (addendum 1.4):
+  - Simulation confirms this and shows the failure begins at moderate rarity (addendum 1.3):
     - false `WITHIN` 0.0041 at `π = 0.01` (independent cross-check 0.0038);
     - 0.050 at `π = 0.001`.
 - **Assumption H-A2 for population-level statements.** The deviation of per-prefix success rates from the
@@ -350,6 +400,30 @@ subsets that lie entirely in the low 32 bits. Unranking is a bijection:
   - Its uniformity rests on a pseudorandom-permutation assumption with no meaningful proven bound on small
     domains (2^28 for A3) when about 2^25 points are drawn.
   - It was 20 times slower in the prototype.
+
+#### 3.2.5 Design-based margin guarantee for A1 and A3 (revision 4)
+
+- **Setting.** For the fixed, deterministic SHA-256, let `K_a = Σ_{x∈U_a} Y_x`, so `θ_a = K_a / N_a`. The
+  pooled sample is an SRS of `n = 3 × 10^7` from `U_a`. The pooled count is therefore exactly
+  **Hypergeometric(`N_a`, `K_a`, `n`)**, whatever SHA-256 does. No model of the hash function is involved.
+- **Monotonicity** (elementary proof).
+  `P_{K+1}(X = k) / P_K(X = k) = (K + 1)(N − K − n + k) / ((K + 1 − k)(N − K))` increases in `k`. So the family
+  has a monotone likelihood ratio in `K`, and `P_K(X ≤ c)` decreases as `K` grows.
+- **Worst cases.**
+  - For `θ ≥ 1.02·p0`, every false claim (`WITHIN`, or `BEYOND` on the wrong side) lies inside
+    `{X ≤ W_HI}`, and is largest at `K*_hi = ⌈1.02·p0·N⌉`.
+  - For interior `θ`, a false `BEYOND`-high lies inside `{X ≥ B_HI}`, largest at `K*_hi − 1`.
+  - The low side is symmetric.
+  - Evaluated exactly (log-space sums):
+
+  | Arm | `N` | `K*_hi` (`θ/p0`) | sup P(false claim \| θ ≥ 1.02 p0) | sup P(false `BEYOND`-high \| interior θ) | low side | opposite-side term |
+  |---|---:|---:|---:|---:|---:|---:|
+  | A1 | 4,293,918,720 | 17,108,583 (1.02000004) | 0.0016085 | 0.0016086 | 0.0016012 / 0.0016011 | ≈ 10⁻²² |
+  | A3 | 82,068,263 | 326,991 (1.02000083) | 0.0001149 | 0.0001124 | 0.0001117 / 0.0001141 | ≈ 10⁻³⁴ |
+
+- **Result.** Per arm, P(false margin claim about `θ_a`) ≤ 0.0016086 (A1) and ≤ 0.0001149 (A3), for every
+  possible SHA-256 behaviour. The only assumption is that the sampler draws an exact SRS (ideal RNG; 3.2.4).
+  A3's much smaller value reflects the finite-population correction (sampling fraction 36.6%).
 
 #### Null and positive controls
 
@@ -452,8 +526,11 @@ Margin outcome:
 
 How to read the table:
 
-- **`REP` with `WITHIN` is not a contradiction.** It means the strict null `ρ = 1` was rejected **and**
-  `|ρ − 1| < 0.02`: a detectable deviation smaller than the margin. Both findings are reported. H_S is
+- **Quantities.** `REP` and `UNREP` refer to the strict model null (all arms). `WITHIN` and `BEYOND` refer to
+  `θ_a` for A1 and A3 and to `ρ_A2^mod` for A2 (3.1.2). Every label is reported together with the observed
+  ratio `f_a / p0`, as a description.
+- **`REP` with `WITHIN` is not a contradiction.** It means the strict null (every `p_x = p0`) was rejected
+  **and** the arm's average quantity is within 2% of `p0`: a detectable deviation smaller than the margin. Both findings are reported. H_S is
   falsified for that arm, yet the deviation still goes to artifact investigation and 002-R. If genuine, any
   replicated deviation would be of scientific interest.
 - **Discordant cells** (`BEYOND` without replication) are nearly impossible under any true `ρ`. At
@@ -466,9 +543,10 @@ How to read the table:
 - **A2 reading.** The same 9 cells apply, with two differences:
   - The difference outcome refers to the **strict input-level null**. `REP` means "not every evaluated input
     behaves like Bernoulli(`p0`)".
-  - The margin outcome refers to **`ρ_A2^cond`**, the evaluated inputs.
+  - The margin outcome refers to **`ρ_A2^mod`**: the model mean probability of the evaluated inputs, not their
+    observed fraction `f_A2`.
 
-  Every A2 label is reported with the qualifier `estimand: evaluated-inputs`. A population-level sentence may
+  Every A2 label is reported with the qualifier `estimand: model-mean-of-evaluated-inputs`. A population-level sentence may
   be added only in the form "under assumption H-A2, the prefix population average `ρ̄_A2` is also within ±2%"
   (or beyond it), and it is never part of the confirmatory result. A2 `REP` with `WITHIN` is consistent with
   between-prefix heterogeneity around an average near 1. It is reported as such and still goes to artifact
@@ -479,28 +557,33 @@ How to read the table:
 | Family | Size | Method | Budget |
 |---|---:|---|---|
 | Difference (discovery, then validation) | 3 | Holm two-sided in D; Holm one-sided in V among flagged | **0.005**. A false `REP` claim needs a false discovery, so P(any false `REP`) ≤ 0.005 under strong FWER control |
-| Margin (`WITHIN` / `BEYOND`) | 3 | Bonferroni: one two-sided 99.667% interval per arm | **0.005**. For any true `ρ_a`, at most one of a false `WITHIN` (`|ρ_a − 1| ≥ δ`) or a false `BEYOND` (`|ρ_a − 1| < δ`) is possible, each requiring a one-sided miss of probability ≤ 0.005/3. Total ≤ 0.005 |
-| **Combined primary claims** | | Bonferroni over the two families | **≤ 0.01**, under the conditions below |
+| Margin (`WITHIN` / `BEYOND`) | 3 | Bonferroni: one two-sided 99.667% interval per arm | **0.005** budgeted. Proven per-arm suprema: A1 0.0016086 (design-based), A2 0.0016632 (model-based), A3 0.0001149 (design-based), each plus ≤ 10⁻²². Sum ≤ **0.0033867** |
+| **Combined primary claims** | | union bound over the two families | **≤ 0.005 + 0.0033867 = 0.0083867 ≤ 0.01**, under the conditions below |
 | Secondary (leading-zero bits, first byte, last byte per arm and stage; A2 heterogeneity; A3 weight strata) | | Holm within the family | exploratory; never changes a label |
 | Controls | | individual thresholds (3.7) | gates or diagnostics, outside the primary budget |
 
 The 0.005 / 0.005 split is the Architect's provisional allocation (decision D4).
 
-**Conditions of the 0.01 guarantee** (formal argument: addendum section 2):
+**Conditions of the 0.01 guarantee** (formal argument: addendum section 2). The bound is a union bound in
+one joint probability space: the sampler's randomness, plus outcomes `Y_x` that are independent
+Bernoulli(`p_x`) with arbitrary `p_x`.
 
-- **Difference claims, all arms.** The exact binomial test is exact under the strict input-level null.
-  For A1 and A3 it is also conservative under the finite-population SRS model (exact hypergeometric check).
-- **A1 and A3 margin claims.** Exact Clopper–Pearson under the Bernoulli model. Conservative under the
-  finite-population SRS model: verified by exact hypergeometric computation at the boundary, plus
-  monotonicity in the population count. The SRS model treats the sampler's RNG as ideal.
-- **A2 margin claims about `ρ_A2^cond`.** Bounded by the exact binomial values for any between-prefix
-  heterogeneity, under the input-level independent-Bernoulli model (Hoeffding 1956). This is a mathematical
-  argument, given that model.
+- **Difference claims, all arms (model-based).** Under the strict null `H0_a`, each stage total is exactly
+  Binomial(15M, `p0`), so every test has its exact size, and Holm gives FWER ≤ 0.005 (0.0049599 at the
+  global null).
+- **A1 and A3 margin claims about `θ_a` (design-based).** Hold conditionally on every realization of the
+  `Y_x`, hence also in the joint space, and also **without any model** (3.2.5).
+- **A2 margin claims about `ρ_A2^mod` (model-based).** Bounded by the binomial values via Hoeffding (1956)
+  for any heterogeneity, given independence (3.2, A2).
+- **Model-free reading.** If SHA-256 is treated as a fixed function with no probability model, only the A1
+  and A3 margin claims keep a frequentist guarantee (≤ 0.0016086 + 0.0001149 combined). Difference claims
+  and A2 margin claims are then model statements and have no frequentist meaning.
 - **Excluded from the guarantee:**
-  - A2 statements about the prefix population `ρ̄_A2`. No uniform bound exists at J = 3,000 (two-point
-    argument). They hold approximately only under H-A2, on simulation evidence.
-  - Secondary tests, controls, Experiment 002-R, and any attempt beyond a single confirmatory attempt
-    (3.8).
+  - A2 statements about the prefix population `θ_A2` (no uniform bound exists; H-A2, simulation only);
+  - directional readings of `REP` (the direction describes `f_a` only);
+  - secondary tests and controls, including the A2 qualification test (3.7.1);
+  - Experiment 002-R;
+  - any attempt beyond a single confirmatory attempt (3.8).
 
 ### 3.6 Sample size and power
 
@@ -560,7 +643,7 @@ At the boundary `ρ = 1 ± 0.02`, P(`WITHIN`) = 0.00166 ≤ 0.005/3 = 0.001667. 
 equivalence decision is therefore controlled, as required.
 
 **A2 (Option B), recalculated.** Simulation evidence, not proof. Direct simulation with exact per-cluster
-Binomial(10⁴, `p_j`) counts and the full procedure. Full tables are in addendum 1.4.
+Binomial(10⁴, `p_j`) counts and the full procedure. Full tables are in addendum 1.3.
 
 - **Homogeneous prefixes** (no between-prefix variation).
   - The stage totals are exactly Binomial(15M), so difference power equals A1 and A3 exactly: discovery
@@ -585,7 +668,7 @@ Binomial(10⁴, `p_j`) counts and the full procedure. Full tables are in addendu
     variation, and for mixtures with prevalence ≥ 5%;
   - it is **0.0041** at 1% prevalence, **0.050** at 0.1%, and **0.74–0.79** at 0.01% and below;
   - false `BEYOND` at `ρ̄ = 1.0199 / 0.9801` is ≤ 0.0019 in every model.
-- **Errors about the confirmatory estimand `ρ_A2^cond`** stay at or below the proven bound in every model.
+- **Errors about the confirmatory estimand `ρ_A2^mod`** stay at or below the proven bound in every model.
 
 Positive controls (exact, one-sided alpha 0.001):
 
@@ -611,24 +694,95 @@ Expected successes: 58,594 per arm-stage, 117,188 per arm pooled, about 703,900 
 P2− requires a new negative-lift mode in the control engine. The current control supports positive lifts
 only.
 
+#### 3.7.1 A2 implementation-qualification test (QA2), separate from the confirmatory run (D13)
+
+**Purpose.** QA2 verifies, before the protocol is frozen, that the implemented A2 path detects planted
+effects and accepts a null exactly as designed:
+
+- prefix derivation and nonce enumeration;
+- per-cluster aggregation;
+- stage totals;
+- the hull rule on 2,999 df;
+- the 9-cell classification;
+- the dispersion test.
+
+It is an **engineering acceptance test, not a control of the confirmatory run**, and it contributes no
+confirmatory claim.
+
+**Design.** Separate experiment id `002-qual-a2`, separate configuration, own evidence directory under
+`results-qual/`. A2's exact geometry: 3,000 clusters × 10,000 nonces, 1,500 per stage, 80-byte inputs,
+`sha256`. Planted effects use the biased control engine, extended with per-prefix lifts.
+
+| Sub-test | Planted effect | Pass criterion (predeclared) | P(pass \| correct code) |
+|---|---|---|---:|
+| **QA2-0** null | none | margin `WITHIN` **and** difference not `REP` | 0.99992 (200,000 simulated replicates) |
+| **QA2-1** heterogeneous | 20% of prefixes (chosen by the qualification seed) at ρ = 1.25; mean +5% | `REP` (high) **and** `BEYOND` (high) **and** the dispersion test flags in both stages (χ² over 1,500 clusters, one-sided 0.001) | > 0.9999 (100,000 of 100,000) |
+| **QA2-2** calibration (not gating) | homogeneous +2% | reported only | `REP` 0.942; `WITHIN` 0.0016 |
+| **Recomputation check** | n/a | an independent script recomputes the D and V tests, Clopper–Pearson, the cluster t interval and the classification from the stored per-cluster counts, and must match **exactly** | deterministic |
+
+- **Cost:** 90M SHA-256 evaluations (3 × 30M, 80-byte), about 10–30 minutes. It does not count toward
+  Experiment 002's workload or evidence.
+- **Ordering:** QA2 runs **after G1 and before protocol freeze**, so before the confirmatory seed exists
+  (3.8, steps S1–S4). It therefore cannot reveal anything about the confirmatory data.
+- **Seeds:** QA2 uses its own master seed, derived as
+  `SHA-256("hashlab-exp002-qual-a2-v1|" + <commit of the qualification configuration>)`. It is fixed by the
+  committed qualification configuration and independent of the confirmatory seed.
+- **Repeat policy:** non-discretionary.
+  - A failure means a defect (P(false failure) ≈ 8 × 10⁻⁵). It must be diagnosed and fixed, and QA2 rerun on
+    the fixed code with the **same** qualification seed.
+  - Every QA2 run is entered in the registry (Q entries).
+  - The confirmatory attempt must use the **exact code commit that passed QA2**.
+- **No rerun opportunity for the confirmatory run.** QA2 is complete before the seed is revealed. After
+  attempt 1 starts, QA2 is rerun **only** as part of an F1 or F3 code amendment (3.8), where re-qualification
+  is mandatory. A QA2 result can never reclassify, invalidate or justify repeating a valid confirmatory
+  attempt.
+
 ### 3.8 Seeds, run attempts and retry policy (pre-registered)
 
-**Seeds.**
+**Seed commitment procedure** (revision 4). This defines the procedure only: **no execution seed has been
+generated**, and the beacon source is decision D5. The aim is that nobody, including the Director, can know
+the seed before the protocol and code are irrevocably fixed, so seeds cannot be screened in advance.
 
-- A single master seed is committed in the configuration, and therefore in the plan fingerprint, and in the
-  pre-registration record **before any attempt**.
-- Every sub-seed, permutation key and the A2 prefix key derive from it.
-- The confirmatory seed must never be used by a smoke run. Smoke runs use their own experiment id, their own
-  seed, at most 1% of the sample size, and `results-smoke/`.
-- How the seed is chosen is decision D5.
+| Step | Action | Recorded in |
+|---|---|---|
+| **S1. Freeze** | G1 passed and QA2 passed. The code is tagged as the release candidate. The confirmatory configuration is complete **except** `seeds.master: derived-from-beacon`. Compute the configuration SHA-256 and the seedless plan fingerprint (the plan with the seed field set to the placeholder) | pre-registration record |
+| **S2. Pre-registration commit `C_pre`** | Commit the pre-registration record: code commit and tag, configuration SHA-256, seedless plan fingerprint, A3 exclusion digest, QA2 evidence manifest hashes, the beacon specification (source, the **reveal round `R*`** as an explicit number, retrieval URL, verification method), and the derivation formula below | git commit `C_pre` |
+| **S3. External witness** | Before `R*` is published, `C_pre`'s commit hash is sent to the Architect, or pushed with Director approval. This establishes that the commitment predates the beacon value. `R*` must be at least 24 h after the witness time | the Architect's acknowledgement, quoted in the seed record |
+| **S4. Reveal and derive** | After `R*` is published: `master = int.from_bytes(SHA-256("hashlab-exp002-master-v1|" + C_pre + "|" + str(R*) + "|" + beacon_randomness_hex)[:8], "big")`. If `R*` is unavailable, the next published round is used, and this rule is fixed in `C_pre` | seed record |
+| **S5. Seed record commit `C_seed`** | Commit the beacon round, its randomness and signature (or the beacon's verification data), the derived master seed, the full plan fingerprint and the configuration SHA-256 with the seed inserted. Anyone can recompute S4 | git commit `C_seed` |
+| **S6. Attempt** | Registry entry `A1` committed (below), then `hashlab run` | registry |
 
-**Run registry.**
+Sub-seeds, permutation keys and the A2 prefix key derive from the master seed with the existing
+domain-separated `derive_seed`. Smoke runs (`S` entries) and QA2 (`Q` entries) use labels distinct from
+`hashlab-exp002-master-v1` and are fixed before `C_pre`. They can never equal or reveal the confirmatory
+seed.
 
-- A committed, append-only record, for example `docs/experiments/002-run-registry.md`.
-- Before every invocation of `hashlab run` with the Experiment 002 configuration, the Director adds an entry:
-  attempt number, UTC time, commit, configuration SHA-256, plan fingerprint.
-- After the attempt, the Director appends the run id, the failure class or `valid`, and the manifest hash.
-- No attempt is ever deleted, and no sealed evidence directory is ever deleted.
+**Attempt registry procedure.**
+
+- **File.** `docs/experiments/002-run-registry.md` is created in `C_pre`. It is append-only, and every change
+  is its own commit, so git history is the audit trail.
+- **Entry types:**
+  - `S` (smoke) and `Q` (qualification), allowed only before `C_pre`;
+  - `A` (confirmatory attempt), allowed only after `C_seed`, numbered `A1, A2, …` without gaps.
+- **Before each run:** commit a `started` entry with:
+  - entry id and UTC time;
+  - code commit;
+  - configuration SHA-256;
+  - full plan fingerprint;
+  - the exact command line.
+
+  The `started` entry's commit hash is passed to the harness and written into the run's `environment.json`.
+  This binds the evidence to the entry (implementation item).
+- **After each run:** commit a `result` entry with the run id, status, failure class (3.8) or `valid`, and the
+  manifest SHA-256.
+- **Completeness audit (at G4).** Every evidence directory whose configuration hash equals the confirmatory
+  configuration must appear in the registry, and every `A` entry must have a sealed evidence directory or a
+  recorded F1 crash.
+- **Determinism closes the remaining gap.** An unregistered private run would reproduce the registered
+  run's results exactly, because the seed and code are fixed. It could change nothing except by a code
+  change, and every code change after `C_pre` requires an amendment with Architect review of the diff and
+  re-qualification.
+- No entry is ever deleted, and no sealed evidence directory is ever deleted.
 
 **Determinism.**
 
@@ -722,6 +876,7 @@ exploratory. A confirmatory economic claim needs its own predeclared procedure, 
 | P1 (8 B) | 0.2M | 0.2M |
 | P2+, P2− (8 B): 2 × 15M | 30.0M | 30.0M |
 | **Total** | **180.2M** | **240.2M** |
+| *Separate, before freeze:* QA2 qualification (3 × 30M, 80 B) | *90.0M* | *180.0M* |
 
 Time estimates. Assumptions are stated for each line. **Prototype rates come from scratch code**, not
 production code, and must be re-measured in the G2 smoke run.
@@ -751,7 +906,7 @@ production code, and must be re-measured in the G2 smoke run.
 |---|---|---|---|
 | **G0** Design approval | Architect, then Director | Decisions in section 5 resolved; this document amended | No implementation |
 | **G1** Implementation acceptance | Architect review; Director runs tests | See the list below this table | Fix and re-review |
-| **G2** Pre-execution | Director | Smoke run passes and its throughput is reported. Dry-run plan shows m = 3, n = 15M per stage, the alpha allocation, the power tables, and the E and D audit results of 3.3. Pre-registration record and empty run registry committed. Clean tree; release tagged; written approval | No attempt |
+| **G2** Pre-execution | Director | Smoke run passes and its throughput is reported. **QA2 passes** on the release-candidate commit (3.7.1). Dry-run plan shows m = 3, n = 15M per stage, the alpha allocation, the power tables, and the E and D audit results of 3.3. Seed procedure S1–S5 completed: `C_pre` witnessed before `R*`, `C_seed` committed. Clean tree; release tagged; written approval | No attempt |
 | **G3** Run validity | Analysis (automatic) | Status complete; integrity passes; P1 detected; at least one P2 detected; neither P2 `WITHIN`; no replicated null-control deviation; audit results recorded and consistent with 3.3 | F2, F3 or F4, per section 3.8 |
 | **G4** Post-run decision | Architect and Director | See the outcomes below this table | |
 
@@ -804,7 +959,12 @@ schema_version: <TBD: 2>
 experiment: {id: "002", name: structure-class-margin, specification: docs/experiment-002.md}
 engine: sha256                                       # decided, Architecture Review 003
 target: {equivalent_leading_zero_bits: 8}            # T = 2^248, p0 = 1/256
-seeds: {master: <TBD: committed before attempt 1, decision D5>, rng: mt19937, prf: blake2b-keyed}
+seeds: {master: derived-from-beacon,                 # 3.8 S1-S5; NOT generated; beacon source = decision D5
+        derivation: "SHA-256('hashlab-exp002-master-v1|' + C_pre + '|' + R* + '|' + beacon_hex)[:8]",
+        rng: mt19937, prf: blake2b-keyed}
+quantities: {A1: theta (design-based), A2: model-mean (rho_mod), A3: theta (design-based),
+             all_arms_difference: strict-model-null, observed_fraction: reported-not-inferred}
+qualification: {config: separate (002-qual-a2), results_root: results-qual/, before: C_pre}   # 3.7.1
 
 arms:                                               # primary family, m = 3
   - id: A1-lowint-w8
@@ -815,7 +975,7 @@ arms:                                               # primary family, m = 3
     sampling: {method: two-stage-cluster, clusters: 3000, nonces_per_cluster: 10000, prefix_source: blake2b-keyed,
                nonce_assignment: same-block-all-clusters, enumeration: complete-ascending,
                stage_assignment: {discovery: clusters 0-1499, validation: clusters 1500-2999}}
-    analysis: {difference: strict-input-level-null, margin_estimand: evaluated-inputs (rho_cond),
+    analysis: {difference: strict-input-level-null, margin_estimand: model-mean-of-evaluated-inputs (rho_mod),
                margin_interval: hull(clopper-pearson, cluster-t-2999df),
                population_statement: model-conditional-H-A2, non-confirmatory}
   - id: A3-lowhw-w8
@@ -862,22 +1022,23 @@ economics: {screen: disabled, throughput: descriptive-only}
 
 ## 5. Decisions required from the Director or Architect
 
-| # | Decision | Engineer's recommendation |
-|---|---|---|
-| D1 | Primary direction: Option 2, with Option 3 deferred | Approve |
-| D2 | Margin `δ` | ±2%. At 30M pooled: P(`WITHIN`) 0.99991 at `ρ = 1`, 0.68 at `ρ = 1.01` |
-| D3 | Engine for A2 | **Decided (Architecture Review 003): `sha256`** |
-| D4 | Confirm the provisional alpha split, 0.005 difference + 0.005 margin (total 0.01) | Confirm |
-| D5 | How the master seed is chosen and committed (Director-chosen and committed, or a public randomness-beacon value published after the pre-registration commit) | Director-chosen and committed, plus the registry rules of 3.8 |
-| D6 | Population definitions | **A2 decided (Architecture Review 003):** 3,000 prefixes × nonces `0..9,999`, 1,500 per stage. A1 range and A3 definition (weight cap 6, Experiment 001 exclusion): as proposed |
-| D12 | Accept restricting A2's confirmatory margin claim to the evaluated inputs (`ρ_A2^cond`), with population statements model-conditional under H-A2 (3.2) | Accept. A uniform population guarantee is impossible at this design size |
-| D14 | A2 margin decision rule: keep the hull of Clopper–Pearson and cluster t (protects population statements; power falls under strong heterogeneity), or use Clopper–Pearson alone for the confirmatory `ρ_A2^cond` label (more power; population statements would then need a separate, non-confirmatory t interval) | Keep the hull, as currently specified. No rule change proposed |
-| D13 | Whether to add an A2-path positive control (a planted ±2% lift on clustered 80-byte inputs, about 15M extra hashes). N2 already exercises the A2 analysis path on null data | Optional. Recommended only if the A2 hull implementation is judged high-risk at G1 |
-| D7 | Execution environment (keep CPython 3.11.0 / OpenSSL 1.1.1q, or upgrade); the independent SHA-256 implementation for the verifier; whether to do a second-machine full rerun | Keep for the main run; use an independent implementation for the verifier; the second-machine rerun is optional |
-| D8 | Implementation scope: exact samplers (Algorithm S; Vitter's Algorithm D); ranking; N1 permutation and inverse index check; A2 cluster design and hull interval; margin rule and the 9-cell classification; negative-lift control; success recording and audit; blinding; read-only verifier; deterministic ordering; run-registry template; schema version 2; release `v0.3.0` | Approve as one reviewed change set |
-| D9 | Experiment 001 follow-ups: off-machine archive; update `docs/experiment-001.md` status; optional deterministic re-execution audit | Archive and update the docs |
-| D10 | Retry ceiling before escalation (3.8) | 3 attempts of classes F1–F3 |
-| D11 | n = 15M per arm per stage (raised from 13M to restore joint power under the 0.005 split) | Approve |
+| # | Decision | Status (Architecture Review 004) | Note |
+|---|---|---|---|
+| D1 | Primary direction: Option 2, with Option 3 deferred | Accepted by the Architect | |
+| D2 | Margin `δ` = ±2% | **Provisionally approved** (Director) | |
+| D3 | Engine for A2: `sha256` | Decided (Architecture Review 003) | |
+| D4 | Alpha split 0.005 difference + 0.005 margin | **Provisionally approved** | Proven usage is ≤ 0.0083867 (3.5) |
+| D5 | Seed procedure: the beacon source for steps S1–S5 (3.8), for example drand or the NIST Randomness Beacon; the reveal-round rule; the external witness for `C_pre` | **Open** | Recommendation: a public beacon, so seeds cannot be screened in advance. A Director-chosen seed would only prevent changes after commitment |
+| D6 | Population definitions | A2 decided (Architecture Review 003); A1 and A3 as proposed | |
+| D7 | Execution environment; independent verifier implementation; optional second-machine rerun | **Open** | |
+| D8 | Implementation scope, now also covering: QA2 and its per-prefix-lift control engine; binding the registry entry hash into `environment.json`; the seedless plan fingerprint | **Open** | |
+| D9 | Experiment 001 follow-ups (archive; status update; optional re-execution audit) | **Open** | |
+| D10 | Retry ceiling: 3 attempts of classes F1–F3 | **Provisionally approved** | |
+| D11 | n = 15M per arm per stage | **Provisionally approved** | |
+| D12 | A2 confirmatory scope restricted (now stated precisely: model mean `ρ_A2^mod`, 3.1) | **Provisionally approved**; Architect accepts in principle | |
+| D13 | A2-path positive control | **Provisionally approved**, realized as the separate qualification test QA2 (3.7.1), not as an in-run control | |
+| D14 | Keep the hull rule for A2 | **Provisionally approved** | |
+| D15 | Accept the Hoeffding (1956) citation as the basis of A2's model-based guarantee (full text not accessed; statement verified from the published abstract and numerically), **or** require the fallback with a self-contained proof: a Chernoff/MGF-based interval (addendum 1.2(6)), which is valid with an elementary proof but changes A2's decision rule (relative half-width about 1.04% instead of 0.86%; `WITHIN` power at ρ = 1 / 1.005 / 1.01 of 0.999 / 0.938 / 0.431 instead of 0.9999 / 0.986 / 0.673) | **Open (new)** | Recommendation: accept the citation; keep the fallback documented |
 
 Until these decisions are made, nothing in this proposal is implemented or executed.
 
@@ -889,12 +1050,20 @@ session scratch space, outside the repository:
 - **Power and margin tables:** implementation A, `hashlab.statistics.inference` at `v0.2.0`; implementation
   B, independent log-space binomial sums and bisection Clopper–Pearson; plus a normal-approximation
   cross-check.
-- **A2 (revision 3):** two independent simulation engines (addendum section 1.4):
+- **A2 (revision 3):** two independent simulation engines (addendum section 1.3):
   - a numpy direct simulation with exact per-cluster Binomial(10⁴, `p_j`) counts and the full decision
     procedure;
   - a pure-Python sufficient-statistic engine.
 
   Plus the exact two-point lower bound. The revision 2 Monte Carlo for 30 clusters is superseded.
+- **Revision 4:**
+  - Hoeffding tail-inequality verification: exact Poisson-binomial dynamic programme on 29,230 small-n
+    vectors, plus exact two-binomial convolutions at n = 3 × 10^7 at the protocol's boundaries;
+  - exact hypergeometric worst-case bounds and a monotonicity check for A1 and A3;
+  - QA2 operating characteristics with the exact per-cluster binomial engine;
+  - properties of the Chernoff fallback interval.
+
+  Details are in the addendum, sections 1.2 and 4.
 - **A3:**
   - cardinality by three methods plus brute-force analogs;
   - exact re-enumeration of the Experiment 001 8-byte candidates from the sealed configuration and seeds

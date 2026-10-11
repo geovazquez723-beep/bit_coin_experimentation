@@ -226,6 +226,9 @@ At the time of revision 2, all three were untracked. They were later committed a
 
 ## 8. Architecture Review 003 (Option B for A2), proposal revision 3
 
+> Historical record. Addendum section numbers in this section refer to addendum **revision 2**. Revision 3
+> renumbered them (section 9).
+
 **Disposition received:**
 
 - Option B approved for A2: 3,000 independently sampled 76-byte prefixes; nonces `0..9,999` per prefix;
@@ -259,3 +262,40 @@ At the time of revision 2, all three were untracked. They were later committed a
 are unchanged. The only substantive change is the **scope of A2's confirmatory margin claim**
 (evaluated-inputs estimand). It is submitted for acceptance as D12. N2's pseudo-cluster analysis adds no
 hashes and no primary claims.
+
+## 9. Architecture Review 004 (final protocol clarification), proposal revision 4
+
+**Disposition received:**
+
+- The Architect accepts the research direction, A2 Option B and the restricted A2 scope in principle.
+- The Director provisionally approves D2, D4, D10, D11, D12, D13 and D14, subject to the clarifications
+  below.
+- Documentation and offline verification only. No seed is selected.
+
+| # | Required work | Resolution | Where |
+|---|---|---|---|
+| 1 | Distinguish the observed fraction, the model mean probability and the unsampled population fraction | Three symbols, `f_a`, `μ_a` and `θ_a`, defined and used throughout. `f_a` is never the object of a claim | proposal 3.1.1; addendum 1.1 |
+| 2 | State which quantity each A1, A2 and A3 hypothesis, interval and classification addresses | Per-element mapping table. Difference claims: strict model null, all arms. Margin: `θ` (design-based) for A1 and A3; `μ_A2` (model-based) for A2 | proposal 3.1.2, 3.4; addendum 2.1 |
+| 3 | Verify Clopper–Pearson conservativeness under heterogeneity; theorem, conditions and one-sided tails; or an alternative | Theorem identified (Hoeffding 1956, the result stated in its abstract; revision 3's "Theorem 4" citation corrected). Both one-sided tails derived, with exact conditions (`d ≤ np − 1`, `d ≥ np + 1`), checked at every protocol boundary, and verified numerically (29,230 exact cases; protocol-scale mixtures). Full text not accessed. **Alternative:** a Chernoff interval with a self-contained proof (D15). **Additionally:** A1 and A3 no longer rely on the theorem; they are proven design-based by exact hypergeometric computation | proposal 3.2 (A2), 3.2.5; addendum 1.2 |
+| 4 | Recheck the combined 0.01 bound | ≤ 0.005 + 0.0033867 = **0.0083867**, in an explicit joint probability space. The model-free reading covers only A1 and A3. Conditions and exclusions listed | proposal 3.5; addendum 2 |
+| 5 | A2-path positive control as a separate qualification test | QA2 (`002-qual-a2`): pre-freeze; separate configuration, seed and evidence; predeclared pass criteria with P(pass \| correct code) of 0.99992 and > 0.9999; exact recomputation check; non-discretionary repeat policy | proposal 3.7.1; addendum 4 |
+| 6 | Exact seed-commitment and attempt-registry procedure, without generating a seed | Steps S1–S6: freeze; `C_pre`; external witness before beacon round `R*`; derivation formula; `C_seed`; registry-bound attempt. Registry entry types, binding of each entry into the evidence, and a completeness audit. **No seed generated** | proposal 3.8; addendum 5 |
+| 7 | Update the proposal and addendum; record changed conclusions and unresolved limitations | Proposal revision 4; addendum revision 3 with its changed-conclusions table (C1–C7) and status table (R1–R13) | addendum 0, 6 |
+
+**Changed conclusions** (addendum C1–C7):
+
+- A2's confirmatory quantity is the model mean `μ_A2`, not the observed fraction.
+- A1 and A3 claims are design-based, with bounds tightened to 0.0016086 and 0.0001149.
+- The Hoeffding citation is corrected.
+- `REP` is no longer directional; the earlier 4.1 × 10⁻⁶ direction bound assumed homogeneity.
+- The combined bound is now 0.0083867.
+- D13 is now a separate qualification test.
+- The seed procedure is specified.
+
+**Unresolved:**
+
+- D15: accept the citation, or adopt the Chernoff fallback, which would change A2's decision rule.
+- D5: the beacon source.
+- D7, D8, D9.
+- Independence (the model assumption) remains, by construction, the basis of every difference claim and of
+  A2's margin claim.
