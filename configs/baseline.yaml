@@ -1,0 +1,112 @@
+# HASHLAB Experiment 001: candidate structure vs hash success (baseline configuration)
+#
+# Pre-registered settings. Change them only BEFORE a run, and record why in
+# docs/experiment-001.md. `python -m hashlab.cli plan --config configs/baseline.yaml`
+# shows the resulting plan without hashing anything.
+
+schema_version: 1
+
+experiment:
+  id: "001"
+  name: candidate-structure-vs-hash-success
+  specification: docs/experiment-001.md
+  description: >
+    Tests whether structurally different candidate generators produce SHA-256 proof-of-work
+    success rates (and digest distributions) that differ from the uniform-random null.
+
+engine: sha256            # sha256 | sha256d
+
+target:
+  leading_zero_bits: 8    # success iff int(digest, big-endian) < 2**(256-8); p0 = 1/256
+  # Alternatives (use exactly one key):
+  # target_hex: "00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  # target_int: 452312848583266388373324160190187140051835877600158453279131187530910662656
+
+seeds:
+  master: 20261011        # all sub-seeds are derived from this (see seeds.json in each run)
+
+phases:
+  discovery:
+    candidates_per_generator: 500000
+  validation:              # disjoint from discovery; used only to replicate flagged effects
+    candidates_per_generator: 500000
+
+statistics:
+  alpha: 0.01                          # family-wise error rate per family
+  confidence_level: 0.99               # Clopper-Pearson intervals
+  correction: holm                     # holm | bonferroni
+  power: 0.80                          # planning only (minimum detectable effect)
+  min_actionable_relative_effect: 0.01 # need >= +1% throughput-adjusted success lift to be actionable
+
+execution:
+  batch_size: 10000                    # candidates held in memory at once (per batch)
+  max_tracked_candidates: 2000000      # cap for exact duplicate tracking (seeded generators)
+  record_successes: false              # true writes successful candidates to successes.jsonl
+  max_recorded_successes: 10000
+  dedup: auto                          # auto: set only where not unique by construction | always
+  progress_every_batches: 50
+
+controls:
+  null_control_generator: random-bytes-w8
+  positive_control:
+    enabled: true
+    width: 8
+    candidates: 200000
+    relative_lift: 0.25                # planted +25% success rate; must be detected
+
+generators:
+  # 1. Sequential fixed-width integer encodings
+  - id: seq-be-w8
+    type: sequential
+    width: 8
+    encoding: be-bytes                 # raw 8-byte big-endian integers 0, 1, 2, ...
+    start: 0
+  - id: seq-dec-w16
+    type: sequential
+    width: 16
+    encoding: ascii-decimal            # "0000000000000000", "0000000000000001", ... (character domain)
+    start: 0
+
+  # 2. Uniformly sampled fixed-width integers (with replacement; deduplicated)
+  - id: uniform-be-w8
+    type: uniform
+    width: 8
+    encoding: be-bytes
+  - id: uniform-dec-w16
+    type: uniform
+    width: 16
+    encoding: ascii-decimal
+
+  # 3. Repeated-character and repeated-byte patterns
+  - id: pattern-bytes-w8
+    type: patterned
+    width: 8
+    mode: repeated-bytes
+    max_period: 3
+  - id: pattern-chars-w16
+    type: patterned
+    width: 16
+    mode: repeated-chars
+    alphabet: printable-ascii
+    max_period: 4
+
+  # 4. Structured, deterministic sequences
+  - id: struct-gray-w8
+    type: structured
+    width: 8
+    mode: gray
+  - id: struct-stride-w8
+    type: structured
+    width: 8
+    mode: stride
+    stride: 11400714819323198485       # 0x9E3779B97F4A7C15 (odd; golden-ratio constant)
+    offset: 0
+  - id: struct-bitrev-w8
+    type: structured
+    width: 8
+    mode: bit-reversed
+
+  # 5. Random-looking fixed-width byte sequences (also the null control)
+  - id: random-bytes-w8
+    type: random_bytes
+    width: 8

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hashlab"
+version = "0.1.0"
+description = "Reproducible research harness for SHA-256 proof-of-work candidate-structure experiments."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary - HASHLAB internal research" }
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+hashlab = "hashlab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

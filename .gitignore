@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+build/
+dist/
+plan-preview.json
+
+# Evidence directories are large and read-only; how to retain them is an open question (see README).
+results/*
+!results/.gitkeep
