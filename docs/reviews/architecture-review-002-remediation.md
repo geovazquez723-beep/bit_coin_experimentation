@@ -399,3 +399,23 @@ The Review 005 edits and this finalization pass form one authorized documentatio
 `docs/experiment-002-design`. Verify the complete diff and staged inventory before committing; report the
 resulting commit hash separately (a commit cannot include its own hash). No other paths are included.
 Stop after the commit and verification summary for final Architect review.
+
+
+## 12. Architecture Review 013: A2 encoding approval and E1 prerequisites
+
+Review 011 authorizes implementation and bounded qualification, without confirmatory execution.
+Review 012 stopped E1 on interpreter failure and an undefined A2 byte contract. The Architect approved
+that contract exactly and independently verified all three KATs in Review 013.
+
+| Item | Disposition |
+|---|---|
+| Protocol identity | Proposal revision 8; A2 encoding hashlab-exp002-a2-encoding-v1. Future config/plan/pre-registration must bind both. |
+| Authoritative contract | [Proposal 3.2](../proposals/experiment-002-research-design.md#a2-deterministic-encoding-v1-architecture-review-013): exact labels, canonical decimal seed material, unchanged big-endian sub-seed extraction, LE64 eight-byte key, LE32 index/counter, 29-byte messages, BLAKE2b parameters, 76-byte extraction, fail-closed collision handling, stages/nonces and complete KATs. |
+| Compatibility | Fills unspecified A2 details; no conflicting committed A2 byte definition found. Original hashlab-seed-v1 and Experiment 001 generator conventions are preserved; no population, hypothesis, sample-size, target, alpha, margin or decision-rule changes. |
+| KAT acceptance | Architect independently verified all three approved vectors; copied verbatim. Review 013 checks transcription/lengths without running cryptographic calculations. Documentation reproduction snippet is not production implementation. |
+| Environment gate | Fresh Director PowerShell diagnostics pending. Approved interpreter must run and pass the 240-test baseline before E1. Python regressions NOT RUN in Review 013. |
+| Scope | Documentation only: proposal revision 8, addendum revision 6 and this record. No implementation, Experiment 002 hashing/qualification, execution seed/round, Experiment 001 modification, merge, push or tag. |
+
+Remaining operational requirements (beacon/client/witness verification, independent verifier and its
+approved audit format/seed provenance, archival and G1/QA2/G2) are unaffected. Encoding approval
+resolves the serialization blocker only. Stop after the documentation commit for Architect review.

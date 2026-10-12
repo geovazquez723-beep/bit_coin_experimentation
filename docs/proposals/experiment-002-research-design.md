@@ -1,13 +1,17 @@
 # Experiment 002: research design proposal
 
-- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002–008
-- **Revision:** 7 (Architecture Review 008; workload erratum and verifier accounting). It supersedes revision 6.
-  - Removes the obsolete QA2 workload row and separates statistical checks, candidate reconstruction
-    and sampled hashing costs (3.9, 3.12). Scientific design remains the accepted `a28c563` baseline.
+- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002–013
+- **Revision:** 8 (Architecture Review 013; approved A2 deterministic encoding v1). It supersedes revision 7.
+- **Protocol identity:** proposal revision 8; A2 encoding `hashlab-exp002-a2-encoding-v1` (3.2).
+  - Review 013 approves byte-exact A2 serialization, domain labels, key mapping and all three KATs.
+    The statistical design is unchanged from accepted commit `cac68c4`. E1 remains blocked pending
+    fresh Director diagnostics and the approved Python environment passing its 240-test baseline.
+  - Revision 7 (Review 008) removes the obsolete QA2 workload row and separates statistical checks,
+    candidate reconstruction and sampled hashing costs (3.9, 3.12). Scientific design remains the accepted `a28c563` baseline.
     Recovery instructions and pending audit-format decisions are in the Review 008 operational note.
-  - The Architect provisionally accepts Review 005 and approves the reduced QA2 design. This pass
-    confirms thresholds/FWER, execution-path coverage and operational blockers (addendum section 8).
-    Documentation finalization and a scoped commit are authorized; implementation and execution are not.
+  - Revision 6 (Review 006) records provisional acceptance of Review 005 and approval of reduced QA2,
+    confirming thresholds/FWER, execution-path coverage and operational blockers (addendum section 8).
+    That historical documentation pass did not authorize implementation or execution.
   - Revision 5 independently verifies the fixed A2 decision tails, corrects universal CP-coverage wording
     and outward FWER rounding, replaces 90M-hash QA2 with deterministic fixtures plus <=4,200 small-test
     hashes, and specifies drand pinning, non-discretionary outage handling, independent verification and
@@ -23,12 +27,16 @@
     - specifies the A2 qualification test QA2 (3.7.1);
     - defines the exact seed-commitment and registry procedure (3.8).
   - Changes are mapped in
-    [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md) (sections 8–11).
+    [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md) (sections 8–12).
     The statistical basis is in
     [experiment-002-protocol-readiness-addendum.md](../reviews/experiment-002-protocol-readiness-addendum.md).
-- **Status:** **PROPOSAL.** Research direction approved in principle. **Protocol freeze, implementation and
-  execution are not authorized.** No executable configuration exists, and no execution seed has been
-  selected. Nothing in this document changes the frozen `v0.2.0` release or the Experiment 001 evidence.
+- **Status:** **APPROVED DESIGN WITH A2 ENCODING AMENDMENT.** Review 011 authorizes implementation
+  and bounded qualification, but Reviews 012–013 block E1 until fresh Director diagnostics establish a
+  working approved interpreter and its 240-test regression baseline passes. Review 013 authorizes this
+  documentation-only amendment; no implementation or hashing occurs in this pass. **Confirmatory
+  execution is not authorized.** Protocol freeze and operational prerequisites remain pending. No
+  executable Experiment 002 configuration or execution seed exists. Nothing here changes the frozen
+  `v0.2.0` release or Experiment 001 evidence.
 - **Builds on:** [Experiment 001 scientific review](../reviews/experiment-001-scientific-review.md)
   (run `20261011T205056Z-exp001-fc1d75fc`).
 - **Governance:** the Architect approves the design. The Director approves and runs every execution. The
@@ -249,8 +257,11 @@ of revision 2.
   - Engine `sha256`, as decided in Architecture Review 003.
 - **Prefix sampling (stage 1):** **3,000 prefixes**, drawn independently and uniformly from `{0..255}^76`.
   - Prefix `j` (`j = 0..2,999`) is the first 76 bytes of
-    `BLAKE2b-512(key = K_A2, "hashlab-exp002-prefix" ‖ j ‖ 0) ‖ BLAKE2b-512(key = K_A2, … ‖ j ‖ 1)`.
-  - `K_A2` derives from the master seed. No seed has been selected.
+    `BLAKE2b-512(key = K_A2, ASCII("hashlab-exp002-prefix") ‖ LE32(j) ‖ LE32(0)) ‖
+    BLAKE2b-512(key = K_A2, ASCII("hashlab-exp002-prefix") ‖ LE32(j) ‖ LE32(1))`.
+  - `K_A2` derives from the master seed exactly as specified in
+    [A2 deterministic encoding v1](#a2-deterministic-encoding-v1-architecture-review-013).
+    No execution seed has been selected.
   - All 3,000 prefixes are stored in the evidence.
   - Pairwise distinctness is **verified deterministically** at plan time. A collision blocks execution; its
     probability is about `C(3000, 2) / 2^608 ≈ 2^-586`.
@@ -259,6 +270,180 @@ of revision 2.
 - **Clusters to stages:** clusters `j = 0..1,499` form Stage D and `j = 1,500..2,999` form Stage V. Each
   stage has 1,500 × 10,000 = 15,000,000 inputs; the arm has 30,000,000. Prefixes are i.i.d., so this fixed
   assignment is exchangeable with a random one.
+
+##### A2 deterministic encoding v1 (Architecture Review 013)
+
+**Encoding identity:** `hashlab-exp002-a2-encoding-v1`. The Architect approved this contract and
+independently verified its three known-answer vectors in Review 013. It completes previously
+unspecified serialization details; it does not replace the frozen HASHLAB seed-derivation algorithm.
+The protocol identity is proposal revision 8 together with this encoding identity. Future configuration,
+seedless/full plan fingerprints and pre-registration must bind both identities and the exact labels
+below; this documentation update does not create a configuration, precommitment, seed or round.
+
+**Integer serialization.** LE32(x) and LE64(x) mean exactly four and eight unsigned little-endian bytes,
+including zero padding. Reject out-of-range values, booleans and non-integers; never truncate or wrap.
+
+**Domain-separated key derivation.** Preserve the existing hashlab-seed-v1 algorithm. For master input
+m in [0, 2^64-1], use these exact ordered labels:
+
+| Purpose | Label 1 | Label 2 | Label 3 |
+|---|---|---|---|
+| Confirmatory A2 | experiment-002 | A2-prefix-nonce-w80 | prefix-key-v1 |
+| QA2 fixtures | experiment-002-qa2 | A2-prefix-nonce-w80 | prefix-key-v1 |
+| Documentation KATs | experiment-002-kat | A2-prefix-nonce-w80 | prefix-key-v1 |
+
+The derivation material is:
+
+~~~text
+hashlab-seed-v1|<m>|<label1>|<label2>|<label3>
+~~~
+
+Encode it as ASCII, without BOM, spaces, quotes, NUL or terminal newline. The master field is unsigned
+base-10: 0 for zero, otherwise digits without leading zeros or a sign. This explicitly preserves the
+existing decimal-text representation; it does not depend on an implicit language representation.
+
+~~~text
+H = SHA-256(derivation_material)
+s = unsigned_big_endian_integer(H[0:8])
+K_A2 = LE64(s)
+~~~
+
+K_A2 is exactly eight raw bytes, not hexadecimal text. Big-endian interpretation of H[0:8] is retained
+because the existing seed derivation requires it. Little-endian key serialization is newly specified
+for A2. This does not change Experiment 001's existing random-byte generator, which uses a different
+message layout and a 16-byte big-endian key (src/hashlab/candidates/random.py). The frozen derivation
+is defined in src/hashlab/candidates/base.py; no code in either file is changed by this amendment.
+
+**Prefix messages.** Define the exact 21-byte ASCII label:
+
+~~~text
+hashlab-exp002-prefix
+~~~
+
+Its hex encoding is:
+
+~~~text
+686173686c61622d6578703030322d707265666978
+~~~
+
+For prefix index j in [0,2999] and block counter c in {0,1}:
+
+~~~text
+M(j,c) = ASCII("hashlab-exp002-prefix") || LE32(j) || LE32(c)
+~~~
+
+Every message is exactly 29 bytes. There are no separators or terminators between fields. Use native
+keyed BLAKE2b-512, with a 64-byte digest, sequential mode, zero salt and personalization, and standard
+default parameters (fanout=1, depth=1, leaf_size=0, node_offset=0, node_depth=0, inner_size=0,
+last_node=false). This is keyed BLAKE2b, not HMAC or an unkeyed hash of a prepended key.
+See [RFC 7693](https://www.rfc-editor.org/rfc/rfc7693).
+
+~~~text
+B0(j) = BLAKE2b-512(key=K_A2, message=M(j,0))
+B1(j) = BLAKE2b-512(key=K_A2, message=M(j,1))
+prefix(j) = B0(j) || B1(j)[0:12]
+~~~
+
+Each prefix is exactly 76 bytes. Both blocks use the same key; there is no chaining or shared stream
+buffer between prefix indices. Slices refer to raw bytes, with a zero-based inclusive start and
+exclusive end; concatenation is in the order written.
+
+**Uniqueness and collisions.** Before candidate hashing, verify pairwise distinctness of all 3,000
+prefixes and retain them in index order. Any duplicate blocks execution. Do not redraw, skip an index,
+change a label, increment a retry counter or choose another seed. Record the failure for governance
+review (3.8); this contract does not authorize a replacement seed or retry.
+
+**Stages and candidates.**
+
+- D: prefix indices 0..1499; V: 1500..2999.
+- Within each cluster, enumerate nonce n=0..9999 in ascending order.
+- Candidate bytes are exactly prefix(j) || LE32(n), length 80 bytes.
+- The nonce serializer supports uint32 values, but the confirmatory generator rejects values outside
+  0..9999. Qualification boundary probes remain separate (3.7.1).
+- No additional random stage assignment is introduced.
+
+**Complete known-answer vectors.** These use the public constant m=0 solely as a documentation test
+input under the KAT domain. It is not an execution seed. The Architect independently verified all
+three vectors; they are fixed answers, not qualification results.
+
+Common derivation material:
+
+~~~text
+hashlab-seed-v1|0|experiment-002-kat|A2-prefix-nonce-w80|prefix-key-v1
+~~~
+
+Expected SHA-256:
+
+~~~text
+f9b8be271ab9570f3ecedb49067c032e886d04b10af85b817f6971c8639c1043
+~~~
+
+Expected sub-seed: 17994341386320172815. Expected eight-byte key: 0f57b91a27beb8f9.
+
+For the following messages, prepend the common 21-byte label above to each suffix:
+
+| Vector | j | Stage | Message-0 suffix (hex) | Message-1 suffix (hex) | Example nonce bytes (hex) |
+|---|---:|---|---|---|---|
+| 1 | 0 | D | 0000000000000000 | 0000000001000000 | nonce 1: 01000000 |
+| 2 | 1499 | D | db05000000000000 | db05000001000000 | nonce 256: 00010000 |
+| 3 | 1500 | V | dc05000000000000 | dc05000001000000 | nonce 9999: 0f270000 |
+
+Expected 76-byte prefixes follow. Concatenate the two hex lines in each block without whitespace.
+The corresponding complete 80-byte candidate is the decoded prefix followed by the four example
+nonce bytes in the table; no candidate digest is specified or evaluated by this amendment.
+
+Vector 1:
+
+~~~text
+063d1eb37b1f102e2a56bdb3a953bfe07ed19b3ccd3df65d66128ec6da2f41d2324136bf6da3495cbb3a95b080fcbc1690084cfa69a1511f80ffd68c6e138413
+bf91cf4d4b7c7c3821600caa
+~~~
+
+Vector 2:
+
+~~~text
+ca0ca6c86f2c0ba42b1bc47371b637236bebe9f939252692a8262671320a87273bfc147042516522ba06551cf59070032e33aff3ad423fab24cad2ec7efd2bc4
+1eb9de669aeebd5967ab0145
+~~~
+
+Vector 3:
+
+~~~text
+25c9fbc1593fea7dfc4d6fca5ce4cb842665f9e6a6966a8566f2c74bc344b65df1f38fff5428703b83809cfddbecbe3c5cebcdb46f3d9c6cd796defe38d72e62
+0d7355370310e8fe865fd9e8
+~~~
+
+Independent reproduction, using standard-library primitives and no HASHLAB imports (documentation
+reference only, not E1 implementation; not executed in Review 013):
+
+~~~python
+from hashlib import sha256, blake2b
+
+material = (
+    b"hashlab-seed-v1|0|experiment-002-kat|"
+    b"A2-prefix-nonce-w80|prefix-key-v1"
+)
+h = sha256(material).digest()
+s = int.from_bytes(h[:8], "big")
+key = s.to_bytes(8, "little")
+
+for j, nonce in ((0, 1), (1499, 256), (1500, 9999)):
+    blocks = []
+    for counter in (0, 1):
+        message = (
+            b"hashlab-exp002-prefix"
+            + j.to_bytes(4, "little")
+            + counter.to_bytes(4, "little")
+        )
+        blocks.append(blake2b(message, key=key, digest_size=64).digest())
+    prefix = blocks[0] + blocks[1][:12]
+    print(j, prefix.hex(), nonce.to_bytes(4, "little").hex())
+~~~
+
+Review 012 checked the six keyed blocks with OpenSSL 3.5.3 and an independent in-memory reference;
+Node and OpenSSL agreed on the derivation digest. Those were documentation calculations, not Python
+regression results or QA2 qualification. Review 013 copies the approved values without hashing.
+
 - **Applicability of conclusions:**
 
   | Level | Statement | Status |
@@ -1128,6 +1313,7 @@ G4 outcomes:
 ```text
 # OUTLINE ONLY -- NOT A VALID HASHLAB CONFIG -- DO NOT EXECUTE
 schema_version: <TBD: 2>
+protocol_identity: {proposal_revision: 8, a2_encoding: hashlab-exp002-a2-encoding-v1} # bind in plan/config
 experiment: {id: "002", name: structure-class-margin, specification: docs/experiment-002.md}
 engine: sha256                                       # decided, Architecture Review 003
 target: {equivalent_leading_zero_bits: 8}            # T = 2^248, p0 = 1/256
@@ -1146,7 +1332,8 @@ arms:                                               # primary family, m = 3
     population: {prefix_bytes: 76, prefix_distribution: uniform, nonce: {bytes: 4, order: little, block: [0, 10000)}}
     sampling: {method: two-stage-cluster, clusters: 3000, nonces_per_cluster: 10000, prefix_source: blake2b-keyed,
                nonce_assignment: same-block-all-clusters, enumeration: complete-ascending,
-               stage_assignment: {discovery: clusters 0-1499, validation: clusters 1500-2999}}
+               stage_assignment: {discovery: clusters 0-1499, validation: clusters 1500-2999},
+               encoding_contract: hashlab-exp002-a2-encoding-v1}  # byte-exact contract and KATs in 3.2
     analysis: {difference: strict-input-level-null, margin_estimand: model-mean-of-evaluated-inputs (rho_mod),
                margin_interval: hull(clopper-pearson, cluster-t-2999df),
                population_statement: model-conditional-H-A2, non-confirmatory}
