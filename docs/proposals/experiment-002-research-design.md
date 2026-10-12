@@ -1,7 +1,14 @@
 # Experiment 002: research design proposal
 
-- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002, 003 and 004
-- **Revision:** 4. It supersedes revision 3.
+- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002–006
+- **Revision:** 6 (Architecture Review 006; final documentation gate). It supersedes revision 5.
+  - The Architect provisionally accepts Review 005 and approves the reduced QA2 design. This pass
+    confirms thresholds/FWER, execution-path coverage and operational blockers (addendum section 8).
+    Documentation finalization and a scoped commit are authorized; implementation and execution are not.
+  - Revision 5 independently verifies the fixed A2 decision tails, corrects universal CP-coverage wording
+    and outward FWER rounding, replaces 90M-hash QA2 with deterministic fixtures plus <=4,200 small-test
+    hashes, and specifies drand pinning, non-discretionary outage handling, independent verification and
+    Experiment 001 archival. See addendum section 7 and remediation section 10.
   - Revision 3 adopted **Option B for A2** (3,000 prefixes × nonces `0..9,999`, 1,500 per stage, `sha256`).
   - Revision 4 (Architecture Review 004):
     - distinguishes the observed fraction, the model mean probability and the structural population
@@ -9,11 +16,11 @@
     - makes A1 and A3's margin claims **design-based** (3.2.5);
     - corrects and verifies the Hoeffding (1956) citation (3.2, A2);
     - makes the difference claim non-directional;
-    - tightens the combined bound to ≤ 0.0083867 (3.5);
+    - historically reported a combined bound of 0.0083867; revision 5 corrects outward rounding (3.5);
     - specifies the A2 qualification test QA2 (3.7.1);
     - defines the exact seed-commitment and registry procedure (3.8).
   - Changes are mapped in
-    [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md) (section 8).
+    [architecture-review-002-remediation.md](../reviews/architecture-review-002-remediation.md) (sections 8–11).
     The statistical basis is in
     [experiment-002-protocol-readiness-addendum.md](../reviews/experiment-002-protocol-readiness-addendum.md).
 - **Status:** **PROPOSAL.** Research direction approved in principle. **Protocol freeze, implementation and
@@ -154,7 +161,7 @@ input `x`.
 |---|---|---|---|
 | Difference null `H0_a` (D and V tests) | model, strict: `p_x = p0` for all `x ∈ U_a` | same | same |
 | `REP` / `UNREP` claim | "the strict model null is false for `U_a`"; **direction is a description of `f_a`**, not a claim | same | same |
-| Margin interval (99.667%) | for `θ_A1 / p0`, **design-based** (randomness = SRS sampler only; valid for the fixed, deterministic SHA-256) | for `ρ_A2^mod = μ_A2 / p0`, **model-based** (requires independence; any heterogeneity) | for `θ_A3 / p0`, **design-based** |
+| Margin decision interval (nominal 99.667%) | for `θ_A1 / p0`, **design-based** (randomness = SRS sampler only; valid for the fixed, deterministic SHA-256) | for `ρ_A2^mod = μ_A2 / p0`, **model-based** (requires independence; any heterogeneity) | for `θ_A3 / p0`, **design-based** |
 | `WITHIN` / `BEYOND` claim | `|θ_A1/p0 − 1| < δ` / `≥ δ` | `|ρ_A2^mod − 1| < δ` / `≥ δ` | `|θ_A3/p0 − 1| < δ` / `≥ δ` |
 | H_S decision | about `θ_A1` | about `μ_A2` (evaluated inputs, under the model) | about `θ_A3` |
 | Population sentence | the claim **is** about the population `U_A1` | "under H-A2, `θ_A2` is also …": non-confirmatory | the claim **is** about `U_A3` |
@@ -265,43 +272,34 @@ of revision 2.
   - Under prefix heterogeneity with average 1, the strict null is false and flags are **correct rejections of
     the strict null**. They are not evidence that the average differs (3.1).
 - **Margin analysis.**
-  - The decision interval is the **hull** (union) of two intervals:
-    - the pooled exact Clopper–Pearson interval at 99.667%;
+  - The decision interval is the **hull** (smallest containing interval) of two intervals:
+    - the pooled nominal 99.667% Clopper–Pearson component (fixed classification guarantees below;
+      universal heterogeneous confidence-set coverage is not claimed);
     - a cluster-level Student t interval on the 3,000 per-cluster ratios `r_j = k_j / (10^4 · p0)`, with
       **2,999 df** and `t_{0.998333, 2999} = 2.9376`. Cluster sizes are equal, so `mean(r_j)` equals the
       pooled ratio.
   - `WITHIN` requires **both** intervals inside `(0.98, 1.02)`. `BEYOND` requires **both** to lie entirely
     outside `[0.98, 1.02]`, on the same side.
   - Stages are pooled for the margin analysis. A per-stage analysis (1,499 df) is not used.
-- **Guarantee for the confirmatory quantity `ρ_A2^mod`** (addendum 1.2(2) has the verification).
-  - The hull's `WITHIN` and `BEYOND` events are subsets of the corresponding Clopper–Pearson events.
-  - In the model, the pooled count `S` is a sum of `n = 3 × 10^7` independent Bernoulli(`p_x`) variables with
-    mean `n·μ_A2` (Poisson-binomial).
-  - **Theorem used:** Hoeffding, W. (1956), "On the distribution of the number of successes in independent
-    trials", *Ann. Math. Statist.* 27(3):713–721, doi:10.1214/aoms/1177728178. The result, as stated in the
-    paper's abstract: for integers `0 ≤ b ≤ n·p̄ ≤ c ≤ n`, `P(b ≤ S ≤ c)` attains its minimum over all
-    `(p_1, …, p_n)` with mean `p̄` when `p_1 = … = p_n = p̄` (that is, at Binomial(`n`, `p̄`)). Secondary
-    sources number it Theorem 5, a corollary of Theorem 4; revision 3 cited "Theorem 4", which is corrected
-    here. The full text is subscriber-only and was not accessed.
-  - **Derived one-sided tails:**
-    - with `c = n`: `P(S ≥ b) ≥ P(B ≥ b)` for `b ≤ n·p̄`, hence **`P(S ≤ d) ≤ P(B ≤ d)` for every integer
-      `d ≤ n·p̄ − 1`** (lower tail);
-    - with `b = 0`: `P(S ≤ c) ≥ P(B ≤ c)` for `c ≥ n·p̄`, hence **`P(S ≥ d) ≤ P(B ≥ d)` for every integer
-      `d ≥ n·p̄ + 1`** (upper tail).
-
-    The conditions matter: inside `n·p̄ − 1 < d < n·p̄ + 1` the inequalities can fail, by up to 0.43 in
-    small-n checks.
-  - **Conditions at the protocol's boundaries, checked:**
-    - `W_HI = 118,519 ≤ n·1.02·p0 − 1 = 119,530.25`, and `W_LO = 115,839 ≥ n·0.98·p0 + 1`;
-    - `B_HI = 120,546 ≥ n·1.02·p0 + 1`, and `B_LO = 113,851 ≤ n·0.98·p0 − 1`.
-
-    Binomial tails are monotone in `p̄`.
-  - Hence, for **any** heterogeneity:
-    - P(false `WITHIN`) ≤ P(B ≤ 118,519 | 1.02·p0) = **0.0016629** (0.0016556 on the low side);
-    - P(false `BEYOND`) ≤ **0.0016632** (0.0016553 on the low side), plus a negligible opposite-side term.
-  - This is a mathematical bound **within the independent-Bernoulli model**. It is verified numerically on
-    29,230 exact small-n cases and on heterogeneous mixtures at the protocol's actual boundaries
-    (addendum 1.2(2)).
+- **Guarantee for the confirmatory classifications about rho_A2^mod** (addendum 7.1).
+  - Conditional on evaluated inputs, S is a sum of 30M independent Bernoulli(p_x) variables, with arbitrary
+    fixed probabilities. The CP/t hull classification events are subsets of the CP count events.
+  - The verified Hoeffding extremal theorem gives P(S<=d)<=P(B<=d) for d<=n mu-1 and
+    P(S>=d)<=P(B>=d) for d>=n mu+1, where B has the same mean. These are pointwise tail results under
+    specified conditions, not consequences of convex order. A readable primary source is
+    [Bancal and Sekatski, section II, equations (7)-(8)](https://arxiv.org/html/2212.12558).
+  - W_HI=118,519 <=119,530.25; W_LO=115,839 >=114,844.75;
+    B_HI=120,546 >=119,532.25; B_LO=113,851 <=114,842.75. All four conditions hold and remain valid
+    across the relevant false-decision parameter regions. Binomial monotonicity bounds the boundary tails.
+  - False WITHIN <=0.0016629396; false BEYOND <=0.0016632432 plus an opposite-side term below 1e-22.
+    Use the outward per-arm bound **0.001664**. The t hull cannot enlarge these events.
+  - **Coverage wording correction:** CP is a decision component. Its nominal one-sided endpoint
+    control can fail for heterogeneous Bernoulli means (addendum 7.1). The n=2 example does not disprove
+    full two-sided 1-2alpha coverage; that universal assertion is not established here. The guarantee
+    used here is for fixed WITHIN/BEYOND labels, not every reported CP endpoint.
+  - This review verifies a cited theorem and derives its application; it does not furnish a self-contained
+    proof of the extremal theorem. An elementary Chernoff alternative and its power are in addendum 7.3.
+    D15 proposes keeping the rule on this basis; final acceptance is the Architect's decision.
 - **No uniform guarantee for the population estimand** (proof by two-point argument; addendum 1.2(4)).
   - A prefix population in which a fraction `π = 0.02/255 ≈ 7.8 × 10⁻⁵` of prefixes succeed on every nonce,
     and all others are exactly null, has `ρ̄_A2 = 1.02`.
@@ -557,12 +555,13 @@ How to read the table:
 | Family | Size | Method | Budget |
 |---|---:|---|---|
 | Difference (discovery, then validation) | 3 | Holm two-sided in D; Holm one-sided in V among flagged | **0.005**. A false `REP` claim needs a false discovery, so P(any false `REP`) ≤ 0.005 under strong FWER control |
-| Margin (`WITHIN` / `BEYOND`) | 3 | Bonferroni: one two-sided 99.667% interval per arm | **0.005** budgeted. Proven per-arm suprema: A1 0.0016086 (design-based), A2 0.0016632 (model-based), A3 0.0001149 (design-based), each plus ≤ 10⁻²². Sum ≤ **0.0033867** |
-| **Combined primary claims** | | union bound over the two families | **≤ 0.005 + 0.0033867 = 0.0083867 ≤ 0.01**, under the conditions below |
+| Margin (`WITHIN` / `BEYOND`) | 3 | Bonferroni: one two-sided 99.667% interval per arm | **0.005** budgeted. Outward per-arm bounds including opposite-side tails: A1 <0.001609 (design-based), A2 <0.001664 (model-based), A3 <0.000115 (design-based). Sum <0.003388; reported as **<=0.003389** |
+| **Combined primary claims** | | union bound over the two families | **≤ 0.005 + 0.003389 = 0.008389 ≤ 0.01**, under the conditions below |
 | Secondary (leading-zero bits, first byte, last byte per arm and stage; A2 heterogeneity; A3 weight strata) | | Holm within the family | exploratory; never changes a label |
 | Controls | | individual thresholds (3.7) | gates or diagnostics, outside the primary budget |
 
-The 0.005 / 0.005 split is the Architect's provisional allocation (decision D4).
+For A2, the guarantee is for the specified classification events, not universal CP confidence-set
+coverage. The 0.005 / 0.005 split is the Architect's provisional allocation (decision D4).
 
 **Conditions of the 0.01 guarantee** (formal argument: addendum section 2). The bound is a union bound in
 one joint probability space: the sampler's randomness, plus outcomes `Y_x` that are independent
@@ -576,7 +575,7 @@ Bernoulli(`p_x`) with arbitrary `p_x`.
 - **A2 margin claims about `ρ_A2^mod` (model-based).** Bounded by the binomial values via Hoeffding (1956)
   for any heterogeneity, given independence (3.2, A2).
 - **Model-free reading.** If SHA-256 is treated as a fixed function with no probability model, only the A1
-  and A3 margin claims keep a frequentist guarantee (≤ 0.0016086 + 0.0001149 combined). Difference claims
+  and A3 margin claims keep a frequentist guarantee (outward bound <0.001724 combined). Difference claims
   and A2 margin claims are then model statements and have no frequentist meaning.
 - **Excluded from the guarantee:**
   - A2 statements about the prefix population `θ_A2` (no uniform bound exists; H-A2, simulation only);
@@ -590,9 +589,10 @@ Bernoulli(`p_x`) with arbitrary `p_x`.
 **Assumptions.**
 
 - Under the null, distinct inputs are independent Bernoulli(`p0`) trials.
-- A1 and A3 are finite-population SRS designs (sampling fractions 0.7% and 36.6%). The binomial model is
-  then **conservative** for the finite-population estimand, because hypergeometric variance is smaller by
-  `1 − f`. Size is preserved and power is understated.
+- A1 and A3 are finite-population SRS designs (sampling fractions 0.7% and 36.6%). The finite-population
+  variance has factor 1-f; variance reduction alone does not prove tail domination or uniform power
+  ordering. Fixed decision size is checked directly by hypergeometric tails (addendum 7.2). Binomial
+  power tables below are model planning calculations, not exact design-based population power.
 - A2 uses the cluster design of 3.2.
 - No duplicates.
 - Every power figure below is a planning quantity. The analysis never reads it.
@@ -694,48 +694,77 @@ Expected successes: 58,594 per arm-stage, 117,188 per arm pooled, about 703,900 
 P2− requires a new negative-lift mode in the control engine. The current control supports positive lifts
 only.
 
-#### 3.7.1 A2 implementation-qualification test (QA2), separate from the confirmatory run (D13)
+#### 3.7.1 A2 engineering qualification QA2 (design approved in Review 006; D13)
 
-**Purpose.** QA2 verifies, before the protocol is frozen, that the implemented A2 path detects planted
-effects and accepts a null exactly as designed:
+This specification replaces the 90M-hash QA2 proposal. **Do not implement or run it under this review.**
+QA2 is deterministic engineering qualification, completed after G1 and before C_pre. It makes no
+confirmatory claim and does not estimate power. There is no probabilistic pass criterion or seed search.
+The production geometry remains 3,000 clusters, 10,000 trials per cluster, 1,500 clusters per stage.
 
-- prefix derivation and nonce enumeration;
-- per-cluster aggregation;
-- stage totals;
-- the hull rule on 2,999 df;
-- the 9-cell classification;
-- the dispersion test.
+**Statistical fixtures (zero candidate hashes).** Commit explicit arrays of 3,000 integer cluster counts,
+stage assignments, geometry, alpha, expected intermediate statistics and expected final labels. Expected
+answers must come from an independent reference calculation, not snapshots of the implementation under
+qualification. Fixtures are synthetic counts, never represented as actual SHA-256 observations.
 
-It is an **engineering acceptance test, not a control of the confirmatory run**, and it contributes no
-confirmatory claim.
+| Fixture family | Required cases and assertions |
+|---|---|
+| Null | Balanced counts 39/40, pooled total 117,188, balanced D/V; no discovery, WITHIN, hence no REP |
+| Positive and negative | Balanced counts 42/43 (mean ratio about 1.08) and 35/36 (about 0.91); REP with descriptive high/low direction, BEYOND on the corresponding side |
+| Heterogeneous | Same pooled total and D/V totals as null, but 2,250 zero counts and 750 counts 156/157, distributed in both stages; CP WITHIN, t not WITHIN, hull inconclusive. Equal totals must not erase cluster variance. Also concentrated positive/negative fixtures |
+| Boundary | Each CP total 113,851; 115,839; 118,519; 120,546, and each adjacent integer. Distribute evenly to isolate CP; separately vary cluster dispersion at fixed totals to cross the t boundary. Exact endpoint equality is inconclusive for strict WITHIN/BEYOND interval comparisons |
+| Difference boundaries | Discovery two-sided p-value and each validation Holm level (1, 2, 3 flagged arms): critical count and adjacent integers, both directions; Holm ordering and tied p-values across three arms |
+| Contradictory | Significant D-high / V-low, D-low / V-high, D-only, V-only, REP with WITHIN, and CP/t disagreement. Cover all nine difference-by-margin cells with independently derived labels; contradictory directions cannot produce REP |
+| Degenerate / invalid | All-zero and all-10,000 counts; zero cluster variance (t interval collapses to the mean); missing/duplicate cluster ids, wrong stages, unequal geometry, fractional/negative/out-of-range counts and total mismatches must fail validation |
 
-**Design.** Separate experiment id `002-qual-a2`, separate configuration, own evidence directory under
-`results-qual/`. A2's exact geometry: 3,000 clusters × 10,000 nonces, 1,500 per stage, 80-byte inputs,
-`sha256`. Planted effects use the biased control engine, extended with per-prefix lifts.
+Fixture generation may solve for suitable integer arrays offline before qualification; commit the final
+arrays and reference results before testing production code. Include t-boundary bracketing fixtures with
+reference endpoints on either side; do not silently round endpoints into equality. Ties use the exact
+protocol comparison. Test byte-order and stage-boundary errors explicitly. Include null and concentrated-cluster cases
+for the secondary dispersion path; independently verify its predeclared statistic, df and p-value.
 
-| Sub-test | Planted effect | Pass criterion (predeclared) | P(pass \| correct code) |
-|---|---|---|---:|
-| **QA2-0** null | none | margin `WITHIN` **and** difference not `REP` | 0.99992 (200,000 simulated replicates) |
-| **QA2-1** heterogeneous | 20% of prefixes (chosen by the qualification seed) at ρ = 1.25; mean +5% | `REP` (high) **and** `BEYOND` (high) **and** the dispersion test flags in both stages (χ² over 1,500 clusters, one-sided 0.001) | > 0.9999 (100,000 of 100,000) |
-| **QA2-2** calibration (not gating) | homogeneous +2% | reported only | `REP` 0.942; `WITHIN` 0.0016 |
-| **Recomputation check** | n/a | an independent script recomputes the D and V tests, Clopper–Pearson, the cluster t interval and the classification from the stored per-cluster counts, and must match **exactly** | deterministic |
+**Independent recomputation.** A separately authored verifier must read the fixture/evidence counts,
+without importing HASHLAB inference, aggregation or classification code. Recompute stage sums, pooled
+sum, sum of squares, cluster mean/variance, t interval (2,999 df), CP endpoints, exact binomial tests,
+Holm decisions, hull endpoints, per-stage secondary dispersion statistics/df/p-values, and all nine labels. Counts, ordering, directions and labels must match
+exactly. Numerical agreement: absolute error <= 1e-10 for p-values and ratio endpoints; additionally
+compare discrete critical counts against high-precision references. If numerical uncertainty straddles a
+cutoff, qualification fails pending a higher-precision calculation; tolerance cannot excuse a label error.
 
-- **Cost:** 90M SHA-256 evaluations (3 × 30M, 80-byte), about 10–30 minutes. It does not count toward
-  Experiment 002's workload or evidence.
-- **Ordering:** QA2 runs **after G1 and before protocol freeze**, so before the confirmatory seed exists
-  (3.8, steps S1–S4). It therefore cannot reveal anything about the confirmatory data.
-- **Seeds:** QA2 uses its own master seed, derived as
-  `SHA-256("hashlab-exp002-qual-a2-v1|" + <commit of the qualification configuration>)`. It is fixed by the
-  committed qualification configuration and independent of the confirmatory seed.
-- **Repeat policy:** non-discretionary.
-  - A failure means a defect (P(false failure) ≈ 8 × 10⁻⁵). It must be diagnosed and fixed, and QA2 rerun on
-    the fixed code with the **same** qualification seed.
-  - Every QA2 run is entered in the registry (Q entries).
-  - The confirmatory attempt must use the **exact code commit that passed QA2**.
-- **No rerun opportunity for the confirmatory run.** QA2 is complete before the seed is revealed. After
-  attempt 1 starts, QA2 is rerun **only** as part of an F1 or F3 code amendment (3.8), where re-qualification
-  is mandatory. A QA2 result can never reclassify, invalidate or justify repeating a valid confirmatory
-  attempt.
+**Small hashing integration test.** Fixed, visibly non-confirmatory fixture key; 8 distinct 76-byte
+prefixes, nonces 0..255, 4 prefixes per stage: **2,048 candidate SHA-256 evaluations**. Use actual candidate
+generation, 80-byte encoding, SHA-256, strict digest < 2^248, cluster/stage aggregation, success recording,
+serialization, sealing and read-only verification. A separate implementation checks every candidate and
+digest (another 2,048 evaluations). Include known-answer SHA-256 vectors, nonce endian checks at
+0, 1, 255, 256, 9,999 and 2^32-1, and reject nonce 2^32. Do not enlarge this test to obtain a statistical
+outcome; it has no margin or power acceptance criterion. Full geometry is exercised by synthetic fixtures.
+Budget <= 4,200 candidate/known-answer SHA-256 evaluations plus small file-integrity hashes.
+
+**Complete-path requirement (Review 006).** Use the same production orchestration/entry point and
+plan/configuration validation, generator, engine, accounting, evidence serializer/sealer and read-only
+verifier paths. Only geometry and non-confirmatory fixture identity differ. Bind the resolved
+configuration, plan, environment and qualification Q-entry to the evidence. A separate miniature harness
+that bypasses those production paths cannot pass QA2. Synthetic fixtures enter the statistical path via
+a documented test adapter and cover all nine cells at full geometry; they cannot replace the hashing
+integration test. Include strict target-comparison probes at digest integers 0, T-1, T, T+1 and 2^256-1
+without searching for matching candidate hashes. The 4,096 main/independent evaluations leave 104 for
+known-answer/boundary probes and any additional candidate rehashes; itemize and enforce the total cap.
+Malformed/tampered evidence must fail validation before unnecessary candidate rehashing. This confirms
+coverage in the specification, not successful qualification or production-scale performance.
+
+**Tamper tests and pass/fail.** Mutate copies only: a byte in a candidate/digest/count, truncate a file,
+remove/duplicate a cluster, change stage mapping, add an unlisted file, change manifest metadata, and
+rewrite both a payload and its local manifest. Each must be rejected by integrity/consistency checks;
+the last case must be rejected against an externally pinned manifest digest. Original fixtures remain
+unchanged. PASS requires every reference label and integer statistic to match, all numerical tolerances
+to pass, every digest/encoding to match, and every invalid/tamper case to fail closed. Any failure blocks
+qualification. A defect is diagnosed and corrected; repeat the same fixtures, retain all Q entries and
+reports. No randomized retry-until-pass rule. After an attempt begins, requalification is allowed only
+under the existing amendment policy and cannot justify repeating a valid attempt.
+
+**Power is separate.** Analytical tails and explicitly modelled power calculations belong in the
+statistical review (addendum 7), never in the QA2 pass gate. Historical QA2 simulations are not acceptance
+probabilities for this deterministic replacement. No per-prefix biased hashing engine is required solely
+for QA2. Existing confirmatory controls P1/P2/N1/N2 remain as proposed.
 
 ### 3.8 Seeds, run attempts and retry policy (pre-registered)
 
@@ -748,21 +777,23 @@ the seed before the protocol and code are irrevocably fixed, so seeds cannot be 
 | **S1. Freeze** | G1 passed and QA2 passed. The code is tagged as the release candidate. The confirmatory configuration is complete **except** `seeds.master: derived-from-beacon`. Compute the configuration SHA-256 and the seedless plan fingerprint (the plan with the seed field set to the placeholder) | pre-registration record |
 | **S2. Pre-registration commit `C_pre`** | Commit the pre-registration record: code commit and tag, configuration SHA-256, seedless plan fingerprint, A3 exclusion digest, QA2 evidence manifest hashes, the beacon specification (source, the **reveal round `R*`** as an explicit number, retrieval URL, verification method), and the derivation formula below | git commit `C_pre` |
 | **S3. External witness** | Before `R*` is published, `C_pre`'s commit hash is sent to the Architect, or pushed with Director approval. This establishes that the commitment predates the beacon value. `R*` must be at least 24 h after the witness time | the Architect's acknowledgement, quoted in the seed record |
-| **S4. Reveal and derive** | After `R*` is published: `master = int.from_bytes(SHA-256("hashlab-exp002-master-v1|" + C_pre + "|" + str(R*) + "|" + beacon_randomness_hex)[:8], "big")`. If `R*` is unavailable, the next published round is used, and this rule is fixed in `C_pre` | seed record |
+| **S4. Reveal and derive** | After `R*` is published: `master = int.from_bytes(SHA-256("hashlab-exp002-master-v1|" + C_pre + "|" + str(R*) + "|" + beacon_randomness_hex)[:8], "big")`. If `R*` is unavailable, wait for that exact round; only transport fallback is allowed (3.8.1) | seed record |
 | **S5. Seed record commit `C_seed`** | Commit the beacon round, its randomness and signature (or the beacon's verification data), the derived master seed, the full plan fingerprint and the configuration SHA-256 with the seed inserted. Anyone can recompute S4 | git commit `C_seed` |
 | **S6. Attempt** | Registry entry `A1` committed (below), then `hashlab run` | registry |
 
 Sub-seeds, permutation keys and the A2 prefix key derive from the master seed with the existing
 domain-separated `derive_seed`. Smoke runs (`S` entries) and QA2 (`Q` entries) use labels distinct from
-`hashlab-exp002-master-v1` and are fixed before `C_pre`. They can never equal or reveal the confirmatory
-seed.
+`hashlab-exp002-master-v1` and are fixed before `C_pre`. Their labels cannot select the confirmatory stream; distinct labels do not mathematically guarantee
+unequal finite seed values. QA2 no longer needs random qualification draws.
 
 **Attempt registry procedure.**
 
-- **File.** `docs/experiments/002-run-registry.md` is created in `C_pre`. It is append-only, and every change
-  is its own commit, so git history is the audit trail.
+- **File.** `docs/experiments/002-run-registry.md` is initialized before the first smoke/qualification
+  entry; C_pre binds its existing history/tip. It is append-only, and every change is its own commit,
+  so initial S/Q entries precede C_pre and git history is the audit trail.
 - **Entry types:**
-  - `S` (smoke) and `Q` (qualification), allowed only before `C_pre`;
+  - `S` (smoke) and initial `Q` (qualification), allowed only before `C_pre`; amendment requalification Q
+    entries are allowed later only when explicitly required by an approved F1/F3 amendment;
   - `A` (confirmatory attempt), allowed only after `C_seed`, numbered `A1, A2, …` without gaps.
 - **Before each run:** commit a `started` entry with:
   - entry id and UTC time;
@@ -819,6 +850,121 @@ seed.
   - a complete registry;
   - retained evidence for every attempt;
   - a final report that lists every attempt and its class.
+
+#### 3.8.1 Proposed beacon pin and deterministic fallback (D5; review required)
+
+Use drand **mainnet quicknet**, not quicknet-t or an automatically selected default chain. The
+[official quicknet announcement](https://docs.drand.love/blog/2023/10/16/quicknet-is-live/)
+and [protocol specification](https://docs.drand.love/docs/specification/) were checked on 2026-10-11.
+Pin the following tuple in C_pre:
+
+- chain hash: 52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971;
+- scheme: bls-unchained-g1-rfc9380; beacon id: quicknet;
+- period: 3 seconds; genesis Unix time: 1692803367;
+- public key (96-byte G2, lowercase hex):
+  83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bcb5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a.
+
+**Verification status:** this tuple matches official published documentation. The live chain /info
+endpoint could not be retrieved in this review. Current service availability and agreement of live
+/info with this pin **require confirmation before freeze**. No public round value was retrieved and
+no execution seed was derived. Archive the exact /info bytes and independently verify the chain hash
+from the pinned information, rather than trusting a relay's self-asserted hash.
+
+Use a reviewed, version-pinned client supporting the exact RFC9380 scheme, with verification enabled
+and chain hash/public key pinned. The [official client](https://github.com/drand/drand-client) and
+[scheme implementation](https://github.com/drand/drand/blob/master/crypto/schemes.go) are starting
+points; an immutable revision, dependencies and successful historical verification vectors must be
+pinned before freeze. Validate the requested round, signature encoding/subgroup membership, scheme-specific
+BLS signature over SHA-256(uint64-big-endian(round)) (48-byte G1 signature, RFC9380 G1 domain) and randomness=SHA-256(decoded signature). Quicknet is unchained:
+previous_signature is not a trust anchor. Checking randomness against signature alone is insufficient.
+Reject wrong chain, wrong round, bad signature or malformed randomness; archive raw responses and checks.
+
+**Witness and round selection.** C_pre names one explicit future positive integer R* and its scheduled
+time genesis+(R*-1)*3. An independent timestamped witness must acknowledge the full C_pre hash at least
+24 hours before that time. C_pre binds code, complete seedless configuration, QA2 references, derivation,
+chain pin and outage rule; the witness retains the record off-machine. If the witness deadline is missed,
+that commitment is ineligible: halt and record the failure, rather than opportunistically selecting a
+later value under it. A replacement precommitment requires Architect review and full disclosure.
+
+**Byte-exact derivation (preserves S4 v1).** Hash UTF-8/ASCII bytes, no BOM, spaces or terminal newline:
+
+    hashlab-exp002-master-v1|<C_pre>|<R*>|<randomness_hex>
+
+C_pre is the full lowercase 40-character git commit id (current repository object format); R* is unsigned
+base-10 with no leading zeros; randomness_hex is exactly 64 lowercase hex characters from the verified
+32-byte randomness. SHA-256 returns 32 bytes; take the first eight **raw bytes**, interpret unsigned
+big-endian (0..2^64-1). Do not slice hex characters or reduce modulo a smaller range. The seedless
+configuration must preserve this uint64 exactly; test JSON/JavaScript precision loss above 2^53 in
+qualification. Sub-seeds use the existing frozen domain-separated derive_seed specification. Other git
+object formats need a reviewed derivation amendment. C_pre does not contain its own hash: the later seed
+record names it. No execution seed is generated by this document.
+
+**Outage/fallback rule.** Replace the former next-published-round policy. The target remains R* forever.
+Query https://api.drand.sh/<chain-hash>/public/<R*>; alternate transport is
+https://api2.drand.sh/<chain-hash>/public/<R*> (availability checked before freeze). A verified cached
+response for exactly the same round is also acceptable. Retry these fixed relays in order; logging
+failure and delay never changes the round, chain, code, derivation or seed. Relay disagreement or a
+verification error halts derivation for independent investigation. If unavailable, wait indefinitely,
+recording an outage after 24 h; there is **no alternate round or alternate beacon**. Permanent loss
+leaves this experiment unexecuted. A replacement is a separately approved experiment with disclosure
+of this abandoned commitment, not an F1-F3 retry. This policy trades liveness for freedom from selective
+round choice. Anyone may supply the uniquely verifying R* response; nobody may select a replacement
+value based on observed candidate results or seed preferences.
+
+#### 3.8.2 Minimum independent verifier (D7; specification only)
+
+Before freeze, appoint a reviewer/author independent of the main implementation, pin the verifier source
+revision and environment, and qualify it against QA2 fixtures. It must run read-only from an off-machine
+copy and must not import HASHLAB statistical, aggregation or classification functions. A generic crypto
+or numerical dependency is acceptable if separately pinned and its known-answer vectors are checked.
+
+Minimum checks:
+
+1. Anchor the manifest digest to the independent witness; verify every listed file hash/size, manifest
+   self-hash, schema, expected inventory and absence of extra/unlisted evidence. Reject path traversal,
+   missing/truncated files, duplicates, invalid integers, NaN/infinity and inconsistent status.
+2. Verify C_pre, its timing, chain pin, beacon signature/round, seed derivation, configuration/plan hashes,
+   code revision, registry binding, all attempts, amendments and final-attempt eligibility.
+3. Recompute all per-cluster/stage/arm totals, denominators, success-record counts and cluster moments;
+   verify exact 3,000-by-10,000 geometry, stages, prefix uniqueness, nonce bounds, success membership,
+   exclusions and overlap evidence. Recompute every stored successful digest with an independent SHA-256
+   implementation and check digest < target and candidate encoding.
+4. Independently recompute exact tests, Holm, CP critical counts/endpoints, t statistics/df/endpoints,
+   hull, nine-cell labels, controls/gates, failure classes and claim scope. Use QA2's tolerances and
+   fail closed near unresolved numerical boundaries; classifications and integer counts match exactly.
+5. Produce a separate signed or independently witnessed report with input manifest digest, verifier
+   revision, environment, checks, discrepancies and explicit limitations; never alter sealed evidence.
+
+Rehashing successes checks positive records but **cannot establish absence of omitted successes**.
+Minimal evidence/statistical verification must state that limitation. Candidate-generation correctness
+and completeness require independent full regeneration and rehashing of all evaluated candidates (a
+separate audit requiring authorization), or an explicitly approved stronger evidence scheme. A sampled
+audit is diagnostic, not a proof of all 180.2M outcomes. Freeze must decide whether minimal verification
+or a full audit is required and who will perform it; no audit execution is authorized here.
+
+#### 3.8.3 Off-machine archival of Experiment 001 (D9; proposed, not performed)
+
+Keep the sealed run 20261011T205056Z-exp001-fc1d75fc and v0.2.0 untouched. Director/custodian procedure:
+
+1. Verify its nine payload hashes and byte sizes, manifest self-hash and 11-file inventory read-only.
+   Record the run id, complete manifest digest, tag object id and dereferenced code commit in an external
+   inventory. The review's checked digest is recorded in addendum 7.4.
+2. Copy exact bytes to an archive staging location outside the sealed directory. Include the 11 evidence
+   files, a repository bundle containing v0.2.0 and its reachable history, reproduction documentation,
+   dependencies/environment records available from that release, and the separate inventory. Do not
+   regenerate results or add analyses inside the original. Give the outer archive its own hash inventory.
+3. Transfer to two independent off-machine destinations: an institutional/object-store immutable copy
+   with retention/versioning and an offline/removable copy held by another custodian. Check access and
+   retention policy with the Director; record receipts, destination identifiers and UTC timestamps.
+4. At each destination, independently recompute archive and per-file hashes. Sign or timestamp the
+   manifest digest/inventory through a witness retained outside both the source and archive account.
+   A local manifest rewritten alongside payloads is not an authenticity anchor.
+5. Restore a copy to a separate directory and reverify inventory, hashes and repository tag/commit.
+   Record a periodic annual read/restore check and retain prior inventories. Only then mark archival
+   complete; report failures and repair copies from verified bytes without touching the source.
+
+Current status: local integrity verified; no transfer, external receipt or restore test was performed by
+this review. Destination, custodian and retention selection remain D9 decisions.
 
 ### 3.9 Independent replication
 
@@ -924,7 +1070,8 @@ G1 requires all of the following:
 
 G4 outcomes:
 
-- **All arms `equivalent-within-margin`.** H_S is falsified for all three populations at ±2%. No-go for any
+- **All arms `equivalent-within-margin`.** H_S is falsified for the three confirmatory estimands at ±2%
+  (A1/A3 population fractions; A2 evaluated-input model mean). No-go for any
   scale-up on these populations.
 - **Any `REP` label.** Go for artifact investigation and then 002-R. No external claim.
 - **Any `inconclusive-at-margin`.** Report the interval. No-go for topping up. A tighter study must be a new
@@ -941,7 +1088,7 @@ G4 outcomes:
 | Seed shopping, selective reruns | Seed committed before any attempt; deterministic reruns; failure classes defined without primary statistics; blinding; a new seed means a new experiment; every attempt disclosed (3.8) |
 | Margin or outcome switching | δ, the arms, the tests, the alpha split and the labels are fixed in the plan fingerprint. All arms are reported |
 | Sub-population mining (A2 prefixes, A3 weights, bytes) | Secondary family only; Holm; no sub-population claims. Class averages do not bound sub-populations (3.1) |
-| Over-claiming equivalence | The wording is fixed: "`ρ` for population U lies within ±2% at `T = 2^248`, `sha256`, this implementation". Never "SHA-256 has no structural bias" |
+| Over-claiming equivalence | The wording names the arm's confirmatory estimand: A1/A3 population fraction or A2 evaluated-input model mean, within ±2% at `T = 2^248`, `sha256`, this implementation. Never "SHA-256 has no structural bias" |
 | Over-claiming deviation | At 30M per arm, tiny artifacts become significant. Every `REP` is a candidate until 002-R |
 | Over-generalizing A2 | Clustered design with a stated population (3.2). Confirmatory claims refer to the evaluated inputs only; population statements are labelled model-conditional (H-A2). No claim about real block headers, `sha256d` or other nonce ranges |
 | Reading an A2 difference flag as an average effect | Stated distinction (3.1, 3.2): the A2 difference test rejects the strict input-level null; average-level statements come only from the margin analysis |
@@ -1022,30 +1169,47 @@ economics: {screen: disabled, throughput: descriptive-only}
 
 ## 5. Decisions required from the Director or Architect
 
-| # | Decision | Status (Architecture Review 004) | Note |
+| # | Decision | Status (through Architecture Review 006) | Note |
 |---|---|---|---|
 | D1 | Primary direction: Option 2, with Option 3 deferred | Accepted by the Architect | |
 | D2 | Margin `δ` = ±2% | **Provisionally approved** (Director) | |
 | D3 | Engine for A2: `sha256` | Decided (Architecture Review 003) | |
-| D4 | Alpha split 0.005 difference + 0.005 margin | **Provisionally approved** | Proven usage is ≤ 0.0083867 (3.5) |
-| D5 | Seed procedure: the beacon source for steps S1–S5 (3.8), for example drand or the NIST Randomness Beacon; the reveal-round rule; the external witness for `C_pre` | **Open** | Recommendation: a public beacon, so seeds cannot be screened in advance. A Director-chosen seed would only prevent changes after commitment |
+| D4 | Alpha split 0.005 difference + 0.005 margin | **Provisionally approved** | Proven usage is ≤ 0.008389 (3.5) |
+| D5 | Mainnet drand quicknet pin, exact future round, witness and same-round-only transport fallback (3.8.1) | **Proposed; not frozen** | Live /info confirmation, pinned client and historical signature vectors required before freeze |
 | D6 | Population definitions | A2 decided (Architecture Review 003); A1 and A3 as proposed | |
 | D7 | Execution environment; independent verifier implementation; optional second-machine rerun | **Open** | |
-| D8 | Implementation scope, now also covering: QA2 and its per-prefix-lift control engine; binding the registry entry hash into `environment.json`; the seedless plan fingerprint | **Open** | |
+| D8 | Implementation scope, now also covering: deterministic QA2 fixtures and its small integration test; binding the registry entry hash into `environment.json`; the seedless plan fingerprint | **Open** | |
 | D9 | Experiment 001 follow-ups (archive; status update; optional re-execution audit) | **Open** | |
 | D10 | Retry ceiling: 3 attempts of classes F1–F3 | **Provisionally approved** | |
 | D11 | n = 15M per arm per stage | **Provisionally approved** | |
 | D12 | A2 confirmatory scope restricted (now stated precisely: model mean `ρ_A2^mod`, 3.1) | **Provisionally approved**; Architect accepts in principle | |
-| D13 | A2-path positive control | **Provisionally approved**, realized as the separate qualification test QA2 (3.7.1), not as an in-run control | |
+| D13 | A2-path positive control | **Reduced QA2 design approved by Architect (Review 006)**; implementation/run still unauthorized | |
 | D14 | Keep the hull rule for A2 | **Provisionally approved** | |
-| D15 | Accept the Hoeffding (1956) citation as the basis of A2's model-based guarantee (full text not accessed; statement verified from the published abstract and numerically), **or** require the fallback with a self-contained proof: a Chernoff/MGF-based interval (addendum 1.2(6)), which is valid with an elementary proof but changes A2's decision rule (relative half-width about 1.04% instead of 0.86%; `WITHIN` power at ρ = 1 / 1.005 / 1.01 of 0.999 / 0.938 / 0.431 instead of 0.9999 / 0.986 / 0.673) | **Open (new)** | Recommendation: accept the citation; keep the fallback documented |
+| D15 | Retain CP/t hull classification using the independently verified extremal theorem, withdraw universal heterogeneous CP coverage wording; optional elementary Chernoff alternative in addendum 7.3 | **Review 005 results provisionally accepted (Review 006)**; final gate pending | Fixed decision tails valid; no self-contained CP theorem proof supplied. No sample-size, cutoff or alpha change proposed |
 
 Until these decisions are made, nothing in this proposal is implemented or executed.
 
+## 6. Final documentation gate (Architecture Review 006)
+
+The auditable theorem/threshold table, fresh FWER calculation, QA2 coverage matrix, live-beacon
+checklist and concise blockers are in [addendum section 8](../reviews/experiment-002-protocol-readiness-addendum.md#8-architecture-review-006-final-documentation-gate).
+The retained rule has W_LO=115,839, W_HI=118,519, B_LO=113,851 and B_HI=120,546;
+15M per stage and 0.005/0.005 allocation are unchanged. The outward combined bound is <=0.008389.
+
+Python regression tests are **NOT RUN** because the venv's referenced Python311 interpreter is missing.
+Node probability calculations are not pytest results. QA2 has not run. Experiment 001's sealed 11 files
+and v0.2.0 were reverified unchanged. No experiment or execution seed was generated.
+
+Before freeze/execution: obtain final approval, repair/pin Python and complete authorized implementation,
+regressions/G1/QA2/G2, pin independent high-precision references and verifier/audit scope, verify the
+live beacon/client/witness arrangements, and arrange the off-machine Experiment 001 archive.
+The approved reduced QA2 design does not authorize its implementation or execution.
+
 ## Appendix: reproducing the calculations
 
-All calculations are offline, used no SHA-256 success evaluation, and were run with `python -I -B` from the
-session scratch space, outside the repository:
+The following records describe historical calculations from revisions 2–4, run offline with
+`python -I -B` in session scratch space, outside the repository. They are not current regression results.
+Review 005/006 Node checks and Python NOT RUN status are separately recorded below:
 
 - **Power and margin tables:** implementation A, `hashlab.statistics.inference` at `v0.2.0`; implementation
   B, independent log-space binomial sums and bisection Clopper–Pearson; plus a normal-approximation
@@ -1073,3 +1237,7 @@ session scratch space, outside the repository:
   - Monte Carlo of the Algorithm S + hypergeometric prototype and of the Feistel alternative.
 - **Throughput:** prototype figures come from scratch code on the Director's machine. They are estimates,
   not measurements of production code.
+
+**Review 005 calculations:** independent Node finite-law recurrences and heterogeneous small-n checks;
+reproduction details, numerical limitations and current evidence checks are in addendum 7.4. Earlier
+Python/Monte Carlo results above were not rerun in this review.

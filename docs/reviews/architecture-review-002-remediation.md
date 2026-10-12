@@ -1,5 +1,11 @@
 # Architecture Review 002: remediation record
 
+> **Current disposition:** Architecture Review 006 final documentation gate is recorded in section 11;
+> Review 005 is provisionally accepted and the reduced QA2 design is approved.
+> Sections 1–10 are historical records; their universal heterogeneous CP-coverage wording, QA2 cost,
+> beacon fallback and rounded FWER claims are superseded as specified there. No freeze, implementation
+> or execution is authorized.
+
 - **Review:** Architecture Review 002 of Engineering Assignment 004
 - **Verdicts received:**
   - Experiment 001 closeout: **ACCEPTED**, subject to wording cleanup.
@@ -299,3 +305,97 @@ hashes and no primary claims.
 - D7, D8, D9.
 - Independence (the model assumption) remains, by construction, the basis of every difference claim and of
   A2's margin claim.
+
+## 10. Architecture Review 005: independent review and proposed disposition
+
+**Scope and starting state.** Documentation and offline calculations only, on clean branch
+`docs/experiment-002-design` at `1c046cf`. The previous reasoning was independently checked against
+a readable primary research source and new finite-law numerical calculations. No seed was generated,
+no Experiment 002 code or qualification was implemented or run, and no commit/push/tag/branch change
+was made. Experiment 001 remains scientifically closed as null-consistent.
+
+### 10.1 Decision register for Architect review
+
+| Item | Proposed disposition | Approval / remaining dependency |
+|---|---|---|
+| D15: heterogeneous Bernoulli inference | Retain fixed CP/t hull classifications. All four decision-tail inequalities are valid by the verified Hoeffding extremal theorem. Withdraw universal heterogeneous CP confidence-set coverage; explicit n=2 counterexample in addendum 7.1 | Architect accepts cited-theorem basis; no self-contained proof of the CP extremal theorem supplied. Elementary Chernoff alternative and homogeneous power documented in 7.3 |
+| FWER precision | Existing rule satisfies 0.01 budget under stated models. Replace downward-rounded 0.0083867 with outward <=0.008389 | No change to 0.005/0.005 allocation, 15M per stage, 30M pooled, margin or integer cutoffs |
+| D13 / QA2 | Replace 90M extra hashes with committed synthetic per-cluster fixtures, independent recomputation, all nine labels, and <=4,200 small integration/known-answer hashes plus file-integrity hashes | Proposed specification only; no fixtures/test implementation or execution authorized here. Future deterministic pass required before freeze |
+| D5 / seed governance | Pin mainnet drand quicknet tuple and exact future R*, byte-exact v1 derivation, >=24h witnessed precommitment; transport fallback for same R* only, otherwise wait | Official documented parameters verified; live /info unavailable in this review. Confirm live tuple, relay availability, pinned client/version and historical signature vectors before freeze; no actual R* or seed selected |
+| D7 / independent verifier | Independent read-only evidence/statistical verifier, external digest anchor, exact aggregation/labels and separately checked numerical routines | Appoint owner and pin source/environment; decide full outcome audit scope. Checking only successes cannot detect omitted successes |
+| D8 / implementation | Deterministic QA2 replaces per-prefix biased hashing engine needed solely for qualification; registry/amendment binding retained | Implementation remains unauthorized; G1, QA2 and G2 are future gates |
+| D9 / Experiment 001 archive | Exact-byte copies to two off-machine destinations, independent digest witness, destination checks and restore verification | Choose custodians/destinations/retention. Procedure documented only; no transfer or archive completion claimed |
+
+### 10.2 Mathematical conclusions and assumptions
+
+Addendum 7 is the current mathematical disposition. Pointwise binomial tail domination is valid only in
+the stated outside-mean regions; convex order alone does not prove it. The unfinished hinge calculation
+was not a disproof and was not used as a guarantee. A primary paper now verifies the necessary theorem
+statement. The self-contained MGF/AM-GM proof establishes the optional Chernoff alternative, not the CP
+extremal theorem. Chernoff-only homogeneous WITHIN power at ratios 1, 1.005 and 1.01 is 0.99897,
+0.93764 and 0.43097; a retained t hull can only reduce those values. It is not adopted.
+
+The current CP/t rule needs independent input-level Bernoulli outcomes for A2 and the strict-null tests;
+A1/A3 margin conclusions need exact SRS under ideal RNG. Single confirmatory attempt and correct code
+remain necessary. A2 population generalization is non-confirmatory; no arbitrary-heterogeneity power
+promise is made. REP is non-directional. Review 005 also corrects the earlier suggestion that reduced
+variance alone proves finite-population tail/power ordering, and the Berry–Esseen phrasing that could be
+misread as a lower bound on actual approximation error.
+
+### 10.3 Offline checks and preservation
+
+| Check in this review | Result |
+|---|---|
+| Git starting branch / HEAD / worktree | Expected branch, 1c046cf, clean |
+| Heterogeneous Bernoulli finite-law checks | 21,840 vectors, 116,520 strict-outside-band comparisons; max discrepancy 2.22e-16 (roundoff), not proof |
+| Four 30M binomial decision tails and adjacent counts | Reproduced; decision-side tails below 1/600, adjacent excluded counts above it |
+| A1/A3 hypergeometric boundary checks | Reproduced by independent recurrence; outward bounds <0.001609 and <0.000115 |
+| Chernoff cutoffs and homogeneous power | Independently calculated from KL inversion and finite binomial sums; hull power not conflated with Chernoff-only power |
+| Python/pytest | **Not run**: repository venv references missing Python311; python/py/python3 unavailable. Historical 240-pass result in section 4 is not a result of this review |
+| Experiment 001 evidence | Nine payload hashes/sizes, manifest self-hash and exact 11-file inventory verified read-only; before/after byte hashes unchanged; no analyses directory |
+| v0.2.0 | Annotated tag object 662bb21c714afd9b560f40845c6780132baf3d6b; dereferenced commit ef595f5c2f2166923fd277def39708409f564419 unchanged |
+| Documentation checks | git diff --check passed; relative file links in all three documents resolve |
+| Final scope | Only the three requested Markdown documents modified; no implementation, run, seed, commit, push, merge, tag or branch switch |
+
+Numerical checks use floating-point recurrences of exact finite distributions, not arbitrary-precision
+certification or simulation. Full method and evidence manifest digest are in addendum 7.4. Freeze should
+pin high-precision QA2 references. Local manifest agreement establishes integrity against that manifest;
+authenticity against an independent historical witness and off-machine archive completion remain open.
+
+**Files changed:** proposal revision 5; protocol-readiness addendum revision 4; this remediation record.
+The new specifications are in proposal 3.7.1 and 3.8.1–3.8.3. No unrelated work existed initially or was
+modified. Git remains on docs/experiment-002-design at 1c046cf with these three documentation edits
+uncommitted. D5, D7, D8, D9 and Architect acceptance of D15 remain open as described above.
+
+**Stop for Architect review. Protocol freeze, implementation and execution remain unauthorized.**
+
+## 11. Architecture Review 006: final documentation gate
+
+**Authorization received:** Review 005 provisionally accepted; reduced QA2 design approved. Documentation
+finalization and a commit containing only the three scoped documents are authorized. No push, merge,
+tag, implementation, qualification, experiment or execution seed is authorized.
+
+| Gate item | Final verification / specification status |
+|---|---|
+| A2 one-sided thresholds | Auditable table in addendum 8.1: W_HI 118,519<=119,530.25; W_LO 115,839>=114,844.75; B_HI 120,546>=119,532.25; B_LO 113,851<=114,842.75. Independent Bernoulli probabilities, integer thresholds and the one-count gap conditions are explicit; theorem source rechecked |
+| CP coverage wording | Review 006 corrects Review 005: the n=2 example disproves one-sided alpha control only; it does not disprove two-sided 1-2alpha coverage. No universal two-sided CP guarantee is asserted; fixed classification results are unaffected |
+| Combined FWER | Independently recalculated raw boundary-maxima sum approximately 0.0083867866; outward envelopes sum to 0.008388; published <=0.008389 adds 0.000001 reporting cushion. Conditions/exclusions retained; no sample size, cutoff or alpha change |
+| QA2 coverage | Approved <=4,200-hash specification explicitly uses production execution/evidence entry points at small geometry; full-geometry synthetic fixtures cover all nine statistical cells and boundary/contradictory cases. Qualification NOT RUN |
+| Beacon governance | Quicknet chain/key/scheme/genesis/period, future witnessed R*, exact derivation and signature verification specified; fallback only for transport of the same round. Live-service/client/witness checks explicitly REQUIRE VERIFICATION (addendum 8.4) |
+| Python regression tests | **NOT RUN**: .venv references missing Python311 interpreter. Node finite-law checks are numerical review calculations, not pytest results |
+| Experiment 001 | Exact 11-file inventory, all nine payload hashes/sizes, manifest self-hash and Review 005 manifest digest verified; before/after file hashes unchanged; v0.2.0 dereferences to ef595f5c2f2166923fd277def39708409f564419 |
+| Prohibited work | No implementation, qualification or experiment run, execution configuration/seed generation, beacon reveal, push, merge or tag performed |
+
+Outstanding implementation/operational blockers:
+
+- Final Architect/protocol disposition and Director authorization; provisional acceptance does not authorize execution.
+- Repair/pin Python; complete separately authorized implementation, regressions, G1, QA2 and G2.
+- Independently author/pin high-precision fixture references and verifier; appoint owner and settle full outcome audit scope (D7).
+- Verify live /info, relay service/schema, pinned RFC9380 client and historical verification vectors, and witness readiness before future precommitment/round selection (D5).
+- Choose archival custodians/destinations/retention and complete off-machine receipts and restore checks for Experiment 001 (D9).
+
+**Scoped files:** proposal revision 6, protocol-readiness addendum revision 5, and this remediation record.
+The Review 005 edits and this finalization pass form one authorized documentation commit on
+`docs/experiment-002-design`. Verify the complete diff and staged inventory before committing; report the
+resulting commit hash separately (a commit cannot include its own hash). No other paths are included.
+Stop after the commit and verification summary for final Architect review.
