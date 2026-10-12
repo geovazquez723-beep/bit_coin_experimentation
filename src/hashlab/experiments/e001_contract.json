@@ -1,0 +1,395 @@
+{
+  "config": {
+    "controls": {
+      "null_control_generator": "random-bytes-w8",
+      "positive_control": {
+        "candidates": 200000,
+        "enabled": true,
+        "relative_lift": 0.25,
+        "width": 8
+      }
+    },
+    "economics": {
+      "reference_generator": "seq-be-w8"
+    },
+    "engine": "sha256",
+    "execution": {
+      "batch_size": 10000,
+      "dedup": "auto",
+      "max_recorded_successes": 10000,
+      "max_tracked_candidates": 2000000,
+      "progress_every_batches": 50,
+      "record_successes": false
+    },
+    "experiment": {
+      "description": "Tests whether structurally different candidate generators produce SHA-256 proof-of-work success rates (and digest distributions) that differ from the uniform-random null.\n",
+      "id": "001",
+      "name": "candidate-structure-vs-hash-success",
+      "specification": "docs/experiment-001.md"
+    },
+    "generators": [
+      {
+        "encoding": "be-bytes",
+        "id": "seq-be-w8",
+        "start": 0,
+        "type": "sequential",
+        "width": 8
+      },
+      {
+        "encoding": "ascii-decimal",
+        "id": "seq-dec-w16",
+        "start": 0,
+        "type": "sequential",
+        "width": 16
+      },
+      {
+        "encoding": "be-bytes",
+        "id": "uniform-be-w8",
+        "type": "uniform",
+        "width": 8
+      },
+      {
+        "encoding": "ascii-decimal",
+        "id": "uniform-dec-w16",
+        "type": "uniform",
+        "width": 16
+      },
+      {
+        "id": "pattern-bytes-w8",
+        "max_period": 3,
+        "mode": "repeated-bytes",
+        "type": "patterned",
+        "width": 8
+      },
+      {
+        "alphabet": "printable-ascii",
+        "id": "pattern-chars-w16",
+        "max_period": 4,
+        "mode": "repeated-chars",
+        "type": "patterned",
+        "width": 16
+      },
+      {
+        "id": "struct-gray-w8",
+        "mode": "gray",
+        "type": "structured",
+        "width": 8
+      },
+      {
+        "id": "struct-stride-w8",
+        "mode": "stride",
+        "offset": 0,
+        "stride": 11400714819323198485,
+        "type": "structured",
+        "width": 8
+      },
+      {
+        "id": "struct-bitrev-w8",
+        "mode": "bit-reversed",
+        "type": "structured",
+        "width": 8
+      },
+      {
+        "id": "random-bytes-w8",
+        "type": "random_bytes",
+        "width": 8
+      }
+    ],
+    "phases": {
+      "discovery": {
+        "candidates_per_generator": 500000
+      },
+      "validation": {
+        "candidates_per_generator": 500000
+      }
+    },
+    "schema_version": 1,
+    "seeds": {
+      "master": 20261011
+    },
+    "statistics": {
+      "alpha": 0.01,
+      "confidence_level": 0.99,
+      "correction": "holm",
+      "min_actionable_relative_effect": 0.01,
+      "power": 0.8
+    },
+    "target": {
+      "equivalent_leading_zero_bits": 8,
+      "success_probability_exact": "1/256",
+      "success_probability_float": 0.00390625,
+      "target_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+      "target_int": "452312848583266388373324160190187140051835877600158453279131187530910662656"
+    }
+  },
+  "counts": {
+    "pattern-bytes-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "pattern-chars-w16": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "random-bytes-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": 710289665967761509,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": 8231496708541735395,
+        "start_index": 0,
+        "unique": 500000
+      }
+    },
+    "seq-be-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "seq-dec-w16": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "struct-bitrev-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "struct-gray-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "struct-stride-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": null,
+        "start_index": 500000,
+        "unique": 500000
+      }
+    },
+    "uniform-be-w8": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": 11563638942429927757,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": 17448145370022348540,
+        "start_index": 0,
+        "unique": 500000
+      }
+    },
+    "uniform-dec-w16": {
+      "discovery": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": 4510579110814029430,
+        "start_index": 0,
+        "unique": 500000
+      },
+      "validation": {
+        "attempted": 500000,
+        "duplicates_cross_phase": 0,
+        "duplicates_within_phase": 0,
+        "exhausted": false,
+        "seed": 7646975460325050960,
+        "start_index": 0,
+        "unique": 500000
+      }
+    }
+  },
+  "environment": {
+    "captured_at_utc": "2026-10-11T20:50:56.955300Z",
+    "git": {
+      "available": true,
+      "branch": "main",
+      "changed_paths": 0,
+      "dirty": false,
+      "note": "a dirty tree means the run used uncommitted code; the results may not reproduce from the revision alone",
+      "revision": "ef595f5c2f2166923fd277def39708409f564419"
+    },
+    "machine": {
+      "cpu_count": 16,
+      "machine": "AMD64",
+      "processor": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+      "release": "10",
+      "system": "Windows",
+      "version": "10.0.26200"
+    },
+    "openssl": "OpenSSL 1.1.1q  5 Jul 2022",
+    "packages": {
+      "PyYAML": "6.0.3",
+      "hashlab": "0.2.0",
+      "pytest": "9.1.1"
+    },
+    "python": {
+      "hash_randomization": 1,
+      "implementation": "CPython",
+      "version": "3.11.0 (main, Oct 24 2022, 18:26:48) [MSC v.1933 64 bit (AMD64)]"
+    }
+  },
+  "schema": "hashlab-e001-historical-contract-v1",
+  "seeds": {
+    "derivation": "first 8 bytes (big-endian) of SHA-256('hashlab-seed-v1|<master>|<generator_id>|<phase>')",
+    "generators": {
+      "pattern-bytes-w8": "seedless (validation continues the enumeration after discovery)",
+      "pattern-chars-w16": "seedless (validation continues the enumeration after discovery)",
+      "random-bytes-w8": {
+        "discovery": 710289665967761509,
+        "validation": 8231496708541735395
+      },
+      "seq-be-w8": "seedless (validation continues the enumeration after discovery)",
+      "seq-dec-w16": "seedless (validation continues the enumeration after discovery)",
+      "struct-bitrev-w8": "seedless (validation continues the enumeration after discovery)",
+      "struct-gray-w8": "seedless (validation continues the enumeration after discovery)",
+      "struct-stride-w8": "seedless (validation continues the enumeration after discovery)",
+      "uniform-be-w8": {
+        "discovery": 11563638942429927757,
+        "validation": 17448145370022348540
+      },
+      "uniform-dec-w16": {
+        "discovery": 4510579110814029430,
+        "validation": 7646975460325050960
+      }
+    },
+    "master": 20261011,
+    "positive_control": 15012741615826235588
+  },
+  "source_commit": "ef595f5c2f2166923fd277def39708409f564419",
+  "source_sha256_lf": {
+    "src/hashlab/candidates/__init__.py": "06007d74f8c0753c2b80f6c17e290e3717f88ed5d4374e3220d31ac3012a2f37",
+    "src/hashlab/candidates/base.py": "c48ed63d61846d635e320b6f1c39a938f7d3ad729939c236e5068f95889212d3",
+    "src/hashlab/candidates/patterned.py": "2504d48642a88223bc20e8064b4a691af9fc67f794894797cea3eed8597b1ab9",
+    "src/hashlab/candidates/random.py": "23fda0fce7f888d1a249c08e4639ed2a0279dd39f8aacff9d20e909c04a637c2",
+    "src/hashlab/candidates/sequential.py": "dcda060bd69bff354ecc4f6256da0fae39704d846c19ba9d61e36d4ff9246ae8",
+    "src/hashlab/candidates/structured.py": "2a9e89be3252821334a9948f809531bdd2ed6957c7add5c110752f318fbd9448",
+    "src/hashlab/experiments/baseline.py": "3de5e93dc71cc1f70def37f7fdda923c8d918e5c34eda04d7a51a3dc6905c96b",
+    "src/hashlab/experiments/config.py": "53f35b8124e007a2710d1654f525140858b24036f02c94b7a86d558aca8d110e"
+  }
+}
