@@ -1,7 +1,10 @@
 # Experiment 002: research design proposal
 
-- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002–006
-- **Revision:** 6 (Architecture Review 006; final documentation gate). It supersedes revision 5.
+- **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002–008
+- **Revision:** 7 (Architecture Review 008; workload erratum and verifier accounting). It supersedes revision 6.
+  - Removes the obsolete QA2 workload row and separates statistical checks, candidate reconstruction
+    and sampled hashing costs (3.9, 3.12). Scientific design remains the accepted `a28c563` baseline.
+    Recovery instructions and pending audit-format decisions are in the Review 008 operational note.
   - The Architect provisionally accepts Review 005 and approves the reduced QA2 design. This pass
     confirms thresholds/FWER, execution-path coverage and operational blockers (addendum section 8).
     Documentation finalization and a scoped commit are authorized; implementation and execution are not.
@@ -975,6 +978,11 @@ this review. Destination, custodian and retention selection remain D9 decisions.
    It uses a different SHA-256 implementation (for example another OpenSSL major version or a reference
    implementation) and an independent reimplementation of the samplers for the audit sample. On the
    Director's decision, a full deterministic rerun on a second machine must reproduce every count exactly.
+   Statistical verification separately reproduces stored-count calculations without candidate hashing.
+   Audit reconstruction needs the frozen generator order, arm/stage denominators, recorded-success
+   indices, audit seed and a byte-exact sampling format. The proposed format, candidate replay cost
+   and limitations are documented in [Review 008](../reviews/architecture-review-008-operational-recovery.md).
+   Its format and audit-seed provenance must be approved before freeze; no audit seed is selected here.
 2. **Statistical replication (built in).** Stage V.
 3. **Independent scientific replication (conditional).** Every `REP` label triggers a separately approved
    Experiment 002-R:
@@ -1022,7 +1030,16 @@ exploratory. A confirmatory economic claim needs its own predeclared procedure, 
 | P1 (8 B) | 0.2M | 0.2M |
 | P2+, P2− (8 B): 2 × 15M | 30.0M | 30.0M |
 | **Total** | **180.2M** | **240.2M** |
-| *Separate, before freeze:* QA2 qualification (3 × 30M, 80 B) | *90.0M* | *180.0M* |
+| *Separate, before freeze:* QA2 end-to-end/known-answer tests (3.7.1) | *<=4,200 hashes* | *<=8,400 blocks if all probes <=80 B* |
+| *Separate, before freeze:* QA2 synthetic statistical fixtures (3.7.1) | *0 candidate hashes* | *0 candidate-hash blocks* |
+
+The confirmatory totals exclude qualification, independent verification and small file-integrity hashes.
+QA2 includes both 2,048 execution hashes and 2,048 independent re-hashes (4,096), plus at most 104
+known-answer/boundary evaluations. The two-block allowance assumes all probe inputs are also <=80 B;
+QA2 3.7.1 does not mandate vector lengths, so itemize their actual compression blocks.
+Confirmatory execution plus the QA2 cap is <=180,204,200 candidate/known-answer hashes.
+It is <=240,208,400 compression blocks only under that probe-length assumption, excluding
+file-integrity hashes and verifier work. Longer known-answer vectors need separate block accounting.
 
 Time estimates. Assumptions are stated for each line. **Prototype rates come from scratch code**, not
 production code, and must be re-measured in the G2 smoke run.
@@ -1043,7 +1060,15 @@ production code, and must be re-measured in the G2 smoke run.
 - **Memory:** under 1 GB. There are no deduplication sets; the exclusion set has 60,721 entries; E001 is
   streamed.
 - **Storage:** about 100 MB per attempt (successes about 75 MB, batch log about 5 MB, the rest small).
-- **Verifier:** about 0.7M success re-hashes plus about 1.8M audit inputs, which is minutes.
+- **Verifier:** statistical recomputation needs no candidate hashing. For `s` recorded successes among
+  180.2M inputs, re-hash all `s` and sample about 1% of the remaining 180.2M - `s` inputs. At the
+  illustrative `s` = 704,000, this is about 1,794,960 sampled non-successes and 2,498,960 total
+  candidate re-hashes, about 3.33M compression blocks if successes are spread proportionally by
+  input width. These are workload estimates, not a success-count guarantee. Candidate reconstruction
+  may replay up to the complete 180.2M-input generation stream, plus exclusion/overlap work; sparse
+  hashing does not imply sparse generation. Audit-index generation, file-integrity checks and I/O
+  are additional costs. No verifier wall-time guarantee is made before implementation measurements.
+  See 3.9 and the Review 008 operational note for deterministic audit reconstruction and assurance.
 - **The dominant cost is engineering and review** (D8), not compute.
 
 ### 3.13 Go / no-go criteria
