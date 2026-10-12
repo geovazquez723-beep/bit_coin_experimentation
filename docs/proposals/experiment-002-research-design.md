@@ -2,7 +2,17 @@
 
 - **Assignment:** Engineering Assignment 004, Part B; revised under Architecture Reviews 002–013
 - **Revision:** 8 (Architecture Review 013; approved A2 deterministic encoding v1). It supersedes revision 7.
-- **Protocol identity:** proposal revision 8; A2 encoding `hashlab-exp002-a2-encoding-v1` (3.2).
+- **Protocol identity:** proposal revision 8; A2 encoding `hashlab-exp002-a2-encoding-v1` (3.2);
+  A1/A3 seed encoding `hashlab-exp002-a1-a3-subseed-encoding-v1`
+  ([approved byte contract and KATs](experiment-002-a1-a3-seed-encoding-proposal.md), Architecture Review 027).
+  The exact machine identity is
+  `proposal-revision-8|hashlab-exp002-a2-encoding-v1|hashlab-exp002-a1-a3-subseed-encoding-v1`.
+  Review 027 conditionally accepts E1 and approves the four A1/A3 seed label triples
+  and the fail-closed numerical-abort policy, with mandatory attempt disclosure and
+  no discretionary seed replacement. It authorizes bounded performance fixtures
+  only; confirmatory execution and seed/beacon selection remain unauthorized.
+  Earlier environment/E1-blocker statements below are historical review provenance;
+  current E1 closeout is recorded in the Review 027 report for Review 028 acceptance.
   - Review 013 approves byte-exact A2 serialization, domain labels, key mapping and all three KATs.
     The statistical design is unchanged from accepted commit `cac68c4`. E1 remains blocked pending
     fresh Director diagnostics and the approved Python environment passing its 240-test baseline.
@@ -276,8 +286,9 @@ of revision 2.
 **Encoding identity:** `hashlab-exp002-a2-encoding-v1`. The Architect approved this contract and
 independently verified its three known-answer vectors in Review 013. It completes previously
 unspecified serialization details; it does not replace the frozen HASHLAB seed-derivation algorithm.
-The protocol identity is proposal revision 8 together with this encoding identity. Future configuration,
-seedless/full plan fingerprints and pre-registration must bind both identities and the exact labels
+The protocol identity is proposal revision 8 together with this A2 encoding identity
+and the approved A1/A3 seed encoding identity linked above. Future configuration,
+seedless/full plan fingerprints and pre-registration must bind all approved identities and the exact labels
 below; this documentation update does not create a configuration, precommitment, seed or round.
 
 **Integer serialization.** LE32(x) and LE64(x) mean exactly four and eight unsigned little-endian bytes,
