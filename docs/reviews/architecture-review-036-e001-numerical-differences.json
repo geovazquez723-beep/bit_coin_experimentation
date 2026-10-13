@@ -1,0 +1,789 @@
+{
+  "schema": "hashlab-e001-numerical-differences-v1",
+  "scope": "read-only comparison; no tolerance-based G1 pass",
+  "manifest_sha256": "546d83a2ad5615cfe937e021c2b7097f1997d7f13c8f3326f3d03e6aa60a967b",
+  "historical_python": "CPython 3.11.0",
+  "comparison_python": "3.13.0",
+  "differences": [
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.20282485528822386,
+      "recomputed": 0.20282485528822278,
+      "absolute_difference": 1.0824674490095276e-15
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 273.5482879999998,
+      "recomputed": 273.548288,
+      "absolute_difference": 2.2737367544323206e-13
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.35260992400204927,
+      "recomputed": 0.35260992400205016,
+      "absolute_difference": 8.881784197001252e-16
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 262.9591040000001,
+      "recomputed": 262.959104,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.7800066472935315,
+      "recomputed": 0.7800066472935319,
+      "absolute_difference": 3.3306690738754696e-16
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 11.463600000000001,
+      "recomputed": 11.4636,
+      "absolute_difference": 1.7763568394002505e-15
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.9500147599132447,
+      "recomputed": 0.9500147599132474,
+      "absolute_difference": 2.6645352591003757e-15
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 219.02233599999985,
+      "recomputed": 219.022336,
+      "absolute_difference": 1.4210854715202004e-13
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.9564222878565196,
+      "recomputed": 0.9564222878565195,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "generator": "pattern-bytes-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 217.6870399999998,
+      "recomputed": 217.68704,
+      "absolute_difference": 1.9895196601282805e-13
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.7632109180226241,
+      "recomputed": 0.7632109180226115,
+      "absolute_difference": 1.2545520178264269e-14
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 238.51417600000013,
+      "recomputed": 238.514176,
+      "absolute_difference": 1.4210854715202004e-13
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.44022954659820723,
+      "recomputed": 0.4402295465981834,
+      "absolute_difference": 2.3814283878209608e-14
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 257.7397760000001,
+      "recomputed": 257.739776,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.9812284787075257,
+      "recomputed": 0.9812284787075268,
+      "absolute_difference": 1.1102230246251565e-15
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 210.27430399999994,
+      "recomputed": 210.274304,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.034642107870615925,
+      "recomputed": 0.0346421078706138,
+      "absolute_difference": 2.123301534595612e-15
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 297.5231999999998,
+      "recomputed": 297.5232,
+      "absolute_difference": 1.7053025658242404e-13
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.7434974751349744,
+      "recomputed": 0.7434974751349743,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "generator": "pattern-chars-w16",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 12.007003999999998,
+      "recomputed": 12.007004,
+      "absolute_difference": 1.7763568394002505e-15
+    },
+    {
+      "generator": "random-bytes-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.0837330624617652,
+      "recomputed": 0.08373306246177023,
+      "absolute_difference": 5.023759186428833e-15
+    },
+    {
+      "generator": "random-bytes-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 286.7425280000001,
+      "recomputed": 286.742528,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "random-bytes-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.6588492689306026,
+      "recomputed": 0.6588492689306229,
+      "absolute_difference": 2.0317081350640365e-14
+    },
+    {
+      "generator": "random-bytes-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 245.2152320000001,
+      "recomputed": 245.215232,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "random-bytes-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.27057299511868044,
+      "recomputed": 0.2705729951186799,
+      "absolute_difference": 5.551115123125783e-16
+    },
+    {
+      "generator": "random-bytes-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 268.36275199999994,
+      "recomputed": 268.362752,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.90526103436722,
+      "recomputed": 0.9052610343672202,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 225.88313600000004,
+      "recomputed": 225.883136,
+      "absolute_difference": 2.842170943040401e-14
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.35895747530307787,
+      "recomputed": 0.35895747530307875,
+      "absolute_difference": 8.881784197001252e-16
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 17.419639999999998,
+      "recomputed": 17.41964,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.1739488841248224,
+      "recomputed": 0.1739488841248421,
+      "absolute_difference": 1.970645868709653e-14
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 276.09087999999997,
+      "recomputed": 276.09088,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.506773411579457,
+      "recomputed": 0.5067734115794832,
+      "absolute_difference": 2.6201263381153694e-14
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 253.95097599999988,
+      "recomputed": 253.950976,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.07337204986273312,
+      "recomputed": 0.0733720498627333,
+      "absolute_difference": 1.8041124150158794e-16
+    },
+    {
+      "generator": "seq-be-w8",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 24.803132,
+      "recomputed": 24.803131999999998,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.38029449075208394,
+      "recomputed": 0.38029449075206123,
+      "absolute_difference": 2.270406085358445e-14
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 261.26643199999995,
+      "recomputed": 261.266432,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.6564564248598042,
+      "recomputed": 0.6564564248598045,
+      "absolute_difference": 3.3306690738754696e-16
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 245.35859200000002,
+      "recomputed": 245.358592,
+      "absolute_difference": 2.842170943040401e-14
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.2702105290921517,
+      "recomputed": 0.2702105290921817,
+      "absolute_difference": 2.9976021664879227e-14
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 268.3883519999999,
+      "recomputed": 268.388352,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.5126681491889791,
+      "recomputed": 0.5126681491890033,
+      "absolute_difference": 2.4202861936828413e-14
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 253.6181759999998,
+      "recomputed": 253.618176,
+      "absolute_difference": 1.9895196601282805e-13
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.062029175582810715,
+      "recomputed": 0.06202917558281088,
+      "absolute_difference": 1.6653345369377348e-16
+    },
+    {
+      "generator": "seq-dec-w16",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 25.465452000000003,
+      "recomputed": 25.465452,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "generator": "struct-bitrev-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.8833613411012626,
+      "recomputed": 0.8833613411012492,
+      "absolute_difference": 1.3433698597964394e-14
+    },
+    {
+      "generator": "struct-bitrev-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 228.3950079999999,
+      "recomputed": 228.395008,
+      "absolute_difference": 8.526512829121202e-14
+    },
+    {
+      "generator": "struct-bitrev-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.7975465309804288,
+      "recomputed": 0.7975465309804053,
+      "absolute_difference": 2.353672812205332e-14
+    },
+    {
+      "generator": "struct-bitrev-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 236.0125439999999,
+      "recomputed": 236.012544,
+      "absolute_difference": 8.526512829121202e-14
+    },
+    {
+      "generator": "struct-bitrev-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.1519702859582406,
+      "recomputed": 0.1519702859582404,
+      "absolute_difference": 2.220446049250313e-16
+    },
+    {
+      "generator": "struct-bitrev-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 278.223872,
+      "recomputed": 278.22387200000003,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.10188431117304245,
+      "recomputed": 0.10188431117304221,
+      "absolute_difference": 2.3592239273284576e-16
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 284.0770559999999,
+      "recomputed": 284.077056,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.8958007361696871,
+      "recomputed": 0.8958007361696873,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 227.01260800000003,
+      "recomputed": 227.012608,
+      "absolute_difference": 2.842170943040401e-14
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.381861822104668,
+      "recomputed": 0.38186182210466646,
+      "absolute_difference": 1.5543122344752192e-15
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 17.057871999999996,
+      "recomputed": 17.057872,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.27913006531747825,
+      "recomputed": 0.2791300653174776,
+      "absolute_difference": 6.661338147750939e-16
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 267.76371199999994,
+      "recomputed": 267.763712,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.5420068992163294,
+      "recomputed": 0.542006899216328,
+      "absolute_difference": 1.3322676295501878e-15
+    },
+    {
+      "generator": "struct-gray-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 251.9623679999999,
+      "recomputed": 251.962368,
+      "absolute_difference": 8.526512829121202e-14
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.3105926303926516,
+      "recomputed": 0.3105926303926523,
+      "absolute_difference": 6.661338147750939e-16
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 265.6399360000001,
+      "recomputed": 265.639936,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.518111596859611,
+      "recomputed": 0.5181115968596102,
+      "absolute_difference": 7.771561172376096e-16
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 253.31097599999995,
+      "recomputed": 253.310976,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.7582110048162357,
+      "recomputed": 0.7582110048162224,
+      "absolute_difference": 1.3322676295501878e-14
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 238.86233600000008,
+      "recomputed": 238.862336,
+      "absolute_difference": 8.526512829121202e-14
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.6414031181016323,
+      "recomputed": 0.6414031181016322,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "generator": "struct-stride-w8",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 13.425851999999999,
+      "recomputed": 13.425852,
+      "absolute_difference": 1.7763568394002505e-15
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.17001508682692987,
+      "recomputed": 0.17001508682692953,
+      "absolute_difference": 3.3306690738754696e-16
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "discovery",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 276.45849599999997,
+      "recomputed": 276.458496,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.25990065931515344,
+      "recomputed": 0.25990065931512246,
+      "absolute_difference": 3.097522238704187e-14
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "discovery",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 269.12460799999985,
+      "recomputed": 269.124608,
+      "absolute_difference": 1.7053025658242404e-13
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.8161415927586038,
+      "recomputed": 0.8161415927586037,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "discovery",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 10.891347999999999,
+      "recomputed": 10.891348,
+      "absolute_difference": 1.7763568394002505e-15
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.3369413511655409,
+      "recomputed": 0.33694135116554197,
+      "absolute_difference": 1.0547118733938987e-15
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 263.9411200000001,
+      "recomputed": 263.94112,
+      "absolute_difference": 1.1368683772161603e-13
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.704281700858142,
+      "recomputed": 0.7042817008581079,
+      "absolute_difference": 3.4083846855992306e-14
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 242.42175999999995,
+      "recomputed": 242.42176,
+      "absolute_difference": 5.684341886080802e-14
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "p_value",
+      "sealed": 0.5378341294523896,
+      "recomputed": 0.5378341294523876,
+      "absolute_difference": 1.9984014443252818e-15
+    },
+    {
+      "generator": "uniform-be-w8",
+      "phase": "validation",
+      "test": "leading_zero_bits",
+      "field": "statistic",
+      "sealed": 14.820343999999997,
+      "recomputed": 14.820344,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "generator": "uniform-dec-w16",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.6740980782745781,
+      "recomputed": 0.6740980782745962,
+      "absolute_difference": 1.8096635301390052e-14
+    },
+    {
+      "generator": "uniform-dec-w16",
+      "phase": "validation",
+      "test": "first_byte_uniform",
+      "field": "statistic",
+      "sealed": 244.29363199999992,
+      "recomputed": 244.293632,
+      "absolute_difference": 8.526512829121202e-14
+    },
+    {
+      "generator": "uniform-dec-w16",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "p_value",
+      "sealed": 0.04210710019733114,
+      "recomputed": 0.04210710019733337,
+      "absolute_difference": 2.2343238370581275e-15
+    },
+    {
+      "generator": "uniform-dec-w16",
+      "phase": "validation",
+      "test": "last_byte_uniform",
+      "field": "statistic",
+      "sealed": 295.28166399999986,
+      "recomputed": 295.281664,
+      "absolute_difference": 1.1368683772161603e-13
+    }
+  ],
+  "timestamp_difference": {
+    "sealed": "2026-10-11T20:51:09.511859Z",
+    "comparison": "2026-10-12T18:15:26.412103Z"
+  },
+  "secondary_order_identical": false,
+  "g1_identity_pass": false
+}

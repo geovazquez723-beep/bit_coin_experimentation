@@ -1,0 +1,141 @@
+{
+  "purpose": "R9-M1B1 observed-session preservation only",
+  "mtime_unit": "100 ns .NET UTC ticks; observed-session comparison only, not historical provenance",
+  "before": [
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\analysis.json",
+      "size": 81503,
+      "mtime": 639273486695178617,
+      "sha256": "5e22b2fc5d0ce4ed9dca71f0499c7b1b35f0f40a43d34228d8daad455d38b252"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\batches.jsonl",
+      "size": 254047,
+      "mtime": 639273486694328583,
+      "sha256": "65ecf72decf20c9e9a8db29b1526c5dd39eeb2ecfc3d29166100d92e339fbad8"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\config.resolved.json",
+      "size": 2875,
+      "mtime": 639273486569543035,
+      "sha256": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\config.source.yaml",
+      "size": 4268,
+      "mtime": 639273486569543035,
+      "sha256": "f2c0de21f3eba4b6a5fff41c8729b10d5c389e09334bd218f133d55a0140f225"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\environment.json",
+      "size": 843,
+      "mtime": 639273486570408122,
+      "sha256": "34e5e3c11015405dd540b2541f54086824b066aa83ed94c5fb80e2c13aa467f3"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\manifest.json",
+      "size": 1482,
+      "mtime": 639273486695551816,
+      "sha256": "546d83a2ad5615cfe937e021c2b7097f1997d7f13c8f3326f3d03e6aa60a967b"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\manifest.sha256",
+      "size": 80,
+      "mtime": 639273486695611806,
+      "sha256": "e7200d11952f130786c183dcce2318e817b0f54802e47f4f2d9170499bab227a"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\plan.json",
+      "size": 37502,
+      "mtime": 639273486569553008,
+      "sha256": "ea38ed0150fae79d140b44691ad64dbda223163296b98671966d1b07456f3f36"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\report.md",
+      "size": 11305,
+      "mtime": 639273486695178617,
+      "sha256": "e253f9ab9c40410e8f601a107716fbabd090782c75efa4dd47afb17cd64fb428"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\results.json",
+      "size": 242708,
+      "mtime": 639273486694388587,
+      "sha256": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\seeds.json",
+      "size": 1158,
+      "mtime": 639273486570408122,
+      "sha256": "b04fa14409ff07606e81757908109427e4309615afd702a564f346b19b32d931"
+    }
+  ],
+  "after": [
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\analysis.json",
+      "size": 81503,
+      "mtime": 639273486695178617,
+      "sha256": "5e22b2fc5d0ce4ed9dca71f0499c7b1b35f0f40a43d34228d8daad455d38b252"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\batches.jsonl",
+      "size": 254047,
+      "mtime": 639273486694328583,
+      "sha256": "65ecf72decf20c9e9a8db29b1526c5dd39eeb2ecfc3d29166100d92e339fbad8"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\config.resolved.json",
+      "size": 2875,
+      "mtime": 639273486569543035,
+      "sha256": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\config.source.yaml",
+      "size": 4268,
+      "mtime": 639273486569543035,
+      "sha256": "f2c0de21f3eba4b6a5fff41c8729b10d5c389e09334bd218f133d55a0140f225"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\environment.json",
+      "size": 843,
+      "mtime": 639273486570408122,
+      "sha256": "34e5e3c11015405dd540b2541f54086824b066aa83ed94c5fb80e2c13aa467f3"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\manifest.json",
+      "size": 1482,
+      "mtime": 639273486695551816,
+      "sha256": "546d83a2ad5615cfe937e021c2b7097f1997d7f13c8f3326f3d03e6aa60a967b"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\manifest.sha256",
+      "size": 80,
+      "mtime": 639273486695611806,
+      "sha256": "e7200d11952f130786c183dcce2318e817b0f54802e47f4f2d9170499bab227a"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\plan.json",
+      "size": 37502,
+      "mtime": 639273486569553008,
+      "sha256": "ea38ed0150fae79d140b44691ad64dbda223163296b98671966d1b07456f3f36"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\report.md",
+      "size": 11305,
+      "mtime": 639273486695178617,
+      "sha256": "e253f9ab9c40410e8f601a107716fbabd090782c75efa4dd47afb17cd64fb428"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\results.json",
+      "size": 242708,
+      "mtime": 639273486694388587,
+      "sha256": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+    },
+    {
+      "path": "C:\\repo\\hashlab\\results\\20261011T205056Z-exp001-fc1d75fc\\seeds.json",
+      "size": 1158,
+      "mtime": 639273486570408122,
+      "sha256": "b04fa14409ff07606e81757908109427e4309615afd702a564f346b19b32d931"
+    }
+  ],
+  "differences": 0
+}
