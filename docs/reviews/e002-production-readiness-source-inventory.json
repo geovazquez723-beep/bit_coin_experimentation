@@ -1,0 +1,1098 @@
+{
+  "schema": "hashlab-e002-production-readiness-source-inventory-v1",
+  "base_commit": "16f8b30ae30a9ef3ffc0f2868e9508e70c8007cd",
+  "base_tree": "5956c06c28b6843c09cc1d0830d56ea4fe3f7468",
+  "branch": "feat/e002-production-readiness",
+  "origin": "https://github.com/geovazquez723-beep/bit_coin_experimentation.git",
+  "pr3_merge_commit": "16f8b30ae30a9ef3ffc0f2868e9508e70c8007cd",
+  "pr3_merged_at_utc": "2026-10-14T02:07:45Z",
+  "inventory_scope": "All tracked working-copy bytes, preserved untracked documents, eleven original E001 files and eight retained S1.4 files. Environment and other ignored scratch are not exhaustively inventoried.",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 367,
+      "last_write_utc_ticks": 639274609764578498,
+      "sha256": "facad8f96e2ad78d3360c427c8ef44cd3165de43cf8c7ae69e74c5d5fac56a20"
+    },
+    {
+      "path": "configs/baseline.yaml",
+      "bytes": 4268,
+      "last_write_utc_ticks": 639273459337718873,
+      "sha256": "f2c0de21f3eba4b6a5fff41c8729b10d5c389e09334bd218f133d55a0140f225"
+    },
+    {
+      "path": "configs/smoke-evidence.yaml",
+      "bytes": 2078,
+      "last_write_utc_ticks": 639273475316263750,
+      "sha256": "d497bf4a8080597d978b3b98eaf3bb8542de29baeb979179870b48817152a421"
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "bytes": 5002,
+      "last_write_utc_ticks": 639273476559657988,
+      "sha256": "ee81401efc0fac5f02266a00bdb4059da5bdb24398038bd1a851fd79a99ca797"
+    },
+    {
+      "path": "docs/experiment-001.md",
+      "bytes": 7299,
+      "last_write_utc_ticks": 639273476820498582,
+      "sha256": "34a5b6ca6b4f0497745d21069b6da70992e9f3f0d670c7d6b3fde2bcc6ad0043"
+    },
+    {
+      "path": "docs/methodology.md",
+      "bytes": 19601,
+      "last_write_utc_ticks": 639273476367644703,
+      "sha256": "2c7b96dd73b34e89e7fbd7a265bcfc43361a8458e30d8a188e1c24287b3802fb"
+    },
+    {
+      "path": "docs/plans/hashlab-scientific-recovery-plan.md",
+      "bytes": 22781,
+      "last_write_utc_ticks": 639274386994214551,
+      "sha256": "bf09394b0a0086056e2f9efaa15c2e5c2c8024e62d98d6213d1ba6f8477c2ef5"
+    },
+    {
+      "path": "docs/proposals/e001-reconstruction-phase-b-proposal.md",
+      "bytes": 32518,
+      "last_write_utc_ticks": 639274609764578498,
+      "sha256": "b146c74e32d844a7493a1ece1540d3fab1894735ef63f7c81843ec3d061db84f"
+    },
+    {
+      "path": "docs/proposals/e002-i2-control-byte-specification.md",
+      "bytes": 22190,
+      "last_write_utc_ticks": 639275284130319848,
+      "sha256": "e902682c421251892b593dfaa59d067630187eef19019cad2b27095547ead6f7"
+    },
+    {
+      "path": "docs/proposals/experiment-002-a1-a3-seed-encoding-proposal.md",
+      "bytes": 5776,
+      "last_write_utc_ticks": 639274609764588494,
+      "sha256": "af533bdcf1b2bdcc158632969600596ea1d56c2449c8624df44a1ec51e958e67"
+    },
+    {
+      "path": "docs/proposals/experiment-002-r9-m1b-decision-proposal.md",
+      "bytes": 23041,
+      "last_write_utc_ticks": 639274369749390992,
+      "sha256": "d75cfc2a33fb99248521d00c46ea7bbcaf19627f6eed154e111dee2644d5e7f0"
+    },
+    {
+      "path": "docs/proposals/experiment-002-r9-m1b2-decision-brief.md",
+      "bytes": 10294,
+      "last_write_utc_ticks": 639274381711309502,
+      "sha256": "6b51a7c154829aa5a1d32aaa91604afe64ce25e7493fac682be4586a38b0fe09"
+    },
+    {
+      "path": "docs/proposals/experiment-002-research-design.md",
+      "bytes": 104710,
+      "last_write_utc_ticks": 639274609764588494,
+      "sha256": "60ebb200a1348413e7238c1e2db5daee6627e0d9a4f53071f49a20459cbf3310"
+    },
+    {
+      "path": "docs/proposals/experiment-002-revision-9-governance-migration.md",
+      "bytes": 37520,
+      "last_write_utc_ticks": 639274609764598496,
+      "sha256": "8b06fc5c8b844510107347387cf8d800f0d333a183ed2ec3df1fe64697395a85"
+    },
+    {
+      "path": "docs/proposals/experiment-002-secondary-statistics-proposal.md",
+      "bytes": 18228,
+      "last_write_utc_ticks": 639274609764608496,
+      "sha256": "9a368cda391e8983160490cce512b5e82f5b1f78fbba8326a533e9a836cd4e8f"
+    },
+    {
+      "path": "docs/proposals/experiment-002-solo-governance-revision-9.md",
+      "bytes": 54437,
+      "last_write_utc_ticks": 639274609764608496,
+      "sha256": "0e25dca29ba8c3db1d281b72b6be66b0e5b3dd7bd1412a44a2c0492d27588955"
+    },
+    {
+      "path": "docs/research-charter.md",
+      "bytes": 3161,
+      "last_write_utc_ticks": 639273443370726133,
+      "sha256": "1cd643b1f27c4ef2e6726af5afa87b5bdf44e2b4513e5ac10334ea1fb9c9c632"
+    },
+    {
+      "path": "docs/reviews/architecture-review-001-remediation.md",
+      "bytes": 21733,
+      "last_write_utc_ticks": 639273477216206413,
+      "sha256": "00500e415fe4188710cddb17c33578d7a5697508237cdb23c7776df9de9aaa25"
+    },
+    {
+      "path": "docs/reviews/architecture-review-002-remediation.md",
+      "bytes": 37159,
+      "last_write_utc_ticks": 639274609764618527,
+      "sha256": "7e79189577c8b779e75115f8c6aed42361e8c29fd0deb134d0b58ffd8dff16c1"
+    },
+    {
+      "path": "docs/reviews/architecture-review-008-operational-recovery.md",
+      "bytes": 17569,
+      "last_write_utc_ticks": 639274609764618527,
+      "sha256": "8c692c321b5af48aa1717ea0e6655ed30a180efd2ff88092a89ff0f8cfe7f628"
+    },
+    {
+      "path": "docs/reviews/architecture-review-024-python313-qualification.md",
+      "bytes": 3998,
+      "last_write_utc_ticks": 639274609764628512,
+      "sha256": "e19a20c10cadb7f5602953130b1253a5aa78d7a8811494f7c36019f2fa85e279"
+    },
+    {
+      "path": "docs/reviews/architecture-review-025-e1-implementation.md",
+      "bytes": 8271,
+      "last_write_utc_ticks": 639274609764628512,
+      "sha256": "c467a97e026c5063934b1c86ed9cba3012823221752b6b348826e17b641ab913"
+    },
+    {
+      "path": "docs/reviews/architecture-review-026-algorithm-d.md",
+      "bytes": 9604,
+      "last_write_utc_ticks": 639274609764638491,
+      "sha256": "6d319ae6ce8e0c27d788f2e5f5d5f00f9b7989c97cb034ab2763beeb478596c2"
+    },
+    {
+      "path": "docs/reviews/architecture-review-026-e1-implementation.md",
+      "bytes": 13155,
+      "last_write_utc_ticks": 639274609764638491,
+      "sha256": "2f77c2d57cb471db90007098f8468569619d9d7cb964a56b26ceab47b74f13fd"
+    },
+    {
+      "path": "docs/reviews/architecture-review-027-e1-closeout.md",
+      "bytes": 11730,
+      "last_write_utc_ticks": 639274609764648520,
+      "sha256": "d33d5967cd69a611018cb987349eb3bcdf047f956253e78fe61dd37849c3ceac"
+    },
+    {
+      "path": "docs/reviews/architecture-review-027-e1-performance.json",
+      "bytes": 3643,
+      "last_write_utc_ticks": 639274609764648520,
+      "sha256": "2cc89b1ba501ec4de726fc4e0e9c4e852aec47e7e1d93e6d0dc9fff079f5fd9c"
+    },
+    {
+      "path": "docs/reviews/architecture-review-028-e2-statistics.md",
+      "bytes": 9985,
+      "last_write_utc_ticks": 639274609764658519,
+      "sha256": "2c7e998536958dd946a97a732634024352b823859e589d6ef2f288cd26f1ba9b"
+    },
+    {
+      "path": "docs/reviews/architecture-review-029-e3-foundation.md",
+      "bytes": 14921,
+      "last_write_utc_ticks": 639274609764658519,
+      "sha256": "dd8c3eb8708d59fe9cbb0c37b42c84b7232c7e19932b855925c12bbb19f76893"
+    },
+    {
+      "path": "docs/reviews/architecture-review-032-e3-secondary.md",
+      "bytes": 12375,
+      "last_write_utc_ticks": 639274609764658519,
+      "sha256": "882667a1a4f65265b76c0e32e7f264828c9fd11870d79e93189e33c555138ce1"
+    },
+    {
+      "path": "docs/reviews/architecture-review-033-e4-foundation.md",
+      "bytes": 13404,
+      "last_write_utc_ticks": 639274609764668491,
+      "sha256": "a14b1b3a62e4a02484820218e6b4293006cee47a4996fa5a022806fc6cae3e99"
+    },
+    {
+      "path": "docs/reviews/architecture-review-035-g1-gap-assessment.md",
+      "bytes": 23158,
+      "last_write_utc_ticks": 639274609764668491,
+      "sha256": "04e900f475d14645b6ca4911b5f9f6b2a14fcf28623afe98d3682dff7c860e46"
+    },
+    {
+      "path": "docs/reviews/architecture-review-036-e001-numerical-differences.json",
+      "bytes": 24019,
+      "last_write_utc_ticks": 639274609764678486,
+      "sha256": "be383db934ec6bd95a28e4ba08b8dd468d0ad951a6d4ffdd0b9c0776761c2850"
+    },
+    {
+      "path": "docs/reviews/architecture-review-036-e5-phase-a.md",
+      "bytes": 19611,
+      "last_write_utc_ticks": 639274609764678486,
+      "sha256": "b373b785a8908573968466865232acd9027b18dcd595fbb7a3cf9b075b78a625"
+    },
+    {
+      "path": "docs/reviews/architecture-review-037-numerical-reproduction-decision.md",
+      "bytes": 16213,
+      "last_write_utc_ticks": 639274609764688505,
+      "sha256": "b71fd8e344447b2f6c6575bfea16189ddf801cf5ccee5acbe4ed1082f93c13de"
+    },
+    {
+      "path": "docs/reviews/architecture-review-038-e5-phase-b-bounded.md",
+      "bytes": 15996,
+      "last_write_utc_ticks": 639274609764688505,
+      "sha256": "95202fb595d6a5584c4dd181f721c64cb0cb8b5a3b5e1b6d1776ee7f1cc8eb8e"
+    },
+    {
+      "path": "docs/reviews/architecture-review-039-external-readiness.md",
+      "bytes": 14525,
+      "last_write_utc_ticks": 639274290056575340,
+      "sha256": "63843c51f8825625e6151f6012c078d5fa9df44ad625ad9b00959b0ed4609806"
+    },
+    {
+      "path": "docs/reviews/architecture-review-040-e6-preparation.md",
+      "bytes": 29030,
+      "last_write_utc_ticks": 639274294348432596,
+      "sha256": "f46642549873eed29abb861f37ab88bf2129dc4f768bc92eef3c17667501fa75"
+    },
+    {
+      "path": "docs/reviews/architecture-review-041-revision-9-governance.md",
+      "bytes": 11183,
+      "last_write_utc_ticks": 639274609764698486,
+      "sha256": "edc36554fe24d39fde7360793d64cc386a3cab0aefccb47ec65ee8178a811f18"
+    },
+    {
+      "path": "docs/reviews/architecture-review-043-director-revision-9-adoption.md",
+      "bytes": 4691,
+      "last_write_utc_ticks": 639274609764698486,
+      "sha256": "657396083eb590bebc104722e2ff4a67c2012634f1129138a6aae520377aedd0"
+    },
+    {
+      "path": "docs/reviews/architecture-review-043-r9-migration-handoff.md",
+      "bytes": 7067,
+      "last_write_utc_ticks": 639274609764708494,
+      "sha256": "c7651215fc45785272482a1dced806cc422e882edb19924334f28c40f5be0ef6"
+    },
+    {
+      "path": "docs/reviews/e001-full-reconstruction-tooling-handoff.md",
+      "bytes": 16453,
+      "last_write_utc_ticks": 639274609764708494,
+      "sha256": "f764d15cb0674aefefe910c5286727dc03889f91c6ec4395400d2cbad5734aa9"
+    },
+    {
+      "path": "docs/reviews/e001-historical-exclusion-audit-result.md",
+      "bytes": 12333,
+      "last_write_utc_ticks": 639274609764718488,
+      "sha256": "3ee88972218107f2207512864601d5957e4561d1e12298f008c20ebb1c3a5a4e"
+    },
+    {
+      "path": "docs/reviews/e001-historical-readiness-handoff.md",
+      "bytes": 13676,
+      "last_write_utc_ticks": 639274609764718488,
+      "sha256": "f0f8ee58db81ec2c77a72ee631e08da5f5d8a63b5fe6e8eef4feea05dddb04e7"
+    },
+    {
+      "path": "docs/reviews/e001-historical-scheduler-handoff.md",
+      "bytes": 13601,
+      "last_write_utc_ticks": 639274609764728530,
+      "sha256": "75b602996dfe5562f3bd3992867adeccfe33b3de1800004870bcf93bc939b05e"
+    },
+    {
+      "path": "docs/reviews/e002-i1-synthetic-pipeline-handoff.md",
+      "bytes": 7365,
+      "last_write_utc_ticks": 639274609764728530,
+      "sha256": "ef946769844e7d6dc16bddf549893d60416d6b2f3a95af28d41680d85d1ed861"
+    },
+    {
+      "path": "docs/reviews/e002-i2-controls-synthetic-handoff.md",
+      "bytes": 12341,
+      "last_write_utc_ticks": 639275284130319848,
+      "sha256": "d18dcea7397e7b24bea49be44cf00bdac99540e0c92844aa2a5ca090fa02da15"
+    },
+    {
+      "path": "docs/reviews/e002-i2-regression-disposition.md",
+      "bytes": 9349,
+      "last_write_utc_ticks": 639275284130329837,
+      "sha256": "96fc4518b456f832f87a4abd0d5306635c856ac0a52405c4baf12cf759090b96"
+    },
+    {
+      "path": "docs/reviews/e002-i3-full-system-integration-handoff.md",
+      "bytes": 13093,
+      "last_write_utc_ticks": 639275406744353943,
+      "sha256": "c7b10abe79d5469a902eda5c7d5cd873211eaece76899b0084838d6a3403a461"
+    },
+    {
+      "path": "docs/reviews/experiment-001-scientific-review.md",
+      "bytes": 28831,
+      "last_write_utc_ticks": 639274609764738509,
+      "sha256": "1d3bbf99412de8fcd529b7b50aaae98b797302fd744639f5337ba38511c7fa37"
+    },
+    {
+      "path": "docs/reviews/experiment-002-protocol-readiness-addendum.md",
+      "bytes": 48006,
+      "last_write_utc_ticks": 639274609764738509,
+      "sha256": "2016680fe67bb8fdcb1350f46ef09bcd832aba18f78a2786f4db1af296716b9e"
+    },
+    {
+      "path": "docs/reviews/r9-m1a-contract-foundation-handoff.md",
+      "bytes": 13038,
+      "last_write_utc_ticks": 639274609764748499,
+      "sha256": "b133ce852f0b609575630d5a4e3bb3c3c60237f079acd40bee5f18198cd5c561"
+    },
+    {
+      "path": "docs/reviews/r9-m1a-e001-preservation.json",
+      "bytes": 5840,
+      "last_write_utc_ticks": 639274609764748499,
+      "sha256": "847919ccbea8d48035b8391f25b8f34ed87f50a7aaef1160dc88130d004ef9a8"
+    },
+    {
+      "path": "docs/reviews/r9-m1b1-e001-preservation.json",
+      "bytes": 5746,
+      "last_write_utc_ticks": 639274609764748499,
+      "sha256": "f1fe6dfca194b781dc995b849ad7e5232305e610e97bce602a9db1a5b52f490d"
+    },
+    {
+      "path": "docs/reviews/r9-m1b1-structural-policy-handoff.md",
+      "bytes": 13523,
+      "last_write_utc_ticks": 639274609764758496,
+      "sha256": "f659aaccfe74d0d112c0d7b934f885ac4ae5a9517e55dbc638f9c99875c3b459"
+    },
+    {
+      "path": "docs/run_all_tagging.ps1",
+      "bytes": 7257,
+      "last_write_utc_ticks": 639275116620664392,
+      "sha256": "89e89af00ede8cf9c3820f1402c1ab53a9bbb3d86abb955682a02015b16b6482"
+    },
+    {
+      "path": "docs/smoke-test.md",
+      "bytes": 6329,
+      "last_write_utc_ticks": 639273475713062123,
+      "sha256": "8a022d9d01903a19671ace657cde2bc36808a57e3efc4c5da3f4d31279dcd9ca"
+    },
+    {
+      "path": "GITHUB_INITIAL_README.md",
+      "bytes": 31,
+      "last_write_utc_ticks": 639273447863215399,
+      "sha256": "943273d97edd24af6981390cabd0331327fde5bfdbfb969e43459cdf40422f05"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 618,
+      "last_write_utc_ticks": 639273475110949018,
+      "sha256": "54e386c40385f72f640125fd3c0a19b492a452004161369ad9669ea083300bc7"
+    },
+    {
+      "path": "README.md",
+      "bytes": 10862,
+      "last_write_utc_ticks": 639273476749607311,
+      "sha256": "0821c1b4ec3af27b1fa6d176f42c81e9f863fdba4b425feffba40bfa4f06cd29"
+    },
+    {
+      "path": "results/.gitkeep",
+      "bytes": 0,
+      "last_write_utc_ticks": 639273434907877180,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/analysis.json",
+      "bytes": 81503,
+      "last_write_utc_ticks": 639273486695178617,
+      "sha256": "5e22b2fc5d0ce4ed9dca71f0499c7b1b35f0f40a43d34228d8daad455d38b252"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/batches.jsonl",
+      "bytes": 254047,
+      "last_write_utc_ticks": 639273486694328583,
+      "sha256": "65ecf72decf20c9e9a8db29b1526c5dd39eeb2ecfc3d29166100d92e339fbad8"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/config.resolved.json",
+      "bytes": 2875,
+      "last_write_utc_ticks": 639273486569543035,
+      "sha256": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/config.source.yaml",
+      "bytes": 4268,
+      "last_write_utc_ticks": 639273486569543035,
+      "sha256": "f2c0de21f3eba4b6a5fff41c8729b10d5c389e09334bd218f133d55a0140f225"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/environment.json",
+      "bytes": 843,
+      "last_write_utc_ticks": 639273486570408122,
+      "sha256": "34e5e3c11015405dd540b2541f54086824b066aa83ed94c5fb80e2c13aa467f3"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/manifest.json",
+      "bytes": 1482,
+      "last_write_utc_ticks": 639273486695551816,
+      "sha256": "546d83a2ad5615cfe937e021c2b7097f1997d7f13c8f3326f3d03e6aa60a967b"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/manifest.sha256",
+      "bytes": 80,
+      "last_write_utc_ticks": 639273486695611806,
+      "sha256": "e7200d11952f130786c183dcce2318e817b0f54802e47f4f2d9170499bab227a"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/plan.json",
+      "bytes": 37502,
+      "last_write_utc_ticks": 639273486569553008,
+      "sha256": "ea38ed0150fae79d140b44691ad64dbda223163296b98671966d1b07456f3f36"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/report.md",
+      "bytes": 11305,
+      "last_write_utc_ticks": 639273486695178617,
+      "sha256": "e253f9ab9c40410e8f601a107716fbabd090782c75efa4dd47afb17cd64fb428"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/results.json",
+      "bytes": 242708,
+      "last_write_utc_ticks": 639273486694388587,
+      "sha256": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+    },
+    {
+      "path": "results/20261011T205056Z-exp001-fc1d75fc/seeds.json",
+      "bytes": 1158,
+      "last_write_utc_ticks": 639273486570408122,
+      "sha256": "b04fa14409ff07606e81757908109427e4309615afd702a564f346b19b32d931"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/producer/accounting.sqlite",
+      "bytes": 37801984,
+      "last_write_utc_ticks": 639274449661149743,
+      "sha256": "14bc1c75950284a1d514568207e7bbccea86706b44b118f95e42fa861e0b9803"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/producer/complete.json",
+      "bytes": 2104,
+      "last_write_utc_ticks": 639274449662505659,
+      "sha256": "c4fe9ba89f1c4390c5300a7a5512aaf20f2bc6fcbbfcbe2292b1af564f70ddc1"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/producer/exclusions.bin",
+      "bytes": 971536,
+      "last_write_utc_ticks": 639274449660929763,
+      "sha256": "39d09046325a41dd36d1bc0390e15a1d35a64f649d20f144b9025ccda4395268"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/producer/occurrences.bin",
+      "bytes": 133000000,
+      "last_write_utc_ticks": 639274449660599758,
+      "sha256": "dc27fca46c57a8c02aaa50584af1783e1f4e6dbfedb48231847415c509d9695f"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/producer/plan.json",
+      "bytes": 3464,
+      "last_write_utc_ticks": 639274448555425672,
+      "sha256": "19d6396493fc9b8aa9559fd8ddab65f219b920a13b447bb9fb00c04da782054b"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/producer/ranks.bin",
+      "bytes": 485768,
+      "last_write_utc_ticks": 639274449661129731,
+      "sha256": "124d6722591d81c9739e63d2702d67dcc3f889fb297a55fd52d7c7c800ee320a"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/verifier/reference.sqlite",
+      "bytes": 37789696,
+      "last_write_utc_ticks": 639274450726650568,
+      "sha256": "e024010e7585a019487fc47c1afcbc22ae1d7c7c497f1fc7e6a9cbf25f31970c"
+    },
+    {
+      "path": "results/e001-s14-audit-20261012-01/verifier/verified.json",
+      "bytes": 1881,
+      "last_write_utc_ticks": 639274450726730585,
+      "sha256": "3ed80c4d663614fb5245902f88037573776889dc3c3afc47e32018add11d42eb"
+    },
+    {
+      "path": "src/e001_stream_verify/__init__.py",
+      "bytes": 85,
+      "last_write_utc_ticks": 639274609764758496,
+      "sha256": "b9c1332f3c353ba1aac8beafd9d0dd3915feb976d84503f0de13aa25528d1343"
+    },
+    {
+      "path": "src/e001_stream_verify/streaming.py",
+      "bytes": 17406,
+      "last_write_utc_ticks": 639274609764768494,
+      "sha256": "3635cd0c5e89ae729db3dba83ff7271a9e85b30e8885424eeb2c1ba7e1876253"
+    },
+    {
+      "path": "src/e001_verify/__init__.py",
+      "bytes": 133,
+      "last_write_utc_ticks": 639274609764768494,
+      "sha256": "60d7eb28736f969aa9d34d7189284e54d7b78b0363391c14f049eba3b62629b5"
+    },
+    {
+      "path": "src/e001_verify/core.py",
+      "bytes": 6683,
+      "last_write_utc_ticks": 639274609764778514,
+      "sha256": "aafb7a0572993ef05b88da0e81f8310ac63eaf3b029636f16c61a14e64fa26ad"
+    },
+    {
+      "path": "src/e001_verify/occurrences.py",
+      "bytes": 6864,
+      "last_write_utc_ticks": 639274609764778514,
+      "sha256": "b84a923a1d8af392d9e910fdb57d53537729862d3d7f034211eebda319818ec1"
+    },
+    {
+      "path": "src/e002_verify/__init__.py",
+      "bytes": 77,
+      "last_write_utc_ticks": 639274609764788494,
+      "sha256": "6a77addda5adacd1cb3aed2caf2ee0278158ee5ddb485282dbbeb883b53b6a7a"
+    },
+    {
+      "path": "src/e002_verify/binomial_reference.py",
+      "bytes": 1897,
+      "last_write_utc_ticks": 639275406744363934,
+      "sha256": "9e85777fdf888794c844eb0205208610d524cca672789d2d74e05fb38d2640ac"
+    },
+    {
+      "path": "src/e002_verify/controls.py",
+      "bytes": 12889,
+      "last_write_utc_ticks": 639275284130339841,
+      "sha256": "16c304ef864970f57675d8af0bb3b4e97791094b51f5d832d284e4480f4f5174"
+    },
+    {
+      "path": "src/e002_verify/core.py",
+      "bytes": 15140,
+      "last_write_utc_ticks": 639274609764788494,
+      "sha256": "0ee1a370b423cb4cc595559945e2fd4147c33b9f359f368d9ce9473bc5345bf1"
+    },
+    {
+      "path": "src/e002_verify/integration_statistics.py",
+      "bytes": 15332,
+      "last_write_utc_ticks": 639275406744373938,
+      "sha256": "011d97ca928fb3d0c11435df960adf4b2e77a0fb2d8ee325ede3098110f8057f"
+    },
+    {
+      "path": "src/e002_verify/integration.py",
+      "bytes": 9130,
+      "last_write_utc_ticks": 639275406744363934,
+      "sha256": "373c2806b1046e852ff31617bbf0351d2dffccf410f683a2f732b89020f0dfbd"
+    },
+    {
+      "path": "src/e002_verify/secondary_reference.py",
+      "bytes": 3694,
+      "last_write_utc_ticks": 639275406744373938,
+      "sha256": "cdb474230b87a9f823631c3adb710f837963b2fa70a305a34019e4aeb8937abc"
+    },
+    {
+      "path": "src/hashlab/__init__.py",
+      "bytes": 425,
+      "last_write_utc_ticks": 639273475110743177,
+      "sha256": "53efc5ba94904ffd6c1f4b05da67c5883368bce3a6cb4143d7f28306ec00a28a"
+    },
+    {
+      "path": "src/hashlab/candidates/__init__.py",
+      "bytes": 1722,
+      "last_write_utc_ticks": 639273436781904802,
+      "sha256": "06007d74f8c0753c2b80f6c17e290e3717f88ed5d4374e3220d31ac3012a2f37"
+    },
+    {
+      "path": "src/hashlab/candidates/base.py",
+      "bytes": 4198,
+      "last_write_utc_ticks": 639273436369952763,
+      "sha256": "c48ed63d61846d635e320b6f1c39a938f7d3ad729939c236e5068f95889212d3"
+    },
+    {
+      "path": "src/hashlab/candidates/patterned.py",
+      "bytes": 6382,
+      "last_write_utc_ticks": 639273436779914865,
+      "sha256": "2504d48642a88223bc20e8064b4a691af9fc67f794894797cea3eed8597b1ab9"
+    },
+    {
+      "path": "src/hashlab/candidates/random.py",
+      "bytes": 5221,
+      "last_write_utc_ticks": 639273436371553104,
+      "sha256": "23fda0fce7f888d1a249c08e4639ed2a0279dd39f8aacff9d20e909c04a637c2"
+    },
+    {
+      "path": "src/hashlab/candidates/sequential.py",
+      "bytes": 3015,
+      "last_write_utc_ticks": 639273436370282908,
+      "sha256": "dcda060bd69bff354ecc4f6256da0fae39704d846c19ba9d61e36d4ff9246ae8"
+    },
+    {
+      "path": "src/hashlab/candidates/structured.py",
+      "bytes": 3293,
+      "last_write_utc_ticks": 639273436781584572,
+      "sha256": "2a9e89be3252821334a9948f809531bdd2ed6957c7add5c110752f318fbd9448"
+    },
+    {
+      "path": "src/hashlab/candidates/vitter.py",
+      "bytes": 9673,
+      "last_write_utc_ticks": 639274609764798489,
+      "sha256": "1c4213f687399ab500986a70608125a24f5d58cb5b85fae0f8e2a4e52c7ddca9"
+    },
+    {
+      "path": "src/hashlab/cli.py",
+      "bytes": 6086,
+      "last_write_utc_ticks": 639273440383200053,
+      "sha256": "31543ad010ed9309538349aa6e90614861f6fe5e25797050a05c37458a7853a3"
+    },
+    {
+      "path": "src/hashlab/evidence/__init__.py",
+      "bytes": 405,
+      "last_write_utc_ticks": 639273437910380758,
+      "sha256": "56c11af8fee40cc50b618324b36280bb113fe272150f153c177b5b796a9c9c3c"
+    },
+    {
+      "path": "src/hashlab/evidence/manifest.py",
+      "bytes": 5420,
+      "last_write_utc_ticks": 639273437945299450,
+      "sha256": "da7df47afb3e9c2672a78586184985605f17a3b4e4bc6f2c4c6d715e9a214855"
+    },
+    {
+      "path": "src/hashlab/evidence/storage.py",
+      "bytes": 4759,
+      "last_write_utc_ticks": 639273437908988198,
+      "sha256": "e3f0a2ec41a1aa813d820cf9ee5e98d88defb65c64007a1fb8119f004041ae8c"
+    },
+    {
+      "path": "src/hashlab/experiments/__init__.py",
+      "bytes": 494,
+      "last_write_utc_ticks": 639273440381714831,
+      "sha256": "bd155181f63d355903d2c19137ce1ac128fb3101264bc68c706a68808b8e06f1"
+    },
+    {
+      "path": "src/hashlab/experiments/analysis.py",
+      "bytes": 47265,
+      "last_write_utc_ticks": 639273474787530287,
+      "sha256": "b36a022fb5da01414d6b95fe47327da2efd04e6e6bc35351783787a155770f14"
+    },
+    {
+      "path": "src/hashlab/experiments/baseline.py",
+      "bytes": 29413,
+      "last_write_utc_ticks": 639273475058748005,
+      "sha256": "3de5e93dc71cc1f70def37f7fdda923c8d918e5c34eda04d7a51a3dc6905c96b"
+    },
+    {
+      "path": "src/hashlab/experiments/config.py",
+      "bytes": 9869,
+      "last_write_utc_ticks": 639273454523020005,
+      "sha256": "53f35b8124e007a2710d1654f525140858b24036f02c94b7a86d558aca8d110e"
+    },
+    {
+      "path": "src/hashlab/experiments/controls.py",
+      "bytes": 2396,
+      "last_write_utc_ticks": 639273438560000310,
+      "sha256": "5ce9ee2ab441ae393fc8281dad03732d36be47d22b183b951d2643614c18437b"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_contract.json",
+      "bytes": 11846,
+      "last_write_utc_ticks": 639274609764798489,
+      "sha256": "fa0cd10cd1efba6f17ea8b6d86b931432547350e95eaa7516efdc5cefe7d1cac"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_historical.py",
+      "bytes": 16732,
+      "last_write_utc_ticks": 639274609764808525,
+      "sha256": "e77266e6fc460cb59946ca5d0c8b8034ab4337356f0409ae67ade52db3ede513"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_phase_b_verification.py",
+      "bytes": 3036,
+      "last_write_utc_ticks": 639274609764818534,
+      "sha256": "5f4cb806c48612d3de9f15ef150a22a92079f64d33d70a5d3dea8514de5f7217"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_phase_b.py",
+      "bytes": 15538,
+      "last_write_utc_ticks": 639274609764808525,
+      "sha256": "3855b49aa58f9d5ef85927a2301ad42f7f438e791f9b1c671054627b5d20bf15"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_reconstruction.py",
+      "bytes": 11842,
+      "last_write_utc_ticks": 639274609764818534,
+      "sha256": "3f51a686f332bb82e2d03e650ac7977fea53db9cf05742ee29c75fce4c914c2a"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_scheduler.py",
+      "bytes": 11020,
+      "last_write_utc_ticks": 639274609764828535,
+      "sha256": "3d6cd2779088eca0011a46565ca81c0660e21349f1e72de4a3d4022b4916dcd8"
+    },
+    {
+      "path": "src/hashlab/experiments/e001_tooling.py",
+      "bytes": 9329,
+      "last_write_utc_ticks": 639274609764828535,
+      "sha256": "4281a56f5fd60134d2d8dce5507a405c779e8ec51a8e9b329851ea07e8efbf64"
+    },
+    {
+      "path": "src/hashlab/experiments/economics.py",
+      "bytes": 2902,
+      "last_write_utc_ticks": 639273452771559022,
+      "sha256": "fd2061ae643ec7ba2e2fd9b3f37c5e74ae456b17616ee6f927aa8fa3247b0568"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_controls.py",
+      "bytes": 14436,
+      "last_write_utc_ticks": 639275284130339841,
+      "sha256": "39986664c79f7ae1757f5c1348a6fa5622e6c7398e465dae3ffd599ceabd34a4"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_foundation.py",
+      "bytes": 28143,
+      "last_write_utc_ticks": 639274609764838528,
+      "sha256": "4b56c81a87254cb401b1d21546a9d37be10dd38e4907db337d2c16ed8d05fa87"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_governance.py",
+      "bytes": 6659,
+      "last_write_utc_ticks": 639274609764848522,
+      "sha256": "76a15b8abb73edac281538483d1afbcdba3d0beea4c4edfb1fb66acd1337ec4b"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_i2_synthetic.py",
+      "bytes": 5101,
+      "last_write_utc_ticks": 639275284130349841,
+      "sha256": "5ff68ebb3731d4a45d848d76b538114d3195cf9f05aa75daafc12bb3cce79a46"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_integration_statistics.py",
+      "bytes": 3158,
+      "last_write_utc_ticks": 639275406744383934,
+      "sha256": "d9848c6047bc1fc9f42f78b428cb913a054f1474c538b01b1da67f09f569abe3"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_integration.py",
+      "bytes": 9821,
+      "last_write_utc_ticks": 639275406744378941,
+      "sha256": "93ca5a31ec127fb99fc474eefe38e6de98d783d8a2b964b5382348e973a479ab"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_journal.py",
+      "bytes": 8216,
+      "last_write_utc_ticks": 639274609764848522,
+      "sha256": "252f744aaace7140ecd418c0bb82296ec10d530d84bf44d1559e3f4830a38b7b"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_provenance.py",
+      "bytes": 3197,
+      "last_write_utc_ticks": 639274609764848522,
+      "sha256": "af9637137c039ccafd26a8ad8af34caea69274b2a83018e93265a241db22429c"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_r9_contracts.py",
+      "bytes": 16619,
+      "last_write_utc_ticks": 639274609764858491,
+      "sha256": "7c30a7c2d7afac0cd4aaada658785d1f906633d602829ac05389d4f8fc8242b9"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_r9_policy.py",
+      "bytes": 14939,
+      "last_write_utc_ticks": 639274609764858491,
+      "sha256": "eb07d4c788e2c537d2b465a2cb702392e72a043d88ef534ba55b9b78d1768381"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_s14.py",
+      "bytes": 5544,
+      "last_write_utc_ticks": 639274609764858491,
+      "sha256": "05254e3bf7cf689e6cfae08cd15ddb93ce208c3f5f5790d2953cf6d94de09415"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002_synthetic.py",
+      "bytes": 6197,
+      "last_write_utc_ticks": 639274609764878499,
+      "sha256": "4ad3380fa075b245352969b754a74d8f0fbbdc72073f7369450e18b70737cf03"
+    },
+    {
+      "path": "src/hashlab/experiments/exp002.py",
+      "bytes": 18918,
+      "last_write_utc_ticks": 639274609764838528,
+      "sha256": "a81314a5effe8357bb25baec1c3dae50e8f962ee41c74595bdd202849a47fdf4"
+    },
+    {
+      "path": "src/hashlab/experiments/selfcheck.py",
+      "bytes": 3717,
+      "last_write_utc_ticks": 639273440381984777,
+      "sha256": "c044431e477d25129011bc1c3852d8bf30194c6b81c900d7dfb7e897731c2bbb"
+    },
+    {
+      "path": "src/hashlab/hashing/__init__.py",
+      "bytes": 780,
+      "last_write_utc_ticks": 639273435171345370,
+      "sha256": "11329cc1cddc9af92a5e6e57e4e187e939d857210dbbdc37a316bcf2aecd6bb1"
+    },
+    {
+      "path": "src/hashlab/hashing/sha256.py",
+      "bytes": 554,
+      "last_write_utc_ticks": 639273435173092771,
+      "sha256": "f37ff066d02658daabf2d14679a54cd11bc7371c371e0729fd9389e8f9540a9f"
+    },
+    {
+      "path": "src/hashlab/hashing/sha256d.py",
+      "bytes": 934,
+      "last_write_utc_ticks": 639273435174568641,
+      "sha256": "40d884a1d79abb766275b999bf50f383f4c1966524a1bdb9f112652234d95c8e"
+    },
+    {
+      "path": "src/hashlab/hashing/target.py",
+      "bytes": 3553,
+      "last_write_utc_ticks": 639273435174916909,
+      "sha256": "c1bba74ee95757fb315e361c210c0d2f0c5795c2f3018fad6067bf948144cfc5"
+    },
+    {
+      "path": "src/hashlab/statistics/__init__.py",
+      "bytes": 936,
+      "last_write_utc_ticks": 639273455094778352,
+      "sha256": "b065126c987c0cf702b97caf1f207032d333c0caad6d2c5a4633dd08af33942d"
+    },
+    {
+      "path": "src/hashlab/statistics/distribution.py",
+      "bytes": 4616,
+      "last_write_utc_ticks": 639273437474321270,
+      "sha256": "5adceb9437bb0f3eb79a04fc8d5eac0d8435f5359ddbb54db0697bb6ae079b88"
+    },
+    {
+      "path": "src/hashlab/statistics/exp002_secondary.py",
+      "bytes": 9023,
+      "last_write_utc_ticks": 639274609764888498,
+      "sha256": "c704b17cb16628b8e326a7d07343f76d612854665d9981749e6c49097cdc2d80"
+    },
+    {
+      "path": "src/hashlab/statistics/exp002.py",
+      "bytes": 12023,
+      "last_write_utc_ticks": 639274609764878499,
+      "sha256": "35236299652f55031424bd95549387e260979285f61041f2d1d546a9c565115a"
+    },
+    {
+      "path": "src/hashlab/statistics/inference.py",
+      "bytes": 14750,
+      "last_write_utc_ticks": 639273455020542951,
+      "sha256": "4c6c33ee713396c2b2e70587514dc2939af1f0efe7b60bfff9c35d9347b9f956"
+    },
+    {
+      "path": "tests/conftest.py",
+      "bytes": 1755,
+      "last_write_utc_ticks": 639273442198135203,
+      "sha256": "aa7d1f5df6e10c6abfaebdfb7476230cc0dafd792f834e95c3b09a262c5aca34"
+    },
+    {
+      "path": "tests/e001_reference.py",
+      "bytes": 3013,
+      "last_write_utc_ticks": 639274609764888498,
+      "sha256": "9e5ea3df1665caa8503f8fbbfe23f4f471d8d4ab00434f635995f6c950a34d67"
+    },
+    {
+      "path": "tests/exp002_reference.py",
+      "bytes": 1897,
+      "last_write_utc_ticks": 639274609764888498,
+      "sha256": "9e85777fdf888794c844eb0205208610d524cca672789d2d74e05fb38d2640ac"
+    },
+    {
+      "path": "tests/exp002_secondary_reference.py",
+      "bytes": 3694,
+      "last_write_utc_ticks": 639274609764898494,
+      "sha256": "cdb474230b87a9f823631c3adb710f837963b2fa70a305a34019e4aeb8937abc"
+    },
+    {
+      "path": "tests/fixtures/e001-mt19937-synthetic-v1.json",
+      "bytes": 4781,
+      "last_write_utc_ticks": 639274609764898494,
+      "sha256": "3a3c8b91fe74542a10e2de8ef12886e10441ebbc02a6b2de1c8cd8c2fba304be"
+    },
+    {
+      "path": "tests/fixtures/exp002-e2-synthetic.json",
+      "bytes": 321345,
+      "last_write_utc_ticks": 639274609764908523,
+      "sha256": "2ab331f8146f37db8fbfc657c138971dbb32207a2940f2f09183af479741e60e"
+    },
+    {
+      "path": "tests/fixtures/exp002-r9-algorithmic-synthetic-v1.json",
+      "bytes": 2921,
+      "last_write_utc_ticks": 639274609764918515,
+      "sha256": "9b5a89e218eb7c8399a29f1a51fd30dcc9cca3964b7525c37a6328b45817d6e9"
+    },
+    {
+      "path": "tests/fixtures/exp002-r9-director-synthetic-v1.json",
+      "bytes": 2301,
+      "last_write_utc_ticks": 639274609764918515,
+      "sha256": "ebef50ea53dec3a0dc625185faa03bb6244b0a8138c8c7740480071d4a106a30"
+    },
+    {
+      "path": "tests/fixtures/exp002-secondary-v2-reference.json",
+      "bytes": 1152727,
+      "last_write_utc_ticks": 639274609764948485,
+      "sha256": "6c052e6c7f450f495caa3e69a8d3c3b833290fd6d2e6638fc09b7a3d6342dbae"
+    },
+    {
+      "path": "tests/test_analysis.py",
+      "bytes": 19565,
+      "last_write_utc_ticks": 639273476011205758,
+      "sha256": "17adb0730adb130e5b403c3ddbaabdc07c00e5111c73b903bce402132c360727"
+    },
+    {
+      "path": "tests/test_cli.py",
+      "bytes": 6010,
+      "last_write_utc_ticks": 639273463836841872,
+      "sha256": "28b7371a236b40007cbdc23e7eb464d24414272b8a13f95d0fa863491b1c1b47"
+    },
+    {
+      "path": "tests/test_config.py",
+      "bytes": 7977,
+      "last_write_utc_ticks": 639273476011356080,
+      "sha256": "078ad7b6ad9067ae70d8a2b2c831c61c4adeb174806e493c598781c4211e6844"
+    },
+    {
+      "path": "tests/test_e001_historical.py",
+      "bytes": 17861,
+      "last_write_utc_ticks": 639274609764948485,
+      "sha256": "848c9ff3137aa9e5b277176ffbad6a09c12b4a59a5bf13ae7cbca525edaf1e02"
+    },
+    {
+      "path": "tests/test_e001_phase_b.py",
+      "bytes": 14596,
+      "last_write_utc_ticks": 639274609764958502,
+      "sha256": "8bc8d1613687005e834b3e2f81829572f8664981e8a770e61f56ca0ec65e96f8"
+    },
+    {
+      "path": "tests/test_e001_reconstruction.py",
+      "bytes": 10864,
+      "last_write_utc_ticks": 639274609764958502,
+      "sha256": "dcf9b0ca043784cffbf1f65681611f313ac777fd2fbace85b26feca1ea90f118"
+    },
+    {
+      "path": "tests/test_e001_scheduler.py",
+      "bytes": 15092,
+      "last_write_utc_ticks": 639274609764968494,
+      "sha256": "6b0b7af081b30d0076e5044519424d67f1def3d3ca15a17e7d5e2fe619cf224a"
+    },
+    {
+      "path": "tests/test_e001_tooling.py",
+      "bytes": 15459,
+      "last_write_utc_ticks": 639274609764968494,
+      "sha256": "2abaa2c9bf840dc121665eea32b7b57343672820527cbdf74bee418b1bde450f"
+    },
+    {
+      "path": "tests/test_evidence.py",
+      "bytes": 3822,
+      "last_write_utc_ticks": 639273442199343626,
+      "sha256": "d6efb9c22fceacb58a98a08522459a85d4cf14cd9ad76f55f0c8aeb5d60264ee"
+    },
+    {
+      "path": "tests/test_exp002_e1.py",
+      "bytes": 13009,
+      "last_write_utc_ticks": 639274609764978505,
+      "sha256": "0bd96f9511b0e894456d715a377206005e573dcfaeaee5d81401f3259087e5ed"
+    },
+    {
+      "path": "tests/test_exp002_e2.py",
+      "bytes": 11886,
+      "last_write_utc_ticks": 639274609764978505,
+      "sha256": "dc6dd98d73a147c63ba49fc5f5ff4131a15dfe8874ca63def6139ca2c724bf4e"
+    },
+    {
+      "path": "tests/test_exp002_e3.py",
+      "bytes": 14117,
+      "last_write_utc_ticks": 639274609764978505,
+      "sha256": "da6f4428096fafe6eba34ed2a6b4a517da28f77ae0997ea1ced5bd46eb7da810"
+    },
+    {
+      "path": "tests/test_exp002_e4.py",
+      "bytes": 16915,
+      "last_write_utc_ticks": 639274609764988504,
+      "sha256": "7ad75ec2330a81f5e89436eb1332c90c9e1f3ef07d53f09a2fa5fc6e8f2ca41b"
+    },
+    {
+      "path": "tests/test_exp002_i1.py",
+      "bytes": 19189,
+      "last_write_utc_ticks": 639274609764988504,
+      "sha256": "af8cd76e77b75c907f86f64d57053f8c2fb18d08e9cde3af556028ac936e47b6"
+    },
+    {
+      "path": "tests/test_exp002_i2.py",
+      "bytes": 23411,
+      "last_write_utc_ticks": 639275284130349841,
+      "sha256": "a150cd56b2daa0e5b23505790e7b54de43feee1865fc988546e83ad4aebfec9a"
+    },
+    {
+      "path": "tests/test_exp002_i3.py",
+      "bytes": 16859,
+      "last_write_utc_ticks": 639275406744388954,
+      "sha256": "9ac7ce021319b699db758d524bfb32744979a00e8bb2f41101ba812792e77ccc"
+    },
+    {
+      "path": "tests/test_exp002_r9_contracts.py",
+      "bytes": 13418,
+      "last_write_utc_ticks": 639274609764998500,
+      "sha256": "95f2aa27ee81ae6d1dbc4d61dcc863294a98ebcc48057932f88201dd2524cb92"
+    },
+    {
+      "path": "tests/test_exp002_r9_policy.py",
+      "bytes": 16213,
+      "last_write_utc_ticks": 639274609764998500,
+      "sha256": "176179e8ba23bbdc6ba8e54c2d2ad7c8e34d02d19b9ce7d762b5f0b50e658e76"
+    },
+    {
+      "path": "tests/test_exp002_secondary.py",
+      "bytes": 13116,
+      "last_write_utc_ticks": 639274609764998500,
+      "sha256": "67c847a3b579a55ac57fc058b626782c5879c0d8e3a81d0b63f2f6d6271a1770"
+    },
+    {
+      "path": "tests/test_generators.py",
+      "bytes": 7162,
+      "last_write_utc_ticks": 639273441307568332,
+      "sha256": "43ac111fad8cd42ad8190c0386a89dba033c732340afad4713ab64019b2169f9"
+    },
+    {
+      "path": "tests/test_hashing.py",
+      "bytes": 4442,
+      "last_write_utc_ticks": 639273441263997903,
+      "sha256": "0e504db79b0b62af06c22117c2c07ec232b45a75efdb05388622c0be73081606"
+    },
+    {
+      "path": "tests/test_runner.py",
+      "bytes": 4919,
+      "last_write_utc_ticks": 639273441752340426,
+      "sha256": "b375831683f08330486d709696443f73850cb63b6ee7585a58258182f4a07efd"
+    },
+    {
+      "path": "tests/test_statistics_reference.py",
+      "bytes": 14647,
+      "last_write_utc_ticks": 639273463505769651,
+      "sha256": "1c06c19f67b11515683f909df69a794f200df9f6b6105c8a4ff53ac0c3acdff5"
+    },
+    {
+      "path": "tests/test_statistics.py",
+      "bytes": 6186,
+      "last_write_utc_ticks": 639273442805032887,
+      "sha256": "16235f86a4bbd689dcfb7766f63dc49fd64b68db7356defa1a9200fbbfdb27d0"
+    },
+    {
+      "path": "tests/test_vitter.py",
+      "bytes": 11589,
+      "last_write_utc_ticks": 639274609765008481,
+      "sha256": "06b68fa3d1bdda6516656b9a0df7f1678d5a128acb0777c3b8ebc61c3c572335"
+    },
+    {
+      "path": "tools/benchmark_exp002_e1.py",
+      "bytes": 4599,
+      "last_write_utc_ticks": 639274609765008481,
+      "sha256": "e9660847f18c2a935b35ca0edb1cf6a1163c0870bcf8da9cd375ed9ba6dd28b2"
+    },
+    {
+      "path": "tools/build_exp002_secondary_references.py",
+      "bytes": 6839,
+      "last_write_utc_ticks": 639274609765018497,
+      "sha256": "3df6a1c77eb400f613105e96e6ec7777e6832addc2a48cd3d32d563b8f37d2fd"
+    },
+    {
+      "path": "tools/qualify_e001_readiness.py",
+      "bytes": 4778,
+      "last_write_utc_ticks": 639274609765018497,
+      "sha256": "4b67680a48dbaec7bf5de1245f99bc0ec594f43265f1be3a7fa1edc1dd283191"
+    },
+    {
+      "path": "tools/qualify_e002_i1.py",
+      "bytes": 2985,
+      "last_write_utc_ticks": 639274609765028535,
+      "sha256": "6f51a8c114e4c2b071fa74f916c45120cce17e83b03f6489d22abe5f14accd9c"
+    },
+    {
+      "path": "tools/qualify_e002_i2.py",
+      "bytes": 3009,
+      "last_write_utc_ticks": 639275284130349841,
+      "sha256": "dcd0f74fd3ecb4918a81c0b5b5dfb47e14777b4a318dc3fbb0a75fded06e5036"
+    },
+    {
+      "path": "tools/qualify_e002_i3.py",
+      "bytes": 3020,
+      "last_write_utc_ticks": 639275406744393929,
+      "sha256": "811a89fd5652f21c5eb5e7a59754b1a4dd9bea34269ec539569faea3a5cd4815"
+    }
+  ],
+  "merged_i3_source_commit": "cde2ad1e855f47ca9d0ddb4e3bae0191c36980b6",
+  "verification": {
+    "existing_files_rechecked": 179,
+    "byte_size_mtime_mismatches": 0,
+    "retained_s14_files_matching_source_pins": 8,
+    "tracked_diff_empty": true,
+    "staged_diff_empty": true,
+    "candidate_hashes_executed": 0,
+    "tests_executed": false,
+    "performance_workloads_executed": false,
+    "assessment_sha256": "feff87972ca8bd72ba2157c9c54c5bc6edb934ef10df85d8a3db54e5d87e444f"
+  }
+}
