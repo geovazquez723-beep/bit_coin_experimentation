@@ -291,6 +291,12 @@ def parse_verification_report(raw, *, plan, full, completion_sha256):
             or c.get('compression_blocks') != PRODUCTION_BLOCKS
             or type(c.get('attempts_reconstructed')) is not int or c['attempts_reconstructed'] < PRODUCTION_EVALUATIONS):
         raise ValueError('verification report coverage incomplete')
+    candidate = report['independence'].get('candidate_sha256') if type(report['independence']) is dict else None
+    if (type(candidate) is not dict or candidate.get('role') != 'candidate-evaluation'
+            or candidate.get('backend') not in ('hacl', 'cng', 'reference')
+            or candidate.get('independent_of_producer') is not True or candidate.get('shared_with_producer') is not False
+            or candidate.get('known_answers') != 'passed'):
+        raise ValueError('report does not identify an independent candidate SHA-256 backend (Revision 8 3.9)')
     if (claims != dict(independent_regeneration_and_rehash=True, external_receipt=False, disclosure_authorized=False,
                        execution_authorized=False, g1=False, qa2=False, sampled_audit_absence_claim=False)):
         raise ValueError('verification report claims exceed independent regeneration')

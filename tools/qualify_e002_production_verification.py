@@ -21,6 +21,8 @@ def main():
     parser.add_argument('--seed-record', type=Path)
     parser.add_argument('--geometry', choices=('bounded-fixture', 'production'), default='bounded-fixture')
     parser.add_argument('--report', type=Path)
+    parser.add_argument('--backend', choices=('hacl', 'cng', 'reference'), default='hacl',
+                        help='independent candidate-evaluation SHA-256 backend (never hashlib)')
     args = parser.parse_args()
     if args.role == 'verify' and not (args.pin and args.seed_record):
         parser.error('verify requires a retained --pin and --seed-record')
@@ -34,7 +36,7 @@ def main():
         from e002_verify.production_evidence import verify_evidence
         result = verify_evidence(args.destination, completion_sha256=args.pin, geometry_name=args.geometry,
                                  seed_record=args.seed_record.read_bytes(), audit_root=audit,
-                                 repository_root=args.repository)
+                                 repository_root=args.repository, candidate_backend=args.backend)
     from qualify_e002_i3 import peak_rss
     report = dict(result=result, elapsed_seconds=time.perf_counter()-started, peak_rss_bytes=peak_rss())
     if args.report:

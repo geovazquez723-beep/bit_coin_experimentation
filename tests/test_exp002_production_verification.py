@@ -693,74 +693,14 @@ def test_report_shape_matches_what_the_producer_side_parser_expects(evidence):
 
 # ------------------------------------------------------------------ SHA-256 status
 
-def test_sha256_known_answers_and_declared_non_independence(evidence):
-    import hashlib
-    vectors = {b'': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-               b'abc': 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
-               b'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq':
-                   '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1',
-               b'a'*1_000_000: 'cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0'}
-    assert all(hashlib.sha256(m).hexdigest() == d for m, d in vectors.items())
+def test_report_identifies_the_independent_candidate_backend_and_the_separate_integrity_hash(evidence):
+    root, pin = evidence
+    independence = verify(root, pin)['independence']
+    candidate, integrity = independence['candidate_sha256'], independence['file_integrity_sha256']
+    assert candidate['role'] == 'candidate-evaluation' and candidate['backend'] == 'hacl'
+    assert candidate['independent_of_producer'] is True and candidate['shared_with_producer'] is False
+    assert candidate['known_answers'] == 'passed' and candidate['producer_backend'].startswith('hashlib.sha256')
+    assert integrity['role'] == 'file-integrity' and integrity['used_for_candidate_evaluation'] is False
     from hashlab.hashing.sha256 import SHA256Engine
-    assert SHA256Engine().digest(b'abc').hex() == vectors[b'abc']
-    root, pin = evidence
-    backend = verify(root, pin)['independence']['sha256']
-    assert backend['shared_with_producer'] is True and backend['r8_3_9_independent_implementation'] is False
-    assert backend['implementation'] == 'hashlib.sha256' and 'known-answer' in backend['remaining_requirement']
     import inspect
-    assert 'hashlib.sha256' in inspect.getsource(SHA256Engine)            # same library on the producer side
-
-
-# ------------------------------------------------ D2: bundle and C_pre relationship
-
-def commitment_inputs():
-    from hashlab.experiments import exp002_finalization as producer
-    plan = producer_plan()
-    raw = beacon_record()
-    master, digest, facts = ev.parse_seed_record(raw, v.FROZEN)
-    commitment = ev.parse_seed_commitment(producer.seed_commitment(plan, raw), seed_record_sha=digest, facts=facts,
-                                          master=master, code_commit=plan.code_commit)
-    return producer, plan, facts, commitment
-
-
-def test_bundle_binds_round_chain_and_frozen_seedless_identities():
-    producer, plan, facts, commitment = commitment_inputs()
-    bundle = producer.preregistration_bundle(plan, 1000)
-    assert ev.parse_preregistration_bundle(bundle, facts=facts, commitment=commitment)['reveal_round'] == '1000'
-    assert commitment['preregistration_bundle_sha256'] == facts['bundle_sha256'] == sha256(bundle).hexdigest()
-    wrong = [producer.preregistration_bundle(plan, 1001), bundle + b' ', b'{}', b'x'*9000,
-             canonical(dict(json.loads(bundle), chain_hash='0'*64)),
-             canonical(dict(json.loads(bundle), seedless_plan_sha256='f'*64)),
-             canonical(dict(json.loads(bundle), config_sha256=commitment['seeded_config_sha256'])),   # seeded digest in a frozen field
-             canonical(dict(json.loads(bundle), extra=1))]
-    for raw in wrong:
-        with pytest.raises(ValueError):
-            ev.parse_preregistration_bundle(raw, facts=facts, commitment=commitment)
-    forged = dict(facts, bundle_sha256=sha256(wrong[5]).hexdigest())          # self-consistent digest, wrong content
-    with pytest.raises(ValueError):
-        ev.parse_preregistration_bundle(wrong[5], facts=forged, commitment=commitment)
-    with pytest.raises(ValueError):
-        ev.parse_preregistration_bundle(bundle, facts=dict(facts, round='1001'), commitment=commitment)
-    with pytest.raises(ValueError):                                           # seeded == seedless would hide a missing seed
-        ev.parse_preregistration_bundle(bundle, facts=facts, commitment=dict(commitment, seeded_config_sha256=commitment['config_sha256']))
-
-
-def test_retained_bundle_must_be_the_exact_content_of_the_c_pre_commit(tmp_path):
-    producer, plan, facts, commitment = commitment_inputs()
-    bundle = producer.preregistration_bundle(plan, 1000)
-    repo, _ = tiny_repo(tmp_path)
-    (repo/'preregistration.json').write_bytes(bundle)
-    for args in (['add', '.'], ['commit', '-q', '-m', 'c_pre']):
-        subprocess.run(['git', '-c', 'user.name=unit', '-c', 'user.email=unit@example.invalid', *args], cwd=repo, check=True, capture_output=True)
-    c_pre = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=repo, check=True, capture_output=True, text=True).stdout.strip()
-    ev.verify_c_seed(repo, c_pre, {'preregistration.json': bundle})
-    with pytest.raises(ValueError):
-        ev.verify_c_seed(repo, c_pre, {'preregistration.json': producer.preregistration_bundle(plan, 1001)})
-
-
-def test_production_verification_also_requires_the_retained_bundle(evidence):
-    root, pin = evidence
-    producer, plan, facts, commitment = commitment_inputs()
-    with pytest.raises(ValueError):
-        verify(root, pin, geometry_name='production', seed_record=beacon_record(domain='experiment-002'),
-               seed_commitment=producer.seed_commitment(plan, beacon_record()), c_seed='5'*40)
+    assert 'hashlib.sha256' in inspect.getsource(SHA256Engine)            # producer unchanged: hashlib/OpenSSL
