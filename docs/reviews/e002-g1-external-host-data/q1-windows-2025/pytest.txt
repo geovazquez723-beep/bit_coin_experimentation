@@ -1,0 +1,37 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.7.0
+rootdir: D:\a\bit_coin_experimentation\bit_coin_experimentation
+configfile: pyproject.toml
+plugins: platformdirs-4.12.4
+collected 22 items
+
+tests\test_exp002_e4.py ..                                               [  9%]
+tests\test_exp002_g1d_reparse_security.py ..............                 [ 72%]
+tests\test_exp002_symlink_simulation.py ......                           [100%]
+
+=================================== PASSES ====================================
+- generated xml file: D:\a\bit_coin_experimentation\bit_coin_experimentation\q1-evidence\junit.xml -
+=========================== short test summary info ===========================
+PASSED tests/test_exp002_e4.py::test_symbolic_links_block_inventory_and_disclosure[False]
+PASSED tests/test_exp002_e4.py::test_symbolic_links_block_inventory_and_disclosure[True]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_linked_evidence_root_is_refused_by_every_reader[junction]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_linked_evidence_root_is_refused_by_every_reader[dir-symlink]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_output_beneath_a_linked_parent_is_refused_before_anything_is_created[junction]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_output_beneath_a_linked_parent_is_refused_before_anything_is_created[dir-symlink]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_linked_directory_entry_in_the_evidence_inventory_fails_closed[junction-chunk-00000000.bin]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_linked_directory_entry_in_the_evidence_inventory_fails_closed[junction-unexpected-entry]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_linked_directory_entry_in_the_evidence_inventory_fails_closed[dir-symlink-chunk-00000000.bin]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_linked_directory_entry_in_the_evidence_inventory_fails_closed[dir-symlink-unexpected-entry]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_file_symlink_substituted_for_a_regular_evidence_file_is_refused_even_when_bytes_match[chunk-00000000.bin]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_file_symlink_substituted_for_a_regular_evidence_file_is_refused_even_when_bytes_match[complete.json]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_file_symlink_substituted_for_a_regular_evidence_file_is_refused_even_when_bytes_match[plan.json]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_file_symlink_substituted_for_a_regular_evidence_file_is_refused_even_when_bytes_match[chunks.jsonl]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_file_symlink_substituted_for_a_regular_evidence_file_is_refused_even_when_bytes_match[environment.json]
+PASSED tests/test_exp002_g1d_reparse_security.py::test_content_pinning_not_path_pinning_for_a_linked_ancestor
+PASSED tests/test_exp002_symlink_simulation.py::test_require_plain_refuses_link_shaped_entries[1024-41471]
+PASSED tests/test_exp002_symlink_simulation.py::test_require_plain_refuses_link_shaped_entries[1024-33188]
+PASSED tests/test_exp002_symlink_simulation.py::test_require_plain_refuses_link_shaped_entries[0-41471]
+PASSED tests/test_exp002_symlink_simulation.py::test_plain_file_is_still_accepted
+PASSED tests/test_exp002_symlink_simulation.py::test_inventory_and_partial_inspection_refuse_a_link_shaped_entry[inventory]
+PASSED tests/test_exp002_symlink_simulation.py::test_inventory_and_partial_inspection_refuse_a_link_shaped_entry[inspect_partial]
+============================= 22 passed in 1.94s ==============================
