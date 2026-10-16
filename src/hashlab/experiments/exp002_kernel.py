@@ -256,6 +256,9 @@ class VerifiedCapture:
 
     def __repr__(self): return '<VerifiedCapture primary=withheld validation=withheld>'
 
+    def __reduce__(self): raise TypeError('private capture cannot be serialized or copied')
+    __getstate__ = __reduce__
+
     def engineering_accounting(self):
         if type(self.__plan) is not EngineeringPlan: raise PermissionError('production observations withheld')
         return decode(self.__accounting)
