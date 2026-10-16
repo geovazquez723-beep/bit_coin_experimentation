@@ -297,13 +297,6 @@ def test_accepted_sources_and_sealed_evidence_unchanged():
     sealed = Path('results/20261011T205056Z-exp001-fc1d75fc')
     validate_history(sealed, Path.cwd())
     assert verify_manifest(sealed) == []
-    # Session snapshot is local qualification evidence, not historical provenance.
-    snapshot = Path('results-smoke/e001-s12-qualification/before.json')
-    if snapshot.exists():
-        before = json.loads(snapshot.read_text())
-        for inventory in (before['sealed'], before['protected']):
-            for name, entry in inventory.items():
-                p = Path(name)
-                assert p.stat().st_size == entry['size']
-                assert p.stat().st_mtime_ns == entry['mtime_ns']
-                assert sha256(p.read_bytes()).hexdigest() == entry['sha256']
+    # Session snapshot is local qualification evidence, not historical provenance; see tests/e001_snapshot.py.
+    from e001_snapshot import check_snapshot_file
+    assert check_snapshot_file(Path('results-smoke/e001-s12-qualification/before.json')) == []
