@@ -11,6 +11,7 @@ import struct
 import traceback
 
 import pytest
+from hashing_fixture import synthetic_hashing_identity
 
 from hashlab.experiments import exp002_kernel as k
 from hashlab.experiments import exp002_kernel_plan as plans
@@ -68,7 +69,7 @@ def verify(root,pin):
 
 def production_plan():
     runtime=plans.RuntimeBinding('CPython 3.13.0 engineering identity','unit-platform','1'*64,
-                                (('PyYAML','6.0.3','2'*64),))
+                                (('PyYAML','6.0.3','2'*64),),hashing=synthetic_hashing_identity())
     return plans.ProductionPlan('16f8b30ae30a9ef3ffc0f2868e9508e70c8007cd',
         tuple(plans.Artifact(p,1,'3'*64) for p in sorted(plans.REQUIRED_SOURCES)),runtime)
 

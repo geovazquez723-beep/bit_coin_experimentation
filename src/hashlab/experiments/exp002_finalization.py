@@ -297,6 +297,10 @@ def parse_verification_report(raw, *, plan, full, completion_sha256):
             or candidate.get('independent_of_producer') is not True or candidate.get('shared_with_producer') is not False
             or candidate.get('known_answers') != 'passed'):
         raise ValueError('report does not identify an independent candidate SHA-256 backend (Revision 8 3.9)')
+    declared = report['independence'].get('producer_hashing_identity')
+    if (type(declared) is not dict or declared.get('declared') is not True
+            or type(declared.get('declared_sha256')) is not str or len(declared['declared_sha256']) != 64):
+        raise ValueError('report does not bind the producer loaded SHA-256 implementation identity')
     if (claims != dict(independent_regeneration_and_rehash=True, external_receipt=False, disclosure_authorized=False,
                        execution_authorized=False, g1=False, qa2=False, sampled_audit_absence_claim=False)):
         raise ValueError('verification report claims exceed independent regeneration')

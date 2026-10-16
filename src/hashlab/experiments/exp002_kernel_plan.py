@@ -8,6 +8,7 @@ from .exp002 import Config, arm_seed_labels
 from .exp002_foundation import Plan, canonical, decode, _hex
 from .exp002_s14 import S14_FILES, load_s14
 from .exp002_journal import file_inventory
+from .exp002_runtime_identity import observe_hashing_identity, check_hashing_identity_shape
 from .exp002_r9_contracts import ACTIVE_PROTOCOL, SCIENTIFIC_BASELINE, GOVERNANCE, SECONDARY
 
 FORMAT = 'hashlab-e002-kernel-chunks-v1'
@@ -70,7 +71,8 @@ def observe_runtime():
     if not entries: raise ValueError('dependency artifact inventory unavailable')
     return RuntimeBinding('CPython '+sys.version,platform.platform(),
         file_inventory(sys.executable)['sha256'],
-        (('PyYAML',package.version,sha256(canonical(entries)).hexdigest()),))
+        (('PyYAML',package.version,sha256(canonical(entries)).hexdigest()),),
+        hashing=observe_hashing_identity())
 
 
 @dataclass(frozen=True)
@@ -80,6 +82,8 @@ class RuntimeBinding:
     platform: str
     interpreter_sha256: str
     dependencies: tuple[tuple[str, str, str], ...]
+    # Loaded SHA-256 implementation identity (G1-B). None only for legacy/engineering bindings.
+    hashing: dict | None = None
 
     def __post_init__(self):
         if (type(self.python_version) is not str or not self.python_version.startswith('CPython ')
@@ -99,11 +103,18 @@ class RuntimeBinding:
             names.append(name)
         if names != sorted(set(names)) or 'PyYAML' not in names:
             raise ValueError('unique sorted dependencies including PyYAML required')
+        if self.hashing is not None:
+            check_hashing_identity_shape(self.hashing)
+            if [a['sha256'] for a in self.hashing['artifacts'] if a['role'] == 'interpreter'] != [self.interpreter_sha256]:
+                raise ValueError('hashing identity interpreter differs from interpreter_sha256')
 
     def to_dict(self):
-        return dict(python_version=self.python_version, platform=self.platform,
-                    interpreter_sha256=self.interpreter_sha256,
-                    dependencies=[list(x) for x in self.dependencies])
+        value = dict(python_version=self.python_version, platform=self.platform,
+                     interpreter_sha256=self.interpreter_sha256,
+                     dependencies=[list(x) for x in self.dependencies])
+        if self.hashing is not None:
+            value['hashing'] = self.hashing
+        return value
 
 
 def history_binding():
@@ -125,6 +136,8 @@ class ProductionPlan:
         _hex(self.code_commit, 40)
         if self.schema != 'hashlab-e002-production-kernel-plan-v1' or type(self.runtime) is not RuntimeBinding:
             raise ValueError('production plan identity required')
+        if self.runtime.hashing is None:
+            raise ValueError('production plan requires the loaded SHA-256 implementation identity')
         if (type(self.sources) is not tuple or any(type(x) is not Artifact for x in self.sources)
                 or [x.path for x in self.sources] != sorted(REQUIRED_SOURCES)):
             raise ValueError('complete exact kernel source inventory required')
@@ -174,7 +187,7 @@ class ProductionPlan:
             plan = cls(value['science']['code_commit'],
                 tuple(Artifact(**x) for x in value['sources']),
                 RuntimeBinding(rt['python_version'],rt['platform'],rt['interpreter_sha256'],
-                               tuple(tuple(x) for x in rt['dependencies'])), value['schema'])
+                               tuple(tuple(x) for x in rt['dependencies']), rt.get('hashing')), value['schema'])
         except (KeyError, TypeError) as exc:
             raise ValueError('missing production binding') from exc
         if plan.serialize() != raw:

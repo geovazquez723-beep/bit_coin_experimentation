@@ -1,0 +1,77 @@
+........................................................................ [  3%]
+.......................................................F................ [  7%]
+........................................................................ [ 11%]
+........................................................................ [ 14%]
+........................................................................ [ 18%]
+....F................................................................... [ 22%]
+........................................................................ [ 25%]
+........................................................................ [ 29%]
+........................................................................ [ 33%]
+................ss...................................................... [ 36%]
+........................................................................ [ 40%]
+........................................................................ [ 44%]
+........................................................................ [ 48%]
+........................................................................ [ 51%]
+........................................................................ [ 55%]
+........................................................................ [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 66%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 77%]
+........................................................................ [ 81%]
+........................................................................ [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 92%]
+........................................................................ [ 96%]
+........................................................................ [ 99%]
+..                                                                       [100%]
+================================== FAILURES ===================================
+__________________ test_original_sources_and_e001_preserved ___________________
+
+    def test_original_sources_and_e001_preserved():
+        from hashlab.experiments.e001_reconstruction import validate_history
+        from hashlab.evidence.manifest import verify_manifest
+        validate_history(SEALED,Path.cwd())
+        assert verify_manifest(SEALED)==[]
+        baseline=Path('results-smoke/e001-s13-qualification/before.json')
+        if baseline.exists():
+            before=json.loads(baseline.read_text())
+            for inventory in (before['sealed'],before['protected']):
+                for name,info in inventory.items():
+                    path=Path(name)
+>                   assert path.stat().st_size==info['size'] and path.stat().st_mtime_ns==info['mtime_ns']
+E                   AssertionError: assert (367 == 351)
+E                    +  where 367 = os.stat_result(st_mode=33206, st_ino=268245652805255891, st_dev=17910872237946383374, st_nlink=1, st_uid=0, st_gid=0, st_size=367, st_atime=1792124423, st_mtime=1791864176, st_ctime=1791747568).st_size
+E                    +    where os.stat_result(st_mode=33206, st_ino=268245652805255891, st_dev=17910872237946383374, st_nlink=1, st_uid=0, st_gid=0, st_size=367, st_atime=1792124423, st_mtime=1791864176, st_ctime=1791747568) = stat()
+E                    +      where stat = WindowsPath('.gitignore').stat
+
+tests\test_e001_historical.py:353: AssertionError
+_____________ test_accepted_sources_and_sealed_evidence_unchanged _____________
+
+    def test_accepted_sources_and_sealed_evidence_unchanged():
+        from hashlab.experiments.e001_reconstruction import validate_history
+        from hashlab.evidence.manifest import verify_manifest
+        sealed = Path('results/20261011T205056Z-exp001-fc1d75fc')
+        validate_history(sealed, Path.cwd())
+        assert verify_manifest(sealed) == []
+        # Session snapshot is local qualification evidence, not historical provenance.
+        snapshot = Path('results-smoke/e001-s12-qualification/before.json')
+        if snapshot.exists():
+            before = json.loads(snapshot.read_text())
+            for inventory in (before['sealed'], before['protected']):
+                for name, entry in inventory.items():
+                    p = Path(name)
+>                   assert p.stat().st_size == entry['size']
+E                   AssertionError: assert 367 == 351
+E                    +  where 367 = os.stat_result(st_mode=33206, st_ino=268245652805255891, st_dev=17910872237946383374, st_nlink=1, st_uid=0, st_gid=0, st_size=367, st_atime=1792124423, st_mtime=1791864176, st_ctime=1791747568).st_size
+E                    +    where os.stat_result(st_mode=33206, st_ino=268245652805255891, st_dev=17910872237946383374, st_nlink=1, st_uid=0, st_gid=0, st_size=367, st_atime=1792124423, st_mtime=1791864176, st_ctime=1791747568) = stat()
+E                    +      where stat = WindowsPath('.gitignore').stat
+
+tests\test_e001_tooling.py:307: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_e001_historical.py::test_original_sources_and_e001_preserved
+FAILED tests/test_e001_tooling.py::test_accepted_sources_and_sealed_evidence_unchanged
+SKIPPED [1] tests\test_exp002_e4.py:259: symlinks unavailable: [WinError 1314] A required privilege is not held by the client: 'C:\\Users\\geova\\AppData\\Local\\Temp\\pytest-of-geova\\pytest-70\\test_symbolic_links_block_inve0\\target' -> 'C:\\Users\\geova\\AppData\\Local\\Temp\\pytest-of-geova\\pytest-70\\test_symbolic_links_block_inve0\\journal\\link'
+SKIPPED [1] tests\test_exp002_e4.py:259: symlinks unavailable: [WinError 1314] A required privilege is not held by the client: 'C:\\Users\\geova\\AppData\\Local\\Temp\\pytest-of-geova\\pytest-70\\test_symbolic_links_block_inve1\\target' -> 'C:\\Users\\geova\\AppData\\Local\\Temp\\pytest-of-geova\\pytest-70\\test_symbolic_links_block_inve1\\journal\\link'
+2 failed, 1942 passed, 2 skipped in 191.89s (0:03:11)

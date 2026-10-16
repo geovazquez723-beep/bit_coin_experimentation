@@ -1,0 +1,47 @@
+{
+  "declared": {
+    "cap": 30,
+    "work": "first 1,000 emitted A1 ranks (independent interval implementation)"
+  },
+  "external_wall_seconds": 0.18693999999959487,
+  "probe": "a1-verifier-1k",
+  "result": {
+    "emitted": 1000,
+    "first_ranks": [
+      23,
+      112,
+      544,
+      617,
+      721
+    ],
+    "last_rank": 137251,
+    "microseconds_per_output": {
+      "distribution_us": {
+        "max": 125.80001202877611,
+        "mean": 51.50719998346176,
+        "min": 33.499993151053786,
+        "p50": 51.399998483248055,
+        "p90": 57.999990531243384,
+        "p99": 77.89999654050916
+      },
+      "mean": 51.50719998346176
+    },
+    "peak_rss_bytes": 28082176,
+    "ranks_sha256": "ce405f763418fce14d5965bb37c526ae3efae5cdb23e03ddaf58e08587c608cb",
+    "rss_before_bytes": 24506368,
+    "selection_blocks_per_output": 2.0,
+    "selection_getrandbits64_calls": 2000,
+    "stage_D_count": 483,
+    "stage_getrandbits_calls": 1133,
+    "state": {
+      "N_over_n_at_start": 143.130624,
+      "note": "early stream only: n=30,000,000 at start, remaining n decreases by one per output"
+    },
+    "status": "limit-reached",
+    "wall_seconds": 0.09267240000190213
+  },
+  "returncode": 0,
+  "started_unix": 1792123671.947251,
+  "status": "completed",
+  "stderr_tail": ""
+}

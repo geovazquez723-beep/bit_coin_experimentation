@@ -1,0 +1,29 @@
+{
+  "declared": {
+    "cap": 60,
+    "work": "<=10,000 public-input evaluations (OpenSSL)"
+  },
+  "external_wall_seconds": 0.3484957000036957,
+  "probe": "hash-producer",
+  "result": {
+    "digests_sha256_of_concatenation": "f68daafad8744802542c0388ff8e69457ec3e23e4d60f6786771a1ec4fb2d5a3",
+    "evaluations": 10000,
+    "identity": {
+      "backend": "hashlib.sha256 (OpenSSL), producer SHA256Engine"
+    },
+    "microseconds_per_evaluation": 0.5682200004230253,
+    "microseconds_per_evaluation_w8": 0.5471905248198472,
+    "microseconds_per_evaluation_w80": 0.5522586943958224,
+    "peak_rss_bytes": 37412864,
+    "seconds": 0.005682200004230253,
+    "wall_seconds": 0.24295929999789223,
+    "widths": {
+      "w8": 6923,
+      "w80": 3077
+    }
+  },
+  "returncode": 0,
+  "started_unix": 1792123701.6645067,
+  "status": "completed",
+  "stderr_tail": ""
+}

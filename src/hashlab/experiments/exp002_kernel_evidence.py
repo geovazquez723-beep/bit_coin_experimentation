@@ -193,7 +193,7 @@ def iter_chunks(root, *, expected_chunks, expected_attempts):
     if (chunks,count)!=(expected_chunks,expected_attempts): raise ValueError('incomplete chunks')
 
 
-def create_root(destination, *, repository, audit_root):
+def create_root(destination, *, repository, audit_root, minimum_free_bytes=None):
     root=Path(destination).absolute()
     if root.resolve().is_relative_to(Path(repository).resolve()/'results') or root.resolve().is_relative_to(Path(audit_root).resolve()):
         raise ValueError('output beneath retained evidence')
@@ -201,6 +201,9 @@ def create_root(destination, *, repository, audit_root):
         require_plain(parent,directory=True)
         if (parent/'complete.json').exists() or (parent/'manifest.sha256').exists():
             raise ValueError('output beneath completed evidence')
+    if minimum_free_bytes is not None:
+        from .exp002_resource_preflight import check_free_space
+        check_free_space(root,minimum_free_bytes)       # fails before any file is created
     root.mkdir()
     durable_create(root/'INCOMPLETE',b'incomplete\n')
     return root

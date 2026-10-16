@@ -1,0 +1,104 @@
+{
+  "declared": {
+    "cap": 60,
+    "work": "synthetic remaining-population states, same N/n geometry"
+  },
+  "external_wall_seconds": 0.36938540000119247,
+  "probe": "a1-late-producer",
+  "result": {
+    "label": "SYNTHETIC remaining-population probe; not a measurement of the real late stream",
+    "peak_rss_bytes": 27111424,
+    "states": [
+      {
+        "N": 4293919,
+        "emitted": 2000,
+        "microseconds_per_output": {
+          "max": 2062.3000018531457,
+          "mean": 97.31454977736576,
+          "min": 54.799995268695056,
+          "n": 2000,
+          "p50": 92.59999205823988,
+          "p90": 103.20000001229346,
+          "p99": 203.2999909715727
+        },
+        "n": 30000,
+        "ratio": 143.13063333333332,
+        "requested": 2000,
+        "seconds": 0.19519080000463873
+      },
+      {
+        "N": 42939,
+        "emitted": 300,
+        "microseconds_per_output": {
+          "max": 492.29999422095716,
+          "mean": 148.9826664813639,
+          "min": 6.499991286545992,
+          "n": 300,
+          "p50": 94.0000027185306,
+          "p90": 296.4000013889745,
+          "p99": 443.4000002220273
+        },
+        "n": 300,
+        "ratio": 143.13,
+        "requested": 300,
+        "seconds": 0.044791299995267764
+      },
+      {
+        "N": 1431,
+        "emitted": 10,
+        "microseconds_per_output": {
+          "max": 291.50000773370266,
+          "mean": 115.98000128287822,
+          "min": 2.700006007216871,
+          "n": 10,
+          "p50": 110.20000965800136,
+          "p90": 291.50000773370266,
+          "p99": 291.50000773370266
+        },
+        "n": 10,
+        "ratio": 143.1,
+        "requested": 10,
+        "seconds": 0.0011636999988695607
+      },
+      {
+        "N": 130,
+        "emitted": 10,
+        "microseconds_per_output": {
+          "max": 570.4999930458143,
+          "mean": 152.7799991890788,
+          "min": 1.3999961083754897,
+          "n": 10,
+          "p50": 48.00000169780105,
+          "p90": 570.4999930458143,
+          "p99": 570.4999930458143
+        },
+        "n": 10,
+        "ratio": 13.0,
+        "requested": 10,
+        "seconds": 0.0015309000009438023
+      },
+      {
+        "N": 26,
+        "emitted": 2,
+        "microseconds_per_output": {
+          "max": 35.10000533424318,
+          "mean": 18.050006474368274,
+          "min": 1.00000761449337,
+          "n": 2,
+          "p50": 35.10000533424318,
+          "p90": 35.10000533424318,
+          "p99": 35.10000533424318
+        },
+        "n": 2,
+        "ratio": 13.0,
+        "requested": 2,
+        "seconds": 3.6900004488416016e-05
+      }
+    ],
+    "wall_seconds": 0.2734046999976272
+  },
+  "returncode": 0,
+  "started_unix": 1792123681.4938042,
+  "status": "completed",
+  "stderr_tail": ""
+}

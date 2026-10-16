@@ -1,0 +1,47 @@
+{
+  "declared": {
+    "cap": 60,
+    "work": "first 10,000 emitted A1 ranks (single predeclared continuation)"
+  },
+  "external_wall_seconds": 0.6632213000120828,
+  "probe": "a1-verifier-10k",
+  "result": {
+    "emitted": 10000,
+    "first_ranks": [
+      23,
+      112,
+      544,
+      617,
+      721
+    ],
+    "last_rank": 1388795,
+    "microseconds_per_output": {
+      "distribution_us": {
+        "max": 921.4000019710511,
+        "mean": 51.43450000177836,
+        "min": 31.99999628122896,
+        "p50": 50.99999543745071,
+        "p90": 57.40000051446259,
+        "p99": 74.19999747071415
+      },
+      "mean": 51.43450000177836
+    },
+    "peak_rss_bytes": 30957568,
+    "ranks_sha256": "93d58187cfa717eb8767208fc68382e51e9baf66a7945123e51ec607fa008b4e",
+    "rss_before_bytes": 24412160,
+    "selection_blocks_per_output": 2.0,
+    "selection_getrandbits64_calls": 20000,
+    "stage_D_count": 5036,
+    "stage_getrandbits_calls": 11197,
+    "state": {
+      "N_over_n_at_start": 143.130624,
+      "note": "early stream only: n=30,000,000 at start, remaining n decreases by one per output"
+    },
+    "status": "limit-reached",
+    "wall_seconds": 0.5642386000108672
+  },
+  "returncode": 0,
+  "started_unix": 1792123680.7245243,
+  "status": "completed",
+  "stderr_tail": ""
+}

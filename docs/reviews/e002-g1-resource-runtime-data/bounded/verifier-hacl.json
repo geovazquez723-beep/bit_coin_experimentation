@@ -1,0 +1,105 @@
+{
+  "elapsed_seconds": 6.429612000007182,
+  "peak_rss_bytes": 845918208,
+  "result": {
+    "bindings": {
+      "accounting_sha256": "47792c5916f404411453116163435321cf0e40b6ed16628339f8ee4de086df79",
+      "bundle_sha256": null,
+      "c_pre": null,
+      "c_pre_content": null,
+      "c_seed": null,
+      "c_seed_content": null,
+      "code_commit": null,
+      "completion_sha256": "e2cd0fc8eaf2661414b98278fb940ae896aa2d68b712a563c43633a6a38f9a27",
+      "config_sha256": null,
+      "environment_sha256": "8282f8e61c8939f794e3c17ba450d06fa66ca6a2c53cadabd9da4f54b404eda2",
+      "full_plan_sha256": null,
+      "history_sha256": "641b33c6c4b14ecf0a6c88289496990bbd08261fdf6eda36250c5172ea5fe9d0",
+      "index_sha256": "1ecf3c1fbfdf220169f54c19f317a804507002ea925ae77b663d1ef4dff9c180",
+      "plan_sha256": "d5dc01bea949c66e90395036cc44d504e998a692f6e89833506fa9f3d76efa7d",
+      "runtime_sha256": "656cb76a625b353447c978aaf6a610cc7dd86280acf0699501df987a7263655a",
+      "seed_commitment_sha256": null,
+      "seed_record_sha256": "a3c90a2845d18146bc7e368024ce727be67e006c18f824a47e6a1af099ed00af",
+      "seeded_config_sha256": null,
+      "seedless_sha256": null,
+      "source_inventory_sha256": "4559cb6d542b2da09fb33d4510358a7ee92089e07408671b3c76c0cec61d297f"
+    },
+    "claims": {
+      "disclosure_authorized": false,
+      "execution_authorized": false,
+      "external_receipt": false,
+      "g1": false,
+      "independent_regeneration_and_rehash": true,
+      "qa2": false,
+      "sampled_audit_absence_claim": false
+    },
+    "coverage": {
+      "a3_exclusion_ranks": 60721,
+      "attempts_reconstructed": 78,
+      "candidates_rehashed": 78,
+      "chunks": 1,
+      "compression_blocks": 106,
+      "history_occurrences": 7000000,
+      "rejections": {
+        "A1": 0,
+        "A2": 0,
+        "A3": 0,
+        "N1": 0,
+        "N2": 0,
+        "P1": 0,
+        "P2+": 0,
+        "P2-": 0
+      }
+    },
+    "independence": {
+      "ambiguity_policy": "fail-closed",
+      "beacon_authenticity": "not-established",
+      "candidate_sha256": {
+        "backend": "hacl",
+        "independent_of_producer": true,
+        "interpreter_sha256": "b847bb9f4e48c19f585c8bf7d8b355f3f8c6d2125717ece9c9d7e16fb9f09de8",
+        "known_answers": "passed",
+        "lineage": "HACL* (Project Everest) verified C, built into CPython (_sha2); independent of OpenSSL",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "producer_backend": "hashlib.sha256 (OpenSSL)",
+        "python": "3.12.14",
+        "role": "candidate-evaluation",
+        "sha2_container": {
+          "builtin_module": true,
+          "hacl_source_tree_marker_present": true,
+          "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.dll",
+          "sha256": "2b6fffde96cf24a57fca642aaefd5788816ab5ef8624ea63b722cbceb94d49b1"
+        },
+        "shared_with_producer": false
+      },
+      "file_integrity_sha256": {
+        "implementation": "hashlib.sha256",
+        "module": "_hashlib",
+        "openssl": "OpenSSL 3.5.8 25 Aug 2026",
+        "role": "file-integrity",
+        "used_for_candidate_evaluation": false
+      },
+      "producer_hashing_identity": {
+        "declared": true,
+        "declared_sha256": "71832188f87943d48505711834a0f51be31dd11807eb0a3f1f72103b8a41bc7f",
+        "locally_observed_and_matched": true
+      },
+      "producer_imports": false,
+      "runtime_independently_observed": false,
+      "shared_dependencies": [
+        "CPython random MT19937",
+        "hashlib BLAKE2b (Feistel, N2, A2 prefixes)",
+        "hashlib SHA-256 for file pins and seed derivation (not candidate evaluation)",
+        "accepted independent S1.4/E001 loaders"
+      ]
+    },
+    "mode": "full",
+    "schema": "hashlab-e002-production-verification-v1",
+    "scope": "bounded-fixture",
+    "seed": {
+      "kind": "public-engineering",
+      "master": "0"
+    },
+    "verification": "independent-full-regeneration-and-rehash"
+  }
+}

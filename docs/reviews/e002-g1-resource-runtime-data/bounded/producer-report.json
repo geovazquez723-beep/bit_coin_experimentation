@@ -1,0 +1,9 @@
+{
+  "elapsed_seconds": 61.93302159999439,
+  "peak_rss_bytes": 858177536,
+  "result": {
+    "completion_sha256": "e2cd0fc8eaf2661414b98278fb940ae896aa2d68b712a563c43633a6a38f9a27",
+    "scope": "bounded-fixture",
+    "status": "complete"
+  }
+}
