@@ -14,7 +14,7 @@ def make_package(tmp_path, commit):
     (pkg / 'evidence').mkdir(parents=True)
     (pkg / 'evidence' / 'x.bin').write_bytes(b'evidence')
     manifest = {'schema': q2.SCHEMA, 'required_commit': commit, 'completion_sha256': '0' * 64, 'producer_runtime': {},
-                'producer_host': q2.host_fingerprint(), 'files': q2.inventory(pkg), 'audit_inputs': {}}
+                'producer_host': q2.host_fingerprint(), 'files': q2.inventory(pkg), 'audit_inputs': {}, 'e001_sealed_inputs': {}}
     (pkg / 'MANIFEST.json').write_text(json.dumps(manifest))
     return pkg
 
@@ -23,7 +23,10 @@ def run(pkg, tmp_path, name='report.json'):
     audit = tmp_path / 'audit'
     audit.mkdir(exist_ok=True)
     out = tmp_path / name
-    args = type('A', (), dict(package=pkg, repository=REPO, audit=audit, out=out, observe_hashing=False))
+    sealed = tmp_path / 'sealed'
+    sealed.mkdir(exist_ok=True)
+    args = type('A', (), dict(package=pkg, repository=REPO, audit=audit, e001_sealed=sealed, out=out,
+                              observe_hashing=False, no_eol_align=False))
     return q2.replay(args), json.loads(out.read_text())
 
 
