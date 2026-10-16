@@ -11,6 +11,7 @@ import json
 import shutil
 
 import pytest
+from hashing_fixture import synthetic_hashing_identity
 
 from hashlab.experiments import exp002_finalization as fin
 from hashlab.experiments import exp002_governance as gov
@@ -53,7 +54,7 @@ class SyntheticJournal(journal_module.AttemptJournal):
 
 
 def production_plan():
-    runtime = plans.RuntimeBinding('CPython 3.13.0 engineering identity', 'unit-platform', '1'*64, (('PyYAML', '6.0.3', '2'*64),))
+    runtime = plans.RuntimeBinding('CPython 3.13.0 engineering identity', 'unit-platform', '1'*64, (('PyYAML', '6.0.3', '2'*64),), hashing=synthetic_hashing_identity())
     return plans.ProductionPlan('16f8b30ae30a9ef3ffc0f2868e9508e70c8007cd',
         tuple(plans.Artifact(p, 1, '3'*64) for p in sorted(plans.REQUIRED_SOURCES)), runtime)
 
@@ -91,7 +92,8 @@ def synthetic_report(**changes):
                       compression_blocks=fin.PRODUCTION_BLOCKS, chunks=44000, rejections={}, history_occurrences=7000000,
                       a3_exclusion_ranks=60721),
         independence=dict(candidate_sha256=dict(role='candidate-evaluation', backend='hacl', known_answers='passed',
-                                                independent_of_producer=True, shared_with_producer=False)),
+                                                independent_of_producer=True, shared_with_producer=False),
+                      producer_hashing_identity=dict(declared=True, declared_sha256='4'*64, locally_observed_and_matched=False)),
         claims=dict(independent_regeneration_and_rehash=True, external_receipt=False,
                       disclosure_authorized=False, execution_authorized=False, g1=False, qa2=False,
                       sampled_audit_absence_claim=False))

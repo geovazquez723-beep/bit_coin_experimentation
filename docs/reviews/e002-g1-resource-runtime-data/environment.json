@@ -1,0 +1,72 @@
+{
+  "available_memory_bytes_at_start": 14981058560,
+  "commit_limit_bytes": 47906070528,
+  "logical_cpus": 16,
+  "machine": "AMD64",
+  "physical_memory_bytes": 33947426816,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+  "producer_hashing_identity": {
+    "artifacts": [
+      {
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\VCRUNTIME140.dll",
+        "role": "crt",
+        "sha256": "d5e4d9a3e835fa679450145d6a7d94e36573a509317111904d9b3712c30d9066",
+        "size": 124544
+      },
+      {
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\VCRUNTIME140_1.dll",
+        "role": "crt",
+        "sha256": "1f2d41c4aa5db0bc33ebf7b66d72943a817d7ce6cbe880502a9403823633093f",
+        "size": 49792
+      },
+      {
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs\\_hashlib.pyd",
+        "role": "hashlib_extension",
+        "sha256": "b988077152a33c2d7579f453388abc742675b46f6a9ad65dfd443e96bfac330f",
+        "size": 70448
+      },
+      {
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "role": "interpreter",
+        "sha256": "b847bb9f4e48c19f585c8bf7d8b355f3f8c6d2125717ece9c9d7e16fb9f09de8",
+        "size": 107312
+      },
+      {
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs\\libcrypto-3-x64.dll",
+        "role": "libcrypto",
+        "sha256": "57df468e551cc2579b73bfdf9cec5e80a8e5fdbbfde46ee6344d3fcd446f7e8a",
+        "size": 8003376
+      },
+      {
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.dll",
+        "role": "python_dll",
+        "sha256": "2b6fffde96cf24a57fca642aaefd5788816ab5ef8624ea63b722cbceb94d49b1",
+        "size": 6985520
+      }
+    ],
+    "libcrypto_version": "OpenSSL 3.5.8 25 Aug 2026",
+    "python_version": "3.12.14",
+    "schema": "hashlab-e002-runtime-hashing-identity-v1",
+    "sha256_provider": "_hashlib"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "verifier_candidate_backend": {
+    "backend": "hacl",
+    "independent_of_producer": true,
+    "interpreter_sha256": "b847bb9f4e48c19f585c8bf7d8b355f3f8c6d2125717ece9c9d7e16fb9f09de8",
+    "known_answers": "passed",
+    "lineage": "HACL* (Project Everest) verified C, built into CPython (_sha2); independent of OpenSSL",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "producer_backend": "hashlib.sha256 (OpenSSL)",
+    "python": "3.12.14",
+    "role": "candidate-evaluation",
+    "sha2_container": {
+      "builtin_module": true,
+      "hacl_source_tree_marker_present": true,
+      "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.dll",
+      "sha256": "2b6fffde96cf24a57fca642aaefd5788816ab5ef8624ea63b722cbceb94d49b1"
+    },
+    "shared_with_producer": false
+  }
+}

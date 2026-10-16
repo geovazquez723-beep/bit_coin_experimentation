@@ -109,12 +109,16 @@ def verify_engineering(root, *, completion_sha256, audit_root, repository_root):
         + ['src/hashlab/experiments/e001_contract.json'])
     if names!=expected_sources: raise ValueError('reference complete source inventory')
     rt=environment['runtime']
-    if (type(rt) is not dict or set(rt)!={'python_version','platform','interpreter_sha256','dependencies'}
+    if (type(rt) is not dict or set(rt) not in ({'python_version','platform','interpreter_sha256','dependencies'},
+                                          {'python_version','platform','interpreter_sha256','dependencies','hashing'})
             or type(rt['python_version']) is not str or not rt['python_version'].startswith('CPython ')
             or type(rt['platform']) is not str or not rt['platform']
             or type(rt['interpreter_sha256']) is not str or len(rt['interpreter_sha256'])!=64
             or type(rt['dependencies']) is not list or not rt['dependencies']):
         raise ValueError('reference runtime binding')
+    if 'hashing' in rt:
+        from .runtime_identity import check_declared
+        check_declared(rt['hashing'])
     plan=dict(schema='hashlab-e002-kernel-engineering-plan-v1',scope='engineering-only',
               fixture=integration.spec(),evidence_format='hashlab-e002-kernel-chunks-v1',confirmatory_complete=False,qa2=False)
     if (root/'plan.json').read_bytes()!=encode(plan): raise ValueError('reference fixed plan')

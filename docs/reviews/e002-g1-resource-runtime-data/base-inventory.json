@@ -1,0 +1,301 @@
+{
+ "branch": "feat/e002-g1-resource-qualification",
+ "base_commit": "9737010c1e1e125bbd6d5da22de4d70c58bc64e4",
+ "pr6_merge": "9737010c1e1e125bbd6d5da22de4d70c58bc64e4",
+ "tracked_files": 181,
+ "tracked": [
+  "559ca304774157e8701da64cac02218ee203b380 103 .gitattributes",
+  "16a826d9a770f72c8990992020f19b985d58ffe8 351 .gitignore",
+  "9162f1c1d45d7ec15af6253bde8707ff87ca5842 30 GITHUB_INITIAL_README.md",
+  "45e0d91c36d2fcf099096b289b482a5c8d975e17 10862 README.md",
+  "07c991bfdda6b349563c9635c488c8b8cbfad6b9 4268 configs/baseline.yaml",
+  "541ffeb40b92d59ad0e7ba890a5372ad641d5420 2078 configs/smoke-evidence.yaml",
+  "01197c3217183f9746a95d79b16d98fefcc4bc67 5002 docs/CHANGELOG.md",
+  "374ef4931f4a76f0d3c61ae9d8d2312756e3c59e 7299 docs/experiment-001.md",
+  "0aef14ee1f1bfcc7a3180737dafd5b1e6e74aad9 19601 docs/methodology.md",
+  "724671abc2356d0511f1ceb37c736079da5aaef4 32007 docs/proposals/e001-reconstruction-phase-b-proposal.md",
+  "34d95d5a6329db44e6b16e3105bee71ceda32cf7 21843 docs/proposals/e002-i2-control-byte-specification.md",
+  "4060672d10d4ee751b48fe804c434d01f0faacad 5644 docs/proposals/experiment-002-a1-a3-seed-encoding-proposal.md",
+  "d4ae535b195c6de2a85e28015cea24ed058e5f7a 103244 docs/proposals/experiment-002-research-design.md",
+  "105a24106f8bea4da2d9ec0deff77ec324a416d8 36999 docs/proposals/experiment-002-revision-9-governance-migration.md",
+  "fce71d8f1a1bb559a5cf52ceec11f08bb260beb4 17924 docs/proposals/experiment-002-secondary-statistics-proposal.md",
+  "12a5d0ee1ffb733e170e63a3d74c5ce15e4e6e10 54025 docs/proposals/experiment-002-solo-governance-revision-9.md",
+  "58fcafa8364cc648d5882ea7a2e8377eb958dab5 3161 docs/research-charter.md",
+  "4d4eef89ffc6b108ebffd3359bd72656066b228e 21733 docs/reviews/architecture-review-001-remediation.md",
+  "757679a2b2b3a9ed3a994a250bfc048c038b604d 36738 docs/reviews/architecture-review-002-remediation.md",
+  "4662a600d739e2978a8b42117a07da807ae30854 17328 docs/reviews/architecture-review-008-operational-recovery.md",
+  "85ccbcddc1870b887cad874299b6b1c9b7c42e71 3923 docs/reviews/architecture-review-024-python313-qualification.md",
+  "7bf71879ea19b7a7461688b68975d56b46f0344f 8126 docs/reviews/architecture-review-025-e1-implementation.md",
+  "9686892295808b62fd7a69e225473ed88a980ec1 9440 docs/reviews/architecture-review-026-algorithm-d.md",
+  "c606e4251be06cd77a8dca0c0445cfbca6489b77 12939 docs/reviews/architecture-review-026-e1-implementation.md",
+  "7a805a17f822623b09040493ff0d825ba9e898c1 11509 docs/reviews/architecture-review-027-e1-closeout.md",
+  "b331e9056a5189cb54a2135125ea5c0aa45a31d4 3530 docs/reviews/architecture-review-027-e1-performance.json",
+  "d2ba5ecbe2b75743806113a4fedd82014fe7e168 9815 docs/reviews/architecture-review-028-e2-statistics.md",
+  "31d23df705d2160c9438ee425aced7523402c054 14671 docs/reviews/architecture-review-029-e3-foundation.md",
+  "e2b112e00f90dbe655f72330b5e22a9c75ec3fc7 12172 docs/reviews/architecture-review-032-e3-secondary.md",
+  "6600278ec5dd2f086dc5e25d0a93c037d6da5f71 13176 docs/reviews/architecture-review-033-e4-foundation.md",
+  "219d85ec406a0ce16d787ef3cf5ccce88fa4cf0d 22959 docs/reviews/architecture-review-035-g1-gap-assessment.md",
+  "f9165736678fb95c972aac5c9e642b7c5f05d2fa 23230 docs/reviews/architecture-review-036-e001-numerical-differences.json",
+  "5c05d20c424b21290a76d39f951d065a61142e05 19301 docs/reviews/architecture-review-036-e5-phase-a.md",
+  "62c095645ed9e1188d9358acc4d38110687cd96d 15977 docs/reviews/architecture-review-037-numerical-reproduction-decision.md",
+  "ad95679f8493f41c64256b5ff2533cb66ad2cb54 15751 docs/reviews/architecture-review-038-e5-phase-b-bounded.md",
+  "76e1683c1db332ed4d0720df7d71c135f1e1ebd0 11004 docs/reviews/architecture-review-041-revision-9-governance.md",
+  "9ad4db36ee5c7d4d207261897dc7c4c78ec4fd98 4608 docs/reviews/architecture-review-043-director-revision-9-adoption.md",
+  "c67c38cb9fdbc97125ab206a2cb55ada792bd14e 6947 docs/reviews/architecture-review-043-r9-migration-handoff.md",
+  "4f86cd7b149bd41b87c0a6861742acccca9d738e 16194 docs/reviews/e001-full-reconstruction-tooling-handoff.md",
+  "76a3a9d28ebef351a3f3836e056eef6f9dfa73d2 12221 docs/reviews/e001-historical-exclusion-audit-result.md",
+  "41610b1235beb8f54222c71113e9137c5071966f 13463 docs/reviews/e001-historical-readiness-handoff.md",
+  "0f007f6c193c84cf8e8dbe43002ddd20aec80621 13385 docs/reviews/e001-historical-scheduler-handoff.md",
+  "4e4d0715fc91d3f848777fa9839e4f673830d76f 16836 docs/reviews/e002-g1-independent-sha256-handoff.md",
+  "11b0c437b029682006bbd07b568ca86c5910392c 7250 docs/reviews/e002-i1-synthetic-pipeline-handoff.md",
+  "14f0f6dab1f87492f814659b595a2007c053b19a 12145 docs/reviews/e002-i2-controls-synthetic-handoff.md",
+  "7924f78302faea8cbd818b0f66c8c2961d5e01be 9185 docs/reviews/e002-i2-regression-disposition.md",
+  "3692c7f391b644e0d8cf773a2366f702944ce903 12886 docs/reviews/e002-i3-full-system-integration-handoff.md",
+  "a8c69c53f94ed64d69b298dd154a090d58453855 29573 docs/reviews/e002-production-execution-readiness-assessment.md",
+  "b94421293d4c2f03fcbca1bb3cd9acaea87eba76 18889 docs/reviews/e002-production-kernel-handoff.md",
+  "7400b5bb7d08c40fcea4fdbcf4947bc6eeee557e 41506 docs/reviews/e002-production-readiness-source-inventory.json",
+  "788439cf0034cd799479cddd4f2a1d8d6ee81504 29964 docs/reviews/e002-production-verification-handoff.md",
+  "f54772cfd0263a47dbc3726e1a205d95ea57986a 28437 docs/reviews/experiment-001-scientific-review.md",
+  "735b2a9d7b6e0848889e4e2f7dc9a40e2cfcc89f 47347 docs/reviews/experiment-002-protocol-readiness-addendum.md",
+  "c5b014a299f04bd42b6da3fd9b259a9e115c7b70 12811 docs/reviews/r9-m1a-contract-foundation-handoff.md",
+  "74bc89625e27598d145b6877e60ac800397d23bf 5697 docs/reviews/r9-m1a-e001-preservation.json",
+  "53e01c765a8ded6d2afd3b2dc06c057f6b613d23 5605 docs/reviews/r9-m1b1-e001-preservation.json",
+  "97c3eab79bf7da663749f4c59fac8407c2ff9323 13289 docs/reviews/r9-m1b1-structural-policy-handoff.md",
+  "3f525826f1f9ea5e071a4886b76f2c7b17d77705 6329 docs/smoke-test.md",
+  "0cd7e36bb42db39db00453b688b932a97c128eab 618 pyproject.toml",
+  "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0 results/.gitkeep",
+  "b337d4ea9dc66108da6fae39c65cdf7890ccf381 84 src/e001_stream_verify/__init__.py",
+  "52433711684795c20292060c3fefd9f88b8f5d13 17098 src/e001_stream_verify/streaming.py",
+  "d90b8e94bf5acd30c680c1d03c7b7678970efd18 131 src/e001_verify/__init__.py",
+  "191b568a3a8011924111fb74fa8dfb6071545a69 6551 src/e001_verify/core.py",
+  "840302bd5644736e701ce590212b2bdaf5fee604 6745 src/e001_verify/occurrences.py",
+  "c714403c31b5a0f29077d26ba8f1e4f5a964b1ea 76 src/e002_verify/__init__.py",
+  "c7678d6de016297cf96720c1e0a7d44a8c5fd2d0 1837 src/e002_verify/binomial_reference.py",
+  "6c5139f08dd46dc215fff75a3d9ee8751d878cef 12643 src/e002_verify/controls.py",
+  "fbff8bac4919f1b918edcd4b0f1a169a2ac76eaf 14838 src/e002_verify/core.py",
+  "1fd5919a08c244dab19b0f02de8cc23a59fe52ed 9002 src/e002_verify/integration.py",
+  "5afdf5ddfa4c2040cf780269f4920b612c0b021e 15097 src/e002_verify/integration_statistics.py",
+  "4ebc8aab57f7946ec36c530a1e2c5844b76885fc 11454 src/e002_verify/kernel.py",
+  "817bb3518e6486741485cc21d28d25a14502ee57 19169 src/e002_verify/production.py",
+  "46b4f47d96d4f68a198d3f55993d56e793424ed9 35364 src/e002_verify/production_evidence.py",
+  "a03b27fd063c2170ff81a701f4011ea129b81a7a 5311 src/e002_verify/production_statistics.py",
+  "75261725aa71df3cf95d04d123daef82401b8233 3606 src/e002_verify/secondary_reference.py",
+  "3933d20d0cd85b597c035d636c25c837a0a56e21 8294 src/e002_verify/sha256_independent.py",
+  "3d17a69a632783ae039166f80f0722db49c841e4 2433 src/e002_verify/sha256_reference.py",
+  "d4e7e38b35f1f20372d65d014dca137c67936be9 425 src/hashlab/__init__.py",
+  "6bcc79a7091352a878f7284d4fed27489532340f 1722 src/hashlab/candidates/__init__.py",
+  "fcf2ed9815c153ac27e157d92e273a92b8c02b4f 4198 src/hashlab/candidates/base.py",
+  "e61269f39c9645c0f3fd1d5d8c6cd43126395961 6382 src/hashlab/candidates/patterned.py",
+  "0655f833dd6915a92aa2490e11b4c39468b17502 5221 src/hashlab/candidates/random.py",
+  "aa21e29bdf78cd363ef415e968f6df333c07ec30 3015 src/hashlab/candidates/sequential.py",
+  "17a7327daa8c20c1d3c2786c4f646a1d3e9e6171 3293 src/hashlab/candidates/structured.py",
+  "bb260afe417ba623f78f4c08f5d27c0abedeb1b3 9423 src/hashlab/candidates/vitter.py",
+  "7e677798c9ee554f06abb5496604b41d05fd5216 6086 src/hashlab/cli.py",
+  "32b5f104f618580600700984494983684df4d0fc 405 src/hashlab/evidence/__init__.py",
+  "f9eed56b761f094f954b52f8590132e9dd2e1a6f 5420 src/hashlab/evidence/manifest.py",
+  "4de0b8a72d4a4dfff836234c7bf5d1c4d2084a72 4759 src/hashlab/evidence/storage.py",
+  "af4220740346cb8372f29c35cfff0b30770de386 494 src/hashlab/experiments/__init__.py",
+  "d608d1867bd51f485ba79da46b7e5ac8d6094b1b 47265 src/hashlab/experiments/analysis.py",
+  "3bf0546f6c7b7830021f6619401125b98b1b248d 29413 src/hashlab/experiments/baseline.py",
+  "4afd4af07ac3e3c45481f5599e1538746c060432 9869 src/hashlab/experiments/config.py",
+  "ca80f1fc4467fc949094e02b9ff190008fbd14d9 2396 src/hashlab/experiments/controls.py",
+  "26529b55d866e74d3d2e368cec8b93827696432a 11451 src/hashlab/experiments/e001_contract.json",
+  "cd2db1a19c08a3a1e0fcee5f82eb8944ed3404db 16376 src/hashlab/experiments/e001_historical.py",
+  "fe109d314fbcbf4f1463230cc4a0dad73d078b80 15267 src/hashlab/experiments/e001_phase_b.py",
+  "8b98fb010af20e4eaf3eb0160d58a4f1d9eb8285 2982 src/hashlab/experiments/e001_phase_b_verification.py",
+  "d415e3492152a5378196eb899f286476f9399074 11605 src/hashlab/experiments/e001_reconstruction.py",
+  "de361de415cd87aa88ea3dda4d98c61d78dc996c 10757 src/hashlab/experiments/e001_scheduler.py",
+  "2443eb8beb716bd4a67929b8434eac5b16ebfb41 9143 src/hashlab/experiments/e001_tooling.py",
+  "74c944fef8d800fe9d272586066e34a842b6b815 2902 src/hashlab/experiments/economics.py",
+  "cf2507e6d28bf31401b1dadcd150d1612e48e215 18478 src/hashlab/experiments/exp002.py",
+  "90ab25fcad23629fd5ec8378029b5d69f913a7ef 14112 src/hashlab/experiments/exp002_controls.py",
+  "64f9ef5c1873c624700ce61aaa8a8710ed22cce5 32381 src/hashlab/experiments/exp002_finalization.py",
+  "319a942e9c391f1424ef673e1de57d2a391d3719 27537 src/hashlab/experiments/exp002_foundation.py",
+  "022a8efa6c72e23e954db61eaabe2ea499a7f538 6506 src/hashlab/experiments/exp002_governance.py",
+  "44c9e857278fbc75b55895141514bd5ac8c668eb 5012 src/hashlab/experiments/exp002_i2_synthetic.py",
+  "64681c3183354a9c3b346d1f63e2186c80d9fd89 9662 src/hashlab/experiments/exp002_integration.py",
+  "5eef96c00eb32a74d15cc72b8a4a4c9a6a4fad32 3092 src/hashlab/experiments/exp002_integration_statistics.py",
+  "6437dd81fea93b27783d547d0d09231176d8a2f2 8054 src/hashlab/experiments/exp002_journal.py",
+  "2885eed1538ceeb4c2026182b3d8df70f77dc609 19662 src/hashlab/experiments/exp002_kernel.py",
+  "f73548dc617f29cb38080a6c92c9258ae50d459a 8657 src/hashlab/experiments/exp002_kernel_bounded.py",
+  "4455fc729cdb3f3f23d458d68a5766793ea38090 3594 src/hashlab/experiments/exp002_kernel_disclosure.py",
+  "9f00d6972256a49b2a3d97fe12660137e1a73dcd 10036 src/hashlab/experiments/exp002_kernel_evidence.py",
+  "5ac50d41375f4efdae0a69fe8244178d5e867574 2072 src/hashlab/experiments/exp002_kernel_inference.py",
+  "c4d6ad56e3602fba2f882ab9efe579513770b23c 11199 src/hashlab/experiments/exp002_kernel_plan.py",
+  "ef4e124ad874784620e148fdd33eafd002b66d32 2100 src/hashlab/experiments/exp002_kernel_statistics.py",
+  "d12095e8961e229340c4435b9a89816fbdf2a379 3130 src/hashlab/experiments/exp002_provenance.py",
+  "dbc08fdc90ada446d224d1bccc1d6489377b487c 16250 src/hashlab/experiments/exp002_r9_contracts.py",
+  "cd75c6beb65766709b95cd4657b04b5e397ebbb4 14649 src/hashlab/experiments/exp002_r9_policy.py",
+  "62d560da30b80aef4488a2421d84fb42c5172fb9 5447 src/hashlab/experiments/exp002_s14.py",
+  "ccb4b940da54e99e46a7153c523d3c73ef814fb6 6082 src/hashlab/experiments/exp002_synthetic.py",
+  "538cf91b1a6d11a1975c664f5186fd612a8d195f 3717 src/hashlab/experiments/selfcheck.py",
+  "2e61edfba1edaf46a55cbc227684e82381a6f752 780 src/hashlab/hashing/__init__.py",
+  "bc7c3e5004c601d6576d97d46b32ce866e861e8a 554 src/hashlab/hashing/sha256.py",
+  "0661930fe8e0e685f663ea138e765f2b8fe4d934 934 src/hashlab/hashing/sha256d.py",
+  "8b8b983cff8479293accc5d9388dba0b1a6f60b9 3553 src/hashlab/hashing/target.py",
+  "2516293a10f78f5c85fb80c511f081498bc5396b 936 src/hashlab/statistics/__init__.py",
+  "ee6460276c61a108cfc75615627399600a84489f 4616 src/hashlab/statistics/distribution.py",
+  "53375e7529994aaa4d0b24cc69987eddc3fc511e 11757 src/hashlab/statistics/exp002.py",
+  "451add489b3b922f0061123ff916752c953e90de 8809 src/hashlab/statistics/exp002_secondary.py",
+  "e9c53b29516165606d2eb9cb581a9c0452c7e39d 14750 src/hashlab/statistics/inference.py",
+  "fac2809b866683f816497577d87133751af273a1 1755 tests/conftest.py",
+  "424876ece051be7e60da4a2bdeaa7dce4a7962ac 2951 tests/e001_reference.py",
+  "c7678d6de016297cf96720c1e0a7d44a8c5fd2d0 1837 tests/exp002_reference.py",
+  "75261725aa71df3cf95d04d123daef82401b8233 3606 tests/exp002_secondary_reference.py",
+  "68fb5fde778c2cb88a543e35c9416379e39488b7 4530 tests/fixtures/e001-mt19937-synthetic-v1.json",
+  "0afec55ede9e6fc65902518b33cf8c097c6edbc8 297188 tests/fixtures/exp002-e2-synthetic.json",
+  "1b4b49170add38297d4a01f9a0cbdcc543c003c8 2921 tests/fixtures/exp002-r9-algorithmic-synthetic-v1.json",
+  "a108e5439a923456ae4ea3a66178f26be82975b0 2301 tests/fixtures/exp002-r9-director-synthetic-v1.json",
+  "873877cfbfd78267c5cebe2649786a5941cd7cde 1091529 tests/fixtures/exp002-secondary-v2-reference.json",
+  "922324e4dc380d6386fcdd9fc0c86cfe60100b06 19565 tests/test_analysis.py",
+  "926e54dd3effd327efcfe5ddfcfd234fd6cdcae9 6010 tests/test_cli.py",
+  "8bbf8c61929f29986ccebca304a13d0361ce9af8 7977 tests/test_config.py",
+  "25638a295f36e84df54d4e2c48c4f191ec358e71 17507 tests/test_e001_historical.py",
+  "37c74dc71d56487049e18aac4b26910bedc4d5fe 14299 tests/test_e001_phase_b.py",
+  "43674521978dc4b46784e683f5153c66b53118f1 10644 tests/test_e001_reconstruction.py",
+  "f1263bd8a8ad730cf7d778c155ba79801d940b6d 14743 tests/test_e001_scheduler.py",
+  "a2d1c0532a6542cbdb7010ac29acef65abf07f50 15150 tests/test_e001_tooling.py",
+  "895f5179bbf709d1a579871f1978fc0dd56ac1b8 3822 tests/test_evidence.py",
+  "8e003eda341f1339a2c3bfcbe67f4c216d202526 12714 tests/test_exp002_e1.py",
+  "b6df504490d7f54f827a6c8096be605b10e7e073 11614 tests/test_exp002_e2.py",
+  "bb266832eb4e89b48322028773718bcef342fc97 13794 tests/test_exp002_e3.py",
+  "cba1cec75d91ed0da03ea29542c38f2d43b67b03 16592 tests/test_exp002_e4.py",
+  "4799a864671e3f80c258f7bf6102ddde04e8717f 50704 tests/test_exp002_finalization.py",
+  "f650ecda2cf3839e8ca2aa7ea0ea77c8fd4d381c 18798 tests/test_exp002_i1.py",
+  "369e73043284c946f6cfa24eb2de30c565045e82 22948 tests/test_exp002_i2.py",
+  "04ff76b39ad7c7c226d4f526c77b90e7927e51cf 16572 tests/test_exp002_i3.py",
+  "1728e4d8ca4a39d1774941c9ccf7816910d8b7dd 14204 tests/test_exp002_independent_sha256.py",
+  "1aff619a4d87e729c4a4142ba658f3b4ea6c0ccb 25034 tests/test_exp002_kernel.py",
+  "8324c2b4c16d65059d37053a5d745361981b2cae 25108 tests/test_exp002_production_components.py",
+  "8c4937736e2d14cb635958c5c24e711cc382aee9 37033 tests/test_exp002_production_verification.py",
+  "26ccc7969129a54c8751dc4ba5e554bbc7098bc8 13145 tests/test_exp002_r9_contracts.py",
+  "cf3228e4a2144b22ddb211d112afe4065f027785 15881 tests/test_exp002_r9_policy.py",
+  "35456be5b9100509d997280d85adca028c2ead1e 12837 tests/test_exp002_secondary.py",
+  "fb77812806d6ef06f866bb734bbb50f341518023 7162 tests/test_generators.py",
+  "d4d56d4fb431344702f2f2dcdac2fa45f6fb828e 4442 tests/test_hashing.py",
+  "5401bcbff6dd906bae54592d7173d34ed00f7190 4919 tests/test_runner.py",
+  "15ed46a22797133650da42cd879fcad8e7a818e1 6186 tests/test_statistics.py",
+  "6290fe86e6b02eacbb3683cdb9666a420afc4e3f 14647 tests/test_statistics_reference.py",
+  "837a9d1dcedc9db92283f6ab30868d3a2c5abdec 11299 tests/test_vitter.py",
+  "8d25591a25228e8a1232d1f0c2daafd59db6dffc 4494 tools/benchmark_exp002_e1.py",
+  "62f2ab68ea9709b6a463638d45d95432d843991f 6712 tools/build_exp002_secondary_references.py",
+  "484b14ff60367afbac65a44749c00222ac081cb7 4682 tools/qualify_e001_readiness.py",
+  "71250fc41ef4b393e0fcfea31c3ef9a3cb523787 2922 tools/qualify_e002_i1.py",
+  "b9f758f46a9b6ee59f389475a4ab6e49cda7f65b 2946 tools/qualify_e002_i2.py",
+  "d2129e8ccf493a8227d0fe9f7fb03d5c448ca3fd 2957 tools/qualify_e002_i3.py",
+  "5804143224433895d7341429f4bf37ef361f2eb2 1659 tools/qualify_e002_kernel.py",
+  "051b325fb7d338d51484cf8611b15c24f910671d 2535 tools/qualify_e002_production_verification.py"
+ ],
+ "protected_results": {
+  "results/.gitkeep": [
+   0,
+   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/analysis.json": [
+   81503,
+   "5e22b2fc5d0ce4ed9dca71f0499c7b1b35f0f40a43d34228d8daad455d38b252"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/batches.jsonl": [
+   254047,
+   "65ecf72decf20c9e9a8db29b1526c5dd39eeb2ecfc3d29166100d92e339fbad8"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/config.resolved.json": [
+   2875,
+   "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/config.source.yaml": [
+   4268,
+   "f2c0de21f3eba4b6a5fff41c8729b10d5c389e09334bd218f133d55a0140f225"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/environment.json": [
+   843,
+   "34e5e3c11015405dd540b2541f54086824b066aa83ed94c5fb80e2c13aa467f3"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/manifest.json": [
+   1482,
+   "546d83a2ad5615cfe937e021c2b7097f1997d7f13c8f3326f3d03e6aa60a967b"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/manifest.sha256": [
+   80,
+   "e7200d11952f130786c183dcce2318e817b0f54802e47f4f2d9170499bab227a"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/plan.json": [
+   37502,
+   "ea38ed0150fae79d140b44691ad64dbda223163296b98671966d1b07456f3f36"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/report.md": [
+   11305,
+   "e253f9ab9c40410e8f601a107716fbabd090782c75efa4dd47afb17cd64fb428"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/results.json": [
+   242708,
+   "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+  ],
+  "results/20261011T205056Z-exp001-fc1d75fc/seeds.json": [
+   1158,
+   "b04fa14409ff07606e81757908109427e4309615afd702a564f346b19b32d931"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/accounting.sqlite": [
+   37801984,
+   "14bc1c75950284a1d514568207e7bbccea86706b44b118f95e42fa861e0b9803"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/complete.json": [
+   2104,
+   "c4fe9ba89f1c4390c5300a7a5512aaf20f2bc6fcbbfcbe2292b1af564f70ddc1"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/exclusions.bin": [
+   971536,
+   "39d09046325a41dd36d1bc0390e15a1d35a64f649d20f144b9025ccda4395268"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/occurrences.bin": [
+   133000000,
+   "dc27fca46c57a8c02aaa50584af1783e1f4e6dbfedb48231847415c509d9695f"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/plan.json": [
+   3464,
+   "19d6396493fc9b8aa9559fd8ddab65f219b920a13b447bb9fb00c04da782054b"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/ranks.bin": [
+   485768,
+   "124d6722591d81c9739e63d2702d67dcc3f889fb297a55fd52d7c7c800ee320a"
+  ],
+  "results/e001-s14-audit-20261012-01/verifier/reference.sqlite": [
+   37789696,
+   "e024010e7585a019487fc47c1afcbc22ae1d7c7c497f1fc7e6a9cbf25f31970c"
+  ],
+  "results/e001-s14-audit-20261012-01/verifier/verified.json": [
+   1881,
+   "3ed80c4d663614fb5245902f88037573776889dc3c3afc47e32018add11d42eb"
+  ]
+ },
+ "audit_root": {
+  "results/e001-s14-audit-20261012-01/producer/accounting.sqlite": [
+   37801984,
+   "14bc1c75950284a1d514568207e7bbccea86706b44b118f95e42fa861e0b9803"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/complete.json": [
+   2104,
+   "c4fe9ba89f1c4390c5300a7a5512aaf20f2bc6fcbbfcbe2292b1af564f70ddc1"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/exclusions.bin": [
+   971536,
+   "39d09046325a41dd36d1bc0390e15a1d35a64f649d20f144b9025ccda4395268"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/plan.json": [
+   3464,
+   "19d6396493fc9b8aa9559fd8ddab65f219b920a13b447bb9fb00c04da782054b"
+  ],
+  "results/e001-s14-audit-20261012-01/producer/ranks.bin": [
+   485768,
+   "124d6722591d81c9739e63d2702d67dcc3f889fb297a55fd52d7c7c800ee320a"
+  ],
+  "results/e001-s14-audit-20261012-01/verifier/reference.sqlite": [
+   37789696,
+   "e024010e7585a019487fc47c1afcbc22ae1d7c7c497f1fc7e6a9cbf25f31970c"
+  ],
+  "results/e001-s14-audit-20261012-01/verifier/verified.json": [
+   1881,
+   "3ed80c4d663614fb5245902f88037573776889dc3c3afc47e32018add11d42eb"
+  ]
+ }
+}

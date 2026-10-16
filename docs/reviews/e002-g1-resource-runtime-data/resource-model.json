@@ -1,0 +1,314 @@
+{
+  "counts": {
+    "A1": 30000000,
+    "A2": 30000000,
+    "A3": 30000000,
+    "N1": 30000000,
+    "N2": 30000000,
+    "P1": 200000,
+    "P2p": 15000000,
+    "P2m": 15000000
+  },
+  "producer": [
+    {
+      "stage": "A1 Algorithm D (30M ranks)",
+      "group": "producer-generation",
+      "label": "M",
+      "seconds": [
+        3147.159299987834,
+        3933.9491249847924,
+        7867.898249969585
+      ],
+      "note": "max of early-stream mean and synthetic late-state means; 4 compares, 2 random blocks/output"
+    },
+    {
+      "stage": "A2 prefix+nonce stream",
+      "group": "producer-generation",
+      "label": "A",
+      "seconds": [
+        90.0,
+        180.0,
+        540.0
+      ],
+      "note": "not individually probed; bounded by Attempt construction (4.5 us) + concatenation"
+    },
+    {
+      "stage": "A3 Algorithm S scan + unrank + encode",
+      "group": "producer-generation",
+      "label": "D",
+      "seconds": [
+        202.7514000510564,
+        253.4392500638205,
+        506.878500127641
+      ],
+      "note": "scan 1.7 us/emitted (early) + unrank at weight-6 mix 5.0 us; scan scales with ranks scanned (x2.74)"
+    },
+    {
+      "stage": "N1 forward + rejection checks",
+      "group": "producer-generation",
+      "label": "M",
+      "seconds": [
+        250.99709996720776,
+        313.7463749590097,
+        627.4927499180194
+      ],
+      "note": "real provider incl. row dict; history set was 100k inversions, not 6.0M"
+    },
+    {
+      "stage": "P1/P2+/P2- forward + checks",
+      "group": "producer-generation",
+      "label": "M",
+      "seconds": [
+        241.40883399988525,
+        301.76104249985656,
+        603.5220849997131
+      ],
+      "note": ""
+    },
+    {
+      "stage": "N2 80-byte stream + A2 membership",
+      "group": "producer-generation",
+      "label": "M",
+      "seconds": [
+        111.92309999023564,
+        139.90387498779455,
+        279.8077499755891
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Kernel eligibility re-check (second Feistel/rank per control/A3)",
+      "group": "producer-accounting",
+      "label": "D",
+      "seconds": [
+        779.4193560790153,
+        974.2741950987692,
+        1948.5483901975383
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Attempt construction + Accumulator.add + ControlEngine.transform",
+      "group": "producer-accounting",
+      "label": "M",
+      "seconds": [
+        1744.925241382739,
+        2181.1565517284234,
+        4362.313103456847
+      ],
+      "note": ""
+    },
+    {
+      "stage": "SHA-256 evaluation (OpenSSL, 180.2M evals)",
+      "group": "producer-hash",
+      "label": "M",
+      "seconds": [
+        102.39324407622917,
+        127.99155509528646,
+        255.98311019057292
+      ],
+      "note": "568 ns/eval; hashing is not a bottleneck"
+    },
+    {
+      "stage": "Row serialization (encode_row)",
+      "group": "producer-serialization",
+      "label": "M",
+      "seconds": [
+        237.35583582398246,
+        296.69479477997805,
+        593.3895895599561
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Durable chunk writes + fsync + per-chunk inventory (43995 files)",
+      "group": "producer-disk",
+      "label": "M",
+      "seconds": [
+        65.01514235394767,
+        336.0730711769738,
+        910.6965
+      ],
+      "note": "disk probe 1.48 ms/file vs ChunkWriter in-situ ~13.8 ms/chunk; Defender real-time on; page-cache effects"
+    },
+    {
+      "stage": "History load: 7.0M occurrences inverted into index",
+      "group": "producer-setup",
+      "label": "D",
+      "seconds": [
+        49.22054899915238,
+        61.525686248940474,
+        123.05137249788095
+      ],
+      "note": "consistent with the 55 s bounded producer runs (dominated by this load)"
+    },
+    {
+      "stage": "Producer-side capture replay / authentication (iter_chunks)",
+      "group": "producer-finalization",
+      "label": "M",
+      "seconds": [
+        952.3201694732414,
+        1190.4002118415517,
+        2380.8004236831034
+      ],
+      "note": ""
+    }
+  ],
+  "verifier": [
+    {
+      "stage": "A1 regeneration (interval arithmetic)",
+      "group": "verifier-generation",
+      "label": "M",
+      "seconds": [
+        1543.0350000533508,
+        1928.7937500666885,
+        3857.587500133377
+      ],
+      "note": ""
+    },
+    {
+      "stage": "A2 regeneration",
+      "group": "verifier-generation",
+      "label": "A",
+      "seconds": [
+        15.0,
+        30.0,
+        90.0
+      ],
+      "note": ""
+    },
+    {
+      "stage": "A3 Algorithm S + Gosper",
+      "group": "verifier-generation",
+      "label": "M",
+      "seconds": [
+        66.33510001120158,
+        82.91887501400197,
+        165.83775002800394
+      ],
+      "note": ""
+    },
+    {
+      "stage": "N1/P Feistel + masks",
+      "group": "verifier-generation",
+      "label": "M",
+      "seconds": [
+        355.80427405032555,
+        444.75534256290695,
+        889.5106851258139
+      ],
+      "note": ""
+    },
+    {
+      "stage": "N2 regeneration",
+      "group": "verifier-generation",
+      "label": "M",
+      "seconds": [
+        30.87540000281297,
+        38.594250003516215,
+        77.18850000703243
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Independent SHA-256 rehash (HACL*)",
+      "group": "verifier-hash",
+      "label": "M",
+      "seconds": [
+        81.30931210644512,
+        101.6366401330564,
+        203.2732802661128
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Row pack/compare + transform + tally",
+      "group": "verifier-compare",
+      "label": "A",
+      "seconds": [
+        270.3,
+        540.6,
+        1621.8000000000002
+      ],
+      "note": "earlier handoff measured 1.15 us/row for comparison alone; tally and transform added"
+    },
+    {
+      "stage": "History load (inverse index, 7.0M)",
+      "group": "verifier-setup",
+      "label": "D",
+      "seconds": [
+        41.90945500130183,
+        52.38681875162729,
+        104.77363750325458
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Sequential read of 25.9 GB (NVMe C:, 166 MB/s)",
+      "group": "verifier-disk",
+      "label": "M",
+      "seconds": [
+        156.64044010773253,
+        195.80055013466566,
+        391.6011002693313
+      ],
+      "note": "rate measured on just-written files; external USB HDD unmeasured; SHA-256 of chunks at 1.6 GB/s adds ~16 s"
+    }
+  ],
+  "archive": [
+    {
+      "stage": "Manifest/inventory re-read of 43,995 chunk files",
+      "group": "finalization",
+      "label": "D",
+      "seconds": [
+        156.64044010773253,
+        195.80055013466566,
+        391.6011002693313
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Copy to two off-machine copies (assumed 150 MB/s each)",
+      "group": "finalization",
+      "label": "A",
+      "seconds": [
+        172.96,
+        345.92,
+        2075.52
+      ],
+      "note": "target media/network not specified; throughput is an assumption"
+    },
+    {
+      "stage": "Re-hash both copies (assumed 150 MB/s)",
+      "group": "finalization",
+      "label": "A",
+      "seconds": [
+        172.96,
+        345.92,
+        2075.52
+      ],
+      "note": ""
+    },
+    {
+      "stage": "Restored-copy verification pass (second full audit read)",
+      "group": "finalization",
+      "label": "D",
+      "seconds": [
+        156.64044010773253,
+        195.80055013466566,
+        391.6011002693313
+      ],
+      "note": "read cost only; the regeneration cost is the verifier table"
+    }
+  ],
+  "producer_total": [
+    7974.889272184526,
+    10290.915733465197,
+    21000.381824576445
+  ],
+  "verifier_total": [
+    2561.2089813331704,
+    3415.486226666463,
+    7401.572453332926
+  ]
+}

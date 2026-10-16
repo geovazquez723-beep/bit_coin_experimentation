@@ -15,6 +15,7 @@ import sys
 import traceback
 
 import pytest
+from hashing_fixture import synthetic_hashing_identity
 
 from hashlab.experiments import exp002_kernel_bounded as bounded
 from hashlab.experiments import exp002_kernel_evidence as binary
@@ -555,7 +556,7 @@ def test_allowed_finalization_extras_are_explicit(evidence):
 # --------------------------------------------------- production plan binding
 
 def producer_plan():
-    runtime = plans.RuntimeBinding('CPython 3.13.0 engineering identity', 'unit-platform', '1'*64, (('PyYAML', '6.0.3', '2'*64),))
+    runtime = plans.RuntimeBinding('CPython 3.13.0 engineering identity', 'unit-platform', '1'*64, (('PyYAML', '6.0.3', '2'*64),), hashing=synthetic_hashing_identity())
     return plans.ProductionPlan('16f8b30ae30a9ef3ffc0f2868e9508e70c8007cd',
         tuple(plans.Artifact(p, 1, '3'*64) for p in sorted(plans.REQUIRED_SOURCES)), runtime)
 
@@ -617,7 +618,7 @@ def test_production_execution_remains_disabled_and_authentication_unavailable(tm
 # ---------------------------------------- production binding contract (git-backed)
 
 RUNTIME = {'python_version': 'CPython 3.13.0 test', 'platform': 'unit', 'interpreter_sha256': '1'*64,
-           'dependencies': [['PyYAML', '6.0.3', '2'*64]]}
+           'dependencies': [['PyYAML', '6.0.3', '2'*64]], 'hashing': synthetic_hashing_identity()}
 
 
 def tiny_repo(tmp_path):
@@ -704,3 +705,28 @@ def test_report_identifies_the_independent_candidate_backend_and_the_separate_in
     from hashlab.hashing.sha256 import SHA256Engine
     import inspect
     assert 'hashlib.sha256' in inspect.getsource(SHA256Engine)            # producer unchanged: hashlib/OpenSSL
+
+
+@pytest.mark.parametrize('error', [KeyboardInterrupt, MemoryError, OSError])
+def test_verifier_interruption_returns_no_report_and_leaves_evidence_untouched(evidence, monkeypatch, error):
+    """G1-B: an interrupted or resource-starved full verification yields no report and latches nothing."""
+    root, pin = evidence
+    before = {p.name: sha256(p.read_bytes()).hexdigest() for p in root.iterdir()}
+    original = ev.CandidateHasher.evaluator
+
+    def evaluator(self):
+        inner, count = original(self), [0]
+
+        def evaluate(candidate):
+            count[0] += 1
+            if count[0] == 5:
+                raise error
+            return inner(candidate)
+        return evaluate
+
+    with monkeypatch.context() as local:
+        local.setattr(ev.CandidateHasher, 'evaluator', evaluator)
+        with pytest.raises(error):
+            verify(root, pin)
+    assert {p.name: sha256(p.read_bytes()).hexdigest() for p in root.iterdir()} == before
+    assert verify(root, pin)['coverage']['candidates_rehashed'] == 78            # a fresh run is unaffected

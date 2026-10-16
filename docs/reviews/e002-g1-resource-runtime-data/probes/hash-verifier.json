@@ -1,0 +1,44 @@
+{
+  "declared": {
+    "cap": 60,
+    "work": "<=10,000 public-input evaluations (independent backend)"
+  },
+  "external_wall_seconds": 0.40643449999333825,
+  "probe": "hash-verifier",
+  "result": {
+    "digests_sha256_of_concatenation": "f68daafad8744802542c0388ff8e69457ec3e23e4d60f6786771a1ec4fb2d5a3",
+    "evaluations": 10000,
+    "identity": {
+      "backend": "hacl",
+      "independent_of_producer": true,
+      "interpreter_sha256": "b847bb9f4e48c19f585c8bf7d8b355f3f8c6d2125717ece9c9d7e16fb9f09de8",
+      "known_answers": "passed",
+      "lineage": "HACL* (Project Everest) verified C, built into CPython (_sha2); independent of OpenSSL",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "producer_backend": "hashlib.sha256 (OpenSSL)",
+      "python": "3.12.14",
+      "role": "candidate-evaluation",
+      "sha2_container": {
+        "builtin_module": true,
+        "hacl_source_tree_marker_present": true,
+        "path": "C:\\Users\\geova\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.dll",
+        "sha256": "2b6fffde96cf24a57fca642aaefd5788816ab5ef8624ea63b722cbceb94d49b1"
+      },
+      "shared_with_producer": false
+    },
+    "microseconds_per_evaluation": 0.4002700006822124,
+    "microseconds_per_evaluation_w8": 0.37974866316159406,
+    "microseconds_per_evaluation_w80": 0.5042898925103012,
+    "peak_rss_bytes": 48721920,
+    "seconds": 0.004002700006822124,
+    "wall_seconds": 0.30377129999396857,
+    "widths": {
+      "w8": 6923,
+      "w80": 3077
+    }
+  },
+  "returncode": 0,
+  "started_unix": 1792123702.121018,
+  "status": "completed",
+  "stderr_tail": ""
+}

@@ -1,0 +1,57 @@
+{
+  "declared": {
+    "cap": 60,
+    "work": "<=10,000 artificial evidence rows, <=10,000 hash evaluations"
+  },
+  "external_wall_seconds": 0.5242380000127014,
+  "probe": "serialize",
+  "result": {
+    "accumulator_add_us_incl_record_validation": 3.9853045150078703,
+    "accumulator_rows": 9901,
+    "bytes_per_row_by_type": {
+      "w80_accepted": {
+        "bytes": 192,
+        "rows": 3049
+      },
+      "w80_reject": {
+        "bytes": 128,
+        "rows": 28
+      },
+      "w8_accepted": {
+        "bytes": 120,
+        "rows": 6852
+      },
+      "w8_reject": {
+        "bytes": 56,
+        "rows": 71
+      }
+    },
+    "chunk_bytes_total": 1415436,
+    "chunk_files": 3,
+    "chunk_framing_bytes_per_chunk": 76,
+    "chunkwriter_chunks": 3,
+    "chunkwriter_total_seconds_including_fsync_and_inventory": 0.04132530000060797,
+    "chunkwriter_us_per_row": 4.132530000060797,
+    "control_transform_seconds": 0.011746600008336827,
+    "encode_row_us": 1.3171799990232103,
+    "generate_artificial_rows_seconds": 0.09938929999771062,
+    "independent_rehash_candidates": 9901,
+    "independent_rehash_us_per_candidate": 0.45121704831545567,
+    "index_bytes": 471,
+    "index_bytes_per_chunk": 157.0,
+    "inventory_rehash_seconds": 0.001057099987519905,
+    "label": "artificial public-input rows; hashing=9901 accepted rows with OpenSSL + 9901 with independent backend",
+    "mean_bytes_per_row": 141.5208,
+    "peak_rss_bytes": 42369024,
+    "producer_iter_chunks_rows": 10000,
+    "producer_iter_chunks_us_per_chunk_incl_decode": 21646.099999391783,
+    "sequential_read_mb_per_s": 3308.967059103818,
+    "sha256_openssl_seconds": 0.0056653000065125525,
+    "total_row_bytes": 1415208,
+    "wall_seconds": 0.2883239000075264
+  },
+  "returncode": 0,
+  "started_unix": 1792123702.633031,
+  "status": "completed",
+  "stderr_tail": ""
+}

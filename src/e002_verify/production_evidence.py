@@ -23,6 +23,7 @@ from . import controls
 from . import production as prod
 from .core import encode, empty_accounting, _plain, _file_hash
 from .integration import read_json
+from . import runtime_identity
 from .sha256_independent import CandidateHasher, BackendUnavailable, file_integrity_backend
 
 
@@ -334,8 +335,18 @@ def verify_git_commit(repository, code_commit, sources):
                  'source differs from the bound commit: ' + item['path'])
 
 
-def _runtime_shape(rt):
-    _require(type(rt) is dict and set(rt) == {'python_version', 'platform', 'interpreter_sha256', 'dependencies'}
+def _runtime_shape(rt, production=False):
+    base = {'python_version', 'platform', 'interpreter_sha256', 'dependencies'}
+    _require(type(rt) is dict and set(rt) in (base, base | {'hashing'}), 'runtime binding keys')
+    _require(not production or 'hashing' in rt, 'production runtime must declare the loaded SHA-256 implementation')
+    if 'hashing' in rt:
+        try:
+            runtime_identity.check_declared(rt['hashing'])
+        except ValueError as exc:
+            raise ValueError('hashing identity: ' + str(exc)) from None
+        _require([a['sha256'] for a in rt['hashing']['artifacts'] if a['role'] == 'interpreter']
+                 == [rt['interpreter_sha256']], 'hashing identity interpreter differs from interpreter_sha256')
+    _require(type(rt) is dict
              and type(rt['python_version']) is str and rt['python_version'].startswith('CPython ')
              and type(rt['platform']) is str and rt['platform'] and _hex(rt['interpreter_sha256'], 64)
              and type(rt['dependencies']) is list and rt['dependencies'], 'runtime binding')
@@ -355,16 +366,20 @@ def _new_accounting():
     return empty_accounting()
 
 
-def check_binding(geometry, plan_raw, environment, repository, expected_runtime=None):
+def check_binding(geometry, plan_raw, environment, repository, expected_runtime=None, observe_hashing=False):
     """Plan/environment/source/runtime contract. Returns (code_commit or None, sources)."""
     production = geometry.name == 'production'
     _require(type(environment) is dict and set(environment) == {'schema', 'scope', 'runtime', 'sources',
                                   'source_commit_correspondence', 'runtime_approval'}
              and environment['schema'] == SCOPES[geometry.name] and environment['scope'] == geometry.name
              and environment['runtime_approval'] == 'not-claimed', 'environment contract')
-    _runtime_shape(environment['runtime'])
+    _runtime_shape(environment['runtime'], production)
     if expected_runtime is not None:
         _require(environment['runtime'] == expected_runtime, 'observed runtime differs from evidence runtime')
+    if observe_hashing:
+        _require('hashing' in environment['runtime'], 'no declared hashing identity to compare')
+        problems, _ = runtime_identity.compare(environment['runtime']['hashing'], runtime_identity.observe_local())
+        _require(not problems, 'declared producer hashing identity differs from the loaded stack: ' + ', '.join(problems))
     sources = environment['sources']
     _require(sources == observe_sources(repository), 'bound source inventory differs from the checkout')
     if production:
@@ -407,7 +422,7 @@ def tally(row, effective, candidate, arm, cluster):
 def verify_evidence(root, *, completion_sha256, geometry_name, seed_record, audit_root, repository_root,
                     mode='full', expected_runtime=None, cross_check=None, allowed_extra=(),
                     seed_commitment=None, c_seed=None, c_seed_files=None, preregistration_bundle=None,
-                    c_pre_files=None, candidate_backend='hacl'):
+                    c_pre_files=None, candidate_backend='hacl', observe_hashing=False):
     """Complete independent verification; returns a public report with no outcomes."""
     _require(mode == 'full', 'only full regeneration/rehash verification is defined; sampled audits are unsupported')
     geometry = prod.GEOMETRIES.get(geometry_name)
@@ -453,7 +468,7 @@ def verify_evidence(root, *, completion_sha256, geometry_name, seed_record, audi
     # --- plan, source, runtime
     plan_raw = (root/'plan.json').read_bytes()
     environment = _json(root/'environment.json', CAPS['environment'])
-    commit, sources = check_binding(geometry, plan_raw, environment, repository, expected_runtime)
+    commit, sources = check_binding(geometry, plan_raw, environment, repository, expected_runtime, observe_hashing)
     commitment = None
     if production:
         commitment = parse_seed_commitment(seed_commitment, seed_record_sha=seed_sha, facts=seed_facts,
@@ -565,6 +580,11 @@ def verify_evidence(root, *, completion_sha256, geometry_name, seed_record, audi
                                                'hashlib SHA-256 for file pins and seed derivation (not candidate evaluation)',
                                                'accepted independent S1.4/E001 loaders'],
                           producer_imports=False, runtime_independently_observed=expected_runtime is not None,
+                          producer_hashing_identity=dict(
+                              declared='hashing' in environment['runtime'],
+                              declared_sha256=sha256(encode(environment['runtime']['hashing'])).hexdigest()
+                              if 'hashing' in environment['runtime'] else None,
+                              locally_observed_and_matched=bool(observe_hashing)),
                           beacon_authenticity='not-established', ambiguity_policy='fail-closed'),
         claims=dict(independent_regeneration_and_rehash=True, external_receipt=False,
                     disclosure_authorized=False, execution_authorized=False, g1=False, qa2=False,

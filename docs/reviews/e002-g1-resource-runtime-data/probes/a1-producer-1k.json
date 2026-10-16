@@ -1,0 +1,147 @@
+{
+  "declared": {
+    "cap": 30,
+    "work": "first 1,000 emitted A1 ranks (production Algorithm D)"
+  },
+  "external_wall_seconds": 0.23349380001309328,
+  "probe": "a1-producer-1k",
+  "result": {
+    "emitted": 1000,
+    "first_ranks": [
+      23,
+      112,
+      544,
+      617,
+      721
+    ],
+    "histogram_bounds": {
+      "5": 1000
+    },
+    "histogram_compare": {
+      "4": 1000
+    },
+    "histogram_geometric": {
+      "1": 1000
+    },
+    "histogram_refine": {
+      "2": 1000
+    },
+    "last_rank": 137251,
+    "max_precision_digits": 40,
+    "microseconds_per_output": {
+      "distribution_us": {
+        "max": 194.2999952007085,
+        "mean": 105.4425999027444,
+        "min": 68.90000076964498,
+        "p50": 106.49999603629112,
+        "p90": 114.49999874457717,
+        "p99": 136.2000039080158
+      },
+      "mean": 105.4425999027444
+    },
+    "peak_rss_bytes": 27488256,
+    "per_output_bounds": {
+      "max": 5,
+      "mean": 5.0,
+      "min": 5,
+      "n": 1000,
+      "p50": 5,
+      "p90": 5,
+      "p99": 5
+    },
+    "per_output_compare": {
+      "max": 4,
+      "mean": 4.0,
+      "min": 4,
+      "n": 1000,
+      "p50": 4,
+      "p90": 4,
+      "p99": 4
+    },
+    "per_output_geometric": {
+      "max": 1,
+      "mean": 1.0,
+      "min": 1,
+      "n": 1000,
+      "p50": 1,
+      "p90": 1,
+      "p99": 1
+    },
+    "per_output_refine": {
+      "max": 2,
+      "mean": 2.0,
+      "min": 2,
+      "n": 1000,
+      "p50": 2,
+      "p90": 2,
+      "p99": 2
+    },
+    "ranks_sha256": "ce405f763418fce14d5965bb37c526ae3efae5cdb23e03ddaf58e08587c608cb",
+    "rss_before_bytes": 24408064,
+    "selection_blocks_per_output": 2.0,
+    "selection_getrandbits64_calls": 2000,
+    "slowest_outputs": [
+      {
+        "bounds": 5,
+        "compare": 4,
+        "geometric": 1,
+        "microseconds": 194.2999952007085,
+        "output": 536,
+        "refine": 2
+      },
+      {
+        "bounds": 5,
+        "compare": 4,
+        "geometric": 1,
+        "microseconds": 184.59999409969896,
+        "output": 387,
+        "refine": 2
+      },
+      {
+        "bounds": 5,
+        "compare": 4,
+        "geometric": 1,
+        "microseconds": 184.1000048443675,
+        "output": 0,
+        "refine": 2
+      },
+      {
+        "bounds": 5,
+        "compare": 4,
+        "geometric": 1,
+        "microseconds": 174.99999376013875,
+        "output": 10,
+        "refine": 2
+      },
+      {
+        "bounds": 5,
+        "compare": 4,
+        "geometric": 1,
+        "microseconds": 172.50000382773578,
+        "output": 980,
+        "refine": 2
+      }
+    ],
+    "stage_D_count": 483,
+    "stage_getrandbits_calls": 1133,
+    "state": {
+      "N_over_n_at_start": 143.130624,
+      "note": "early stream only: n=30,000,000 at start, remaining n decreases by one per output"
+    },
+    "status": "limit-reached",
+    "total_counts": {
+      "bounds": 5000,
+      "compare": 4000,
+      "geometric": 1000,
+      "hint": 1000,
+      "max_precision": 40,
+      "method_a": 0,
+      "refine": 2000
+    },
+    "wall_seconds": 0.13794110000890214
+  },
+  "returncode": 0,
+  "started_unix": 1792123671.6072702,
+  "status": "completed",
+  "stderr_tail": ""
+}

@@ -1,0 +1,52 @@
+{
+  "declared": {
+    "cap": 30,
+    "work": "<=100,000 inversions, <=10,000 emitted per component"
+  },
+  "external_wall_seconds": 2.7931368999998085,
+  "probe": "controls",
+  "result": {
+    "attempt_from_provider_encoding_us": 4.946030001156032,
+    "authenticate_history_seconds": 0.5120862999901874,
+    "forward_agreement_n1": true,
+    "inverse_agreement_first_20000": true,
+    "inverse_index_100k_build_seconds": 0.0031623000104445964,
+    "inverse_index_membership_100k_set_us": 0.025800000003073364,
+    "n1_rejections": {
+      "accepted": 10000,
+      "attempted": 10000,
+      "reasons": {
+        "A2": 0,
+        "C1": 0,
+        "C3": 0,
+        "E001": 0
+      },
+      "rejected": 0
+    },
+    "n2_agreement": true,
+    "occurrence_records_read": 100000,
+    "peak_rss_bytes": 90050560,
+    "producer_feistel_forward_n1_us": 6.7970900010550395,
+    "producer_feistel_forward_p_us": 6.791410000005271,
+    "producer_feistel_inverse_us": 6.831506999878911,
+    "producer_n1_provider_rows": 10000,
+    "producer_n1_provider_us_per_attempt": 8.366569998906925,
+    "producer_n2_a2_membership_us": 0.08448000007774681,
+    "producer_n2_provider_rows": 10000,
+    "producer_n2_provider_us_per_attempt": 3.7307699996745214,
+    "producer_n2_stream_us_per_80_byte_candidate": 1.485809999576304,
+    "producer_p_provider_rows": 10000,
+    "producer_p_provider_us_per_attempt": 7.9936699999962,
+    "producer_round_function_blake2b_us": 1.0163699989789166,
+    "producer_structural_rejection_check_us": 1.1473899998236448,
+    "verifier_feistel_forward_us": 5.694670000229962,
+    "verifier_feistel_inverse_us": 5.787065000185976,
+    "verifier_n2_stream_us": 0.9291800000937656,
+    "verifier_structural_mask_us": 0.1157000006060116,
+    "wall_seconds_measured_sections": 2.0246507999981986
+  },
+  "returncode": 0,
+  "started_unix": 1792123689.1171389,
+  "status": "completed",
+  "stderr_tail": ""
+}

@@ -1,0 +1,33 @@
+{
+  "declared": {
+    "cap": 60,
+    "work": "<=256 MiB disposable files on the target volume"
+  },
+  "external_wall_seconds": 2.6445247000083327,
+  "probe": "disk-io",
+  "result": {
+    "directory_listing_seconds": 0.0011965000012423843,
+    "files": 454,
+    "files_per_second": 676.6885129696045,
+    "files_written": 454,
+    "fsync_seconds": 0.2759393998712767,
+    "fsync_share": 0.41128859508506455,
+    "inventory_mb_per_s": 1630.3808625353772,
+    "inventory_read_and_sha256_seconds": 0.16429289999359753,
+    "label": "DISPOSABLE I/O PROBE",
+    "ms_per_file_create_write_fsync": 1.4777848017717392,
+    "peak_rss_bytes": 27467776,
+    "read_note": "files were just written; page cache likely serves most reads (not a cold-read figure)",
+    "sequential_read_mb_per_s": 165.62772667234916,
+    "sequential_read_seconds": 1.6172413000022061,
+    "target_bytes": 267860000,
+    "volume": "C:\\repo\\hashlab\\.tmp\\e002-g1b\\io",
+    "volume_free_bytes_after": 128729411584,
+    "write_mb_per_s": 399.2462226520667,
+    "write_seconds": 0.6709143000043696
+  },
+  "returncode": 0,
+  "started_unix": 1792123703.2658374,
+  "status": "completed",
+  "stderr_tail": ""
+}
