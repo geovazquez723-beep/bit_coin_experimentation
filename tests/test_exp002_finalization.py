@@ -90,7 +90,9 @@ def synthetic_report(**changes):
         coverage=dict(attempts_reconstructed=fin.PRODUCTION_EVALUATIONS, candidates_rehashed=fin.PRODUCTION_EVALUATIONS,
                       compression_blocks=fin.PRODUCTION_BLOCKS, chunks=44000, rejections={}, history_occurrences=7000000,
                       a3_exclusion_ranks=60721),
-        independence=dict(), claims=dict(independent_regeneration_and_rehash=True, external_receipt=False,
+        independence=dict(candidate_sha256=dict(role='candidate-evaluation', backend='hacl', known_answers='passed',
+                                                independent_of_producer=True, shared_with_producer=False)),
+        claims=dict(independent_regeneration_and_rehash=True, external_receipt=False,
                       disclosure_authorized=False, execution_authorized=False, g1=False, qa2=False,
                       sampled_audit_absence_claim=False))
     for path, value in changes.items():
@@ -410,6 +412,10 @@ def test_unsealed_or_modified_roots_are_refused(tmp_path, monkeypatch):
     ('bindings.seeded_config_sha256', sha256(canonical(__import__('hashlab.experiments.exp002', fromlist=['Config']).Config().to_dict())).hexdigest()),
     ('bindings.config_sha256', FULL.resolved_config_sha256), ('bindings.c_seed_content', 'maybe'),
     ('seed.kind', 'public-engineering'), ('seed.c_pre', 'd'*40),
+    ('independence.candidate_sha256.backend', 'openssl'), ('independence.candidate_sha256.backend', 'hashlib'),
+    ('independence.candidate_sha256.independent_of_producer', False), ('independence.candidate_sha256.shared_with_producer', True),
+    ('independence.candidate_sha256.known_answers', 'failed'), ('independence.candidate_sha256.role', 'file-integrity'),
+    ('independence', {}), ('independence', None),
     ('bindings.accounting_sha256', 'x'), ('scope', 'bounded-fixture'), ('mode', 'success-plus-sample'),
     ('verification', 'sampled'), ('coverage.candidates_rehashed', 1000), ('coverage.compression_blocks', 1),
     ('coverage.attempts_reconstructed', 5), ('claims.execution_authorized', True), ('claims.disclosure_authorized', True),

@@ -23,6 +23,12 @@ from . import controls
 from . import production as prod
 from .core import encode, empty_accounting, _plain, _file_hash
 from .integration import read_json
+from .sha256_independent import CandidateHasher, BackendUnavailable, file_integrity_backend
+
+
+def candidate_hasher(backend):
+    """The only route to candidate-evaluation SHA-256 in the verifier."""
+    return CandidateHasher(backend)
 
 FORMAT = 'hashlab-e002-kernel-chunks-v1'
 HEAD = struct.Struct('>8sIQQ')
@@ -378,27 +384,37 @@ def check_binding(geometry, plan_raw, environment, repository, expected_runtime=
     return None, sources
 
 
-def sha256_backend():
-    """Describe the SHA-256 implementation used for rehashing (never claimed independent of the producer)."""
-    import hashlib
-    import ssl
-    import sys
-    module = type(hashlib.sha256()).__module__
-    return dict(implementation='hashlib.sha256', module=module, openssl=ssl.OPENSSL_VERSION if module == '_hashlib' else None,
-                python=sys.version.split()[0], shared_with_producer=True,
-                r8_3_9_independent_implementation=False,
-                remaining_requirement='rehash with a different SHA-256 implementation (another OpenSSL major or a reference implementation) qualified by FIPS 180-4 known-answer vectors')
+def tally(row, effective, candidate, arm, cluster):
+    """Success classification (strict effective < 2**248) and E3 counters for one accepted candidate."""
+    value = int.from_bytes(effective, 'big')
+    success = value < prod.TARGET
+    row['trials'] += 1
+    row['successes'] += success
+    row['first_byte'][effective[0]] += 1
+    row['last_byte'][effective[-1]] += 1
+    row['leading_zero_bits'][256 - value.bit_length()] += 1
+    if cluster is not None:
+        j = cluster % 1500
+        row['cluster_trials'][j] += 1
+        row['cluster_successes'][j] += success
+    if arm == 'A3':
+        w = int.from_bytes(candidate, 'big').bit_count() - 1
+        row['weight_trials'][w] += 1
+        row['weight_successes'][w] += success
+    return success
 
 
 def verify_evidence(root, *, completion_sha256, geometry_name, seed_record, audit_root, repository_root,
                     mode='full', expected_runtime=None, cross_check=None, allowed_extra=(),
                     seed_commitment=None, c_seed=None, c_seed_files=None, preregistration_bundle=None,
-                    c_pre_files=None):
+                    c_pre_files=None, candidate_backend='hacl'):
     """Complete independent verification; returns a public report with no outcomes."""
     _require(mode == 'full', 'only full regeneration/rehash verification is defined; sampled audits are unsupported')
     geometry = prod.GEOMETRIES.get(geometry_name)
     _require(geometry is not None, 'unknown geometry')
     production = geometry.name == 'production'
+    hasher = candidate_hasher(candidate_backend)      # fails closed before any evidence is read
+    evaluate = hasher.evaluator()
     master, seed_sha, seed_facts = parse_seed_record(seed_record, geometry)
     root, repository = Path(root), Path(repository_root)
     _plain(root, directory=True)
@@ -495,28 +511,14 @@ def verify_evidence(root, *, completion_sha256, geometry_name, seed_record, audi
                 rejected[arm] += 1
                 position = stop
                 continue
-            raw = sha256(candidate).digest()
+            raw = evaluate(candidate)       # independent candidate-evaluation backend, never hashlib
             mode_name = arm if arm[0] in 'NP' else 'N1'
             effective = raw if mode_name in ('N1', 'N2') else prod.transform(mode_name, raw)
             _require(data[stop:stop + 64] == raw + effective, 'raw/effective digest mismatch at attempt %d' % (sequence - 1))
             position = stop + 64
             row = rows[arm, stage]
             _require(accepted == row['trials'], 'accepted index continuity')
-            value = int.from_bytes(effective, 'big')
-            success = value < prod.TARGET
-            row['trials'] += 1
-            row['successes'] += success
-            row['first_byte'][effective[0]] += 1
-            row['last_byte'][effective[-1]] += 1
-            row['leading_zero_bits'][256 - value.bit_length()] += 1
-            if cluster is not None:
-                j = cluster % 1500
-                row['cluster_trials'][j] += 1
-                row['cluster_successes'][j] += success
-            if arm == 'A3':
-                w = int.from_bytes(candidate, 'big').bit_count() - 1
-                row['weight_trials'][w] += 1
-                row['weight_successes'][w] += success
+            success = tally(row, effective, candidate, arm, cluster)
             evaluations += 1
             blocks += (width + 72) // 64
             successes += success
@@ -558,7 +560,9 @@ def verify_evidence(root, *, completion_sha256, geometry_name, seed_record, audi
         coverage=dict(attempts_reconstructed=sequence, candidates_rehashed=evaluations,
                       compression_blocks=blocks, chunks=chunk_count, rejections=rejected,
                       history_occurrences=occurrence_count, a3_exclusion_ranks=len(excluded)),
-        independence=dict(sha256=sha256_backend(), shared_dependencies=['CPython random MT19937', 'hashlib SHA-256/BLAKE2b',
+        independence=dict(candidate_sha256=hasher.identity(), file_integrity_sha256=file_integrity_backend(),
+                          shared_dependencies=['CPython random MT19937', 'hashlib BLAKE2b (Feistel, N2, A2 prefixes)',
+                                               'hashlib SHA-256 for file pins and seed derivation (not candidate evaluation)',
                                                'accepted independent S1.4/E001 loaders'],
                           producer_imports=False, runtime_independently_observed=expected_runtime is not None,
                           beacon_authenticity='not-established', ambiguity_policy='fail-closed'),
