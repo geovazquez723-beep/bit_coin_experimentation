@@ -67,6 +67,9 @@ class RestrictedInference:
 
     def __repr__(self): return '<RestrictedInference primary=withheld validation=withheld>'
 
+    def __reduce__(self): raise TypeError('private inference cannot be serialized or copied')
+    __getstate__ = __reduce__
+
     def inspect(self):
         return dict(primary='withheld',validation='withheld',final_disclosure='authorization-unavailable')
 
