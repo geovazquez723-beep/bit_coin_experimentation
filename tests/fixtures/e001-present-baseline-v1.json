@@ -1,0 +1,60 @@
+{
+ "recorded_at_head": "b96b4828a6d5417c99052aa7f64fd5363f48c128",
+ "schema": "hashlab-e001-present-baseline-v1",
+ "snapshot": "results-smoke/e001-s13-qualification/before.json",
+ "snapshot_sha256": "956c4d325f6cc4eff52a8655f5a487d1bf924c4f572e95abd5396f7822cda573",
+ "superseded_since_snapshot": {
+  "docs/proposals/e001-reconstruction-phase-b-proposal.md": {
+   "current_lf_sha256": "f51922d2efd1f55996bcfa23ccda98e455b834b2223a6913f7d631472ef56b3c",
+   "snapshot_sha256": "86ed77def6c6dc1ee42c05958bf57044a2fb8a9e52c8aa7468ad3e9e2e04d699"
+  },
+  "docs/reviews/architecture-review-033-e4-foundation.md": {
+   "current_lf_sha256": "9983d41ce7a27cc86619da152187120879dd9389e63a9c7be5ddcd45d57d921a",
+   "snapshot_sha256": "f54d234a409520b6364d30e140a7bfc5182edc49c0e65f19979e73e109cbb73d"
+  },
+  "docs/reviews/architecture-review-035-g1-gap-assessment.md": {
+   "current_lf_sha256": "028f112cc77a3e243a345e5260d8bb7b79f1be30accc8d0ca46318056fe8089e",
+   "snapshot_sha256": "1f0c888d0df13160344ecca75b94573b3bc0460e06019c93477c528df5d2361d"
+  },
+  "docs/reviews/architecture-review-036-e5-phase-a.md": {
+   "current_lf_sha256": "84f69b05132965ced70be5a6dc4281258850b41551beb171a2e11f47891efcc3",
+   "snapshot_sha256": "ad5769e12bc442c25311d551414e82cc8ba46818b3287fa95d8229bb2c1dadfa"
+  },
+  "docs/reviews/architecture-review-037-numerical-reproduction-decision.md": {
+   "current_lf_sha256": "b0d722307023808c4b80609928d7f125cccc258a1a7c20068585f835c4541484",
+   "snapshot_sha256": "2a7041113813e104a92e2a7c06f6529e224370b13c472b2efd29210ba5251449"
+  },
+  "docs/reviews/architecture-review-038-e5-phase-b-bounded.md": {
+   "current_lf_sha256": "274b38445b36b141de847c381660db08b35061992db364016681ef950159c897",
+   "snapshot_sha256": "46dd93a401af32cbdc067086b3f1a8611dae40d4e1783e267d1f187b6608091e"
+  },
+  "docs/reviews/r9-m1b1-structural-policy-handoff.md": {
+   "current_lf_sha256": "ebe63a0df08ae53d8fc9ff8f73f5953fa904465bc8d0bd542ed0eff1522ab9d8",
+   "snapshot_sha256": "255726b6b086c3e4ad06fa881807559abb02ec73a3dd8dd95fdf111e059f0a87"
+  },
+  "src/hashlab/experiments/exp002_r9_policy.py": {
+   "current_lf_sha256": "7ae3479fdac80c7078488279e17edbeaa1d0d45608a66197881b2c3551935c90",
+   "snapshot_sha256": "1fae90c17017279e672cca16418733f31daf1d6d1d309c963aa8537a119b26d6"
+  },
+  "tests/e001_reference.py": {
+   "current_lf_sha256": "d32ee3a9635ac92b068c981395c3e69d4cfc1a8378656475e0d4fac4f202d92a",
+   "snapshot_sha256": "0f53e2293cd907db3432f417485f082ee7e507ccdbeb80c8157736e26e33f649"
+  },
+  "tests/test_e001_reconstruction.py": {
+   "current_lf_sha256": "b72920647b4ac5f29083a6885f3d0d1bd0e0edb33661d0ce68c8e69c62b11244",
+   "snapshot_sha256": "cf92e2c249c7349f78459d504c5df98aaa97d30169d8aaf483eec8b111cd65bd"
+  },
+  "tests/test_e001_tooling.py": {
+   "current_lf_sha256": "25cf282e74c96659ed4a2b0fff4553f7febd58cd4be845cbc8ec353cc1801d0d",
+   "snapshot_sha256": "2aec0b41f51dc14d99bfc18d41c8a5b85beb0eb46ff0c07697c7a82a3213f308"
+  },
+  "tests/test_exp002_e4.py": {
+   "current_lf_sha256": "ed3fe5b4a64d9699be963a74d0233d8a1e52c61691af1d704c813fac82ef43f6",
+   "snapshot_sha256": "ba5a0c9a2d6043861b41ad3f21d834fbcfebc33c062e117bed34ec635ed2240d"
+  },
+  "tests/test_exp002_r9_policy.py": {
+   "current_lf_sha256": "c3986e258673d5d55f95c78361560ac31491e298e2b6848144a95aa2ea9d7669",
+   "snapshot_sha256": "7918a555cc420496ebb6bb25746b210811556dbe5d6f6f44ff6c04745365b226"
+  }
+ }
+}

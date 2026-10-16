@@ -1,0 +1,101 @@
+{
+ "schema": "hashlab-g1c-numeric-runs-v1",
+ "runs": {
+  "py311-hist-cfgorder.json": {
+   "sha256": "865437362e6059b938eed39ae4281baeabc794b8cbd4d1c4c2e093e38f4d2963",
+   "python": "3.11.0",
+   "executable_sha256": "bf1b03022cadfc18049a7f0ecf1f3134c7676fcb6ff6c6941ae7f77e21285c73",
+   "naive_sum": false,
+   "config_order": true,
+   "src": "historical ef595f5 export",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  },
+  "py311-hist-storedorder.json": {
+   "sha256": "50f54abf89aa95936297b38a7553af62f81b8e2d5113889c55cc615bda7bfb55",
+   "python": "3.11.0",
+   "executable_sha256": "bf1b03022cadfc18049a7f0ecf1f3134c7676fcb6ff6c6941ae7f77e21285c73",
+   "naive_sum": false,
+   "config_order": false,
+   "src": "historical ef595f5 export",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  },
+  "py312-hist-cfgorder-naive.json": {
+   "sha256": "1eb76a4b26de0bdb7d7d3aa866c2a2e231d5206544dddacf43864c5e958d2d9b",
+   "python": "3.12.14",
+   "executable_sha256": "b847bb9f4e48c19f585c8bf7d8b355f3f8c6d2125717ece9c9d7e16fb9f09de8",
+   "naive_sum": true,
+   "config_order": true,
+   "src": "historical ef595f5 export",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  },
+  "py312-hist-cfgorder.json": {
+   "sha256": "fb5535459731d855b29416fea12eb3dc2464d3a922fa0322910f354070580265",
+   "python": "3.12.14",
+   "executable_sha256": "b847bb9f4e48c19f585c8bf7d8b355f3f8c6d2125717ece9c9d7e16fb9f09de8",
+   "naive_sum": false,
+   "config_order": true,
+   "src": "historical ef595f5 export",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  },
+  "py313-head-cfgorder.json": {
+   "sha256": "5da349c9fbbaef9ffee5e6cc13292790daa1cb3997b8db6a7c209ca6177a5a70",
+   "python": "3.13.0",
+   "executable_sha256": "62ebc90a2884bb63a0cd67e789cafdd51e771eee043587e2354327b4ccc9bb05",
+   "naive_sum": false,
+   "config_order": true,
+   "src": "HEAD src",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  },
+  "py313-hist-cfgorder-naive.json": {
+   "sha256": "65fcea3fcedbdb42fc654129cadafcb14d2862db64bbf253aa939eda94dc0915",
+   "python": "3.13.0",
+   "executable_sha256": "62ebc90a2884bb63a0cd67e789cafdd51e771eee043587e2354327b4ccc9bb05",
+   "naive_sum": true,
+   "config_order": true,
+   "src": "historical ef595f5 export",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  },
+  "py313-hist-cfgorder.json": {
+   "sha256": "a6e48cf14770e3ed13599e427212eac2c0d37b4127a14a1b4f07c91e8c5386ec",
+   "python": "3.13.0",
+   "executable_sha256": "62ebc90a2884bb63a0cd67e789cafdd51e771eee043587e2354327b4ccc9bb05",
+   "naive_sum": false,
+   "config_order": true,
+   "src": "historical ef595f5 export",
+   "inputs_sha256": {
+    "config.resolved.json": "d8a4f67d2823734a245892c36003207132fc72cc0db0d447f8824e4ca203364b",
+    "results.json": "1ff1e2a3dc51c2860d7e5e5d69b8941c62e000c2e06f0f03b3d39331ee15818c"
+   }
+  }
+ },
+ "identities": {
+  "python_3_11_0": {
+   "path": "C:/Users/geova/AppData/Local/Programs/Python/Python311/python.exe",
+   "sha256": "bf1b03022cadfc18049a7f0ecf1f3134c7676fcb6ff6c6941ae7f77e21285c73",
+   "python311_dll_sha256": "a0cf640e756875c25c12b4a38ba5f2772e8e512036e2ac59eb8567bf05ffbfb7",
+   "build": "3.11.0 (main, Oct 24 2022, 18:26:48) [MSC v.1933 64 bit (AMD64)]",
+   "openssl": "OpenSSL 1.1.1q  5 Jul 2022",
+   "matches_sealed_environment_build_string": true,
+   "authenticated_as_original_binary": false,
+   "note": ".venv/pyvenv.cfg home points here; no run-time binary hash was sealed, so identity is corroborative, not hash-authenticated"
+  }
+ }
+}

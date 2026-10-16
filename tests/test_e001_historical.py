@@ -344,11 +344,7 @@ def test_original_sources_and_e001_preserved():
     from hashlab.evidence.manifest import verify_manifest
     validate_history(SEALED,Path.cwd())
     assert verify_manifest(SEALED)==[]
-    baseline=Path('results-smoke/e001-s13-qualification/before.json')
-    if baseline.exists():
-        before=json.loads(baseline.read_text())
-        for inventory in (before['sealed'],before['protected']):
-            for name,info in inventory.items():
-                path=Path(name)
-                assert path.stat().st_size==info['size'] and path.stat().st_mtime_ns==info['mtime_ns']
-                assert sha256(path.read_bytes()).hexdigest()==info['sha256']
+    # The snapshot is a point-in-time local working-checkout inventory (see tests/e001_snapshot.py):
+    # sealed evidence must match exactly; the wider inventory is checked against the pinned present baseline.
+    from e001_snapshot import check_snapshot_file
+    assert check_snapshot_file(Path('results-smoke/e001-s13-qualification/before.json'))==[]
