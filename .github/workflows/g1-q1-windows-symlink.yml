@@ -1,0 +1,50 @@
+# Bounded G1 Q-1 qualification: real Windows file/directory symlink and reparse-point tests.
+# Scope: this feature branch only; read-only token; no secrets; no deployment; no E002/QA2/seed/beacon execution.
+name: g1-q1-windows-symlink
+on:
+  push:
+    branches: [feat/e002-g1-external-host-qualification]
+    paths: [.github/workflows/g1-q1-windows-symlink.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  q1:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies (pinned)
+        run: python -m pip install pytest==9.1.1 PyYAML==6.0.3
+      - name: Record host, privilege context and symlink capability
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force q1-evidence | Out-Null
+          $log = 'q1-evidence/host.txt'
+          "commit: $env:GITHUB_SHA" | Tee-Object $log
+          "runner image: $env:ImageOS $env:ImageVersion" | Tee-Object $log -Append
+          (Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber,OSArchitecture | Format-List | Out-String) | Tee-Object $log -Append
+          (Get-CimInstance Win32_Processor | Select-Object Name,NumberOfCores | Format-List | Out-String) | Tee-Object $log -Append
+          "elevated: " + ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) | Tee-Object $log -Append
+          (whoami /priv | Out-String) | Tee-Object $log -Append
+          python -VV | Tee-Object $log -Append
+          python -c "import sys,hashlib,ssl;print(sys.executable);print(ssl.OPENSSL_VERSION)" | Tee-Object $log -Append
+          python -c "import os,tempfile,pathlib; d=pathlib.Path(tempfile.mkdtemp()); (d/'t').write_text('x'); os.symlink(d/'t', d/'l'); (d/'sub').mkdir(); os.symlink(d/'sub', d/'sl', target_is_directory=True); print('file symlink ok; directory symlink ok')" | Tee-Object $log -Append
+      - name: Run the 11 previously skipped real-symlink tests and the junction/simulation tests
+        shell: pwsh
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          PYTHONPATH: src;tools;tests
+        run: |
+          python -B -m pytest tests/test_exp002_e4.py::test_symbolic_links_block_inventory_and_disclosure tests/test_exp002_g1d_reparse_security.py tests/test_exp002_symlink_simulation.py -rA -p no:cacheprovider --junitxml=q1-evidence/junit.xml 2>&1 | Tee-Object q1-evidence/pytest.txt
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: q1-evidence
+          path: q1-evidence
